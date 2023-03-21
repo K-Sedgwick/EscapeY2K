@@ -1,0 +1,1139 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (MiKTeX 21.6) (preloaded format=pdflatex 2021.9.21)  16 DEC 2022 13:05
+entering extended mode
+**V:/WMSx1/template_latex/ACCESS_newFormata_frDCLdec16/access/access.tex
+(V:/WMSx1/template_latex/ACCESS_newFormata_frDCLdec16/access/access.tex
+LaTeX2e <2021-06-01>
+L3 programming layer <2021-06-01>
+(V:/WMSx1/template_latex/ACCESS_newFormata_frDCLdec16/access\ieeeaccess.cls
+(V:/WMSx1/template_latex/ACCESS_newFormata_frDCLdec16/access\IEEEtran.cls
+Document Class: IEEEtran 2015/08/26 V1.8b by Michael Shell
+-- See the "IEEEtran_HOWTO" manual for usage information.
+-- http://www.michaelshell.org/tex/ieeetran/
+\@IEEEtrantmpdimenA=\dimen138
+\@IEEEtrantmpdimenB=\dimen139
+\@IEEEtrantmpdimenC=\dimen140
+\@IEEEtrantmpcountA=\count182
+\@IEEEtrantmpcountB=\count183
+\@IEEEtrantmpcountC=\count184
+\@IEEEtrantmptoksA=\toks16
+LaTeX Font Info:    Trying to load font information for OT1+ptm on input line 5
+03.
+(C:\Users\ctran\AppData\Roaming\MiKTeX\tex/latex/psnfss\ot1ptm.fd
+File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
+)
+-- Using 8.5in x 11in (letter) paper.
+-- Using PDF output.
+\@IEEEnormalsizeunitybaselineskip=\dimen141
+-- This is a 10 point document.
+\CLASSINFOnormalsizebaselineskip=\dimen142
+\CLASSINFOnormalsizeunitybaselineskip=\dimen143
+\IEEEnormaljot=\dimen144
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <5> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 1090.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <5> not available
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 1090.
+
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 1090.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <7> not available
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 1090.
+
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <8> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 1090.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <8> not available
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 1090.
+
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <9> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 1090.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <9> not available
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 1090.
+
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 1090.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <10> not available
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 1090.
+
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <11> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 1090.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <11> not available
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 1090.
+
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 1090.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <12> not available
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 1090.
+
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <17> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 1090.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <17> not available
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 1090.
+
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <20> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 1090.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <20> not available
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 1090.
+
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <24> not available
+(Font)              Font shape `OT1/ptm/b/n' tried instead on input line 1090.
+LaTeX Font Info:    Font shape `OT1/ptm/bx/it' in size <24> not available
+(Font)              Font shape `OT1/ptm/b/it' tried instead on input line 1090.
+
+\IEEEquantizedlength=\dimen145
+\IEEEquantizedlengthdiff=\dimen146
+\IEEEquantizedtextheightdiff=\dimen147
+\IEEEilabelindentA=\dimen148
+\IEEEilabelindentB=\dimen149
+\IEEEilabelindent=\dimen150
+\IEEEelabelindent=\dimen151
+\IEEEdlabelindent=\dimen152
+\IEEElabelindent=\dimen153
+\IEEEiednormlabelsep=\dimen154
+\IEEEiedmathlabelsep=\dimen155
+\IEEEiedtopsep=\skip47
+\c@section=\count185
+\c@subsection=\count186
+\c@subsubsection=\count187
+\c@paragraph=\count188
+\c@IEEEsubequation=\count189
+\abovecaptionskip=\skip48
+\belowcaptionskip=\skip49
+\c@figure=\count190
+\c@table=\count191
+\@IEEEeqnnumcols=\count192
+\@IEEEeqncolcnt=\count193
+\@IEEEsubeqnnumrollback=\count194
+\@IEEEquantizeheightA=\dimen156
+\@IEEEquantizeheightB=\dimen157
+\@IEEEquantizeheightC=\dimen158
+\@IEEEquantizeprevdepth=\dimen159
+\@IEEEquantizemultiple=\count195
+\@IEEEquantizeboxA=\box50
+\@IEEEtmpitemindent=\dimen160
+\IEEEPARstartletwidth=\dimen161
+\c@IEEEbiography=\count196
+\@IEEEtranrubishbin=\box51
+) (C:\Program Files\MiKTeX\tex/generic/iftex\ifpdf.sty
+Package: ifpdf 2019/10/25 v3.4 ifpdf legacy package. Use iftex instead.
+
+(C:\Program Files\MiKTeX\tex/generic/iftex\iftex.sty
+Package: iftex 2020/03/06 v1.0d TeX engine tests
+))
+(C:\Program Files\MiKTeX\tex/latex/xkeyval\xkeyval.sty
+Package: xkeyval 2020/11/20 v2.8 package option processing (HA)
+
+(C:\Program Files\MiKTeX\tex/generic/xkeyval\xkeyval.tex
+(C:\Program Files\MiKTeX\tex/generic/xkeyval\xkvutils.tex
+\XKV@toks=\toks17
+\XKV@tempa@toks=\toks18
+
+(C:\Program Files\MiKTeX\tex/generic/xkeyval\keyval.tex))
+\XKV@depth=\count197
+File: xkeyval.tex 2014/12/03 v2.7a key=value parser (HA)
+)){C:/Users/ctran/AppData/Local/MiKTeX/pdftex/config/pdftex.map}
+
+pdfTeX warning: pdflatex (file t1-times.map): cannot open font map file
+{V:/WMSx1/template_latex/ACCESS_newFormata_frDCLdec16/access/t1-formata.map}
+
+pdfTeX warning: pdflatex (file t1-giovannistd.map): cannot open font map file
+\@draftversionrule=\dimen162
+(C:\Program Files\MiKTeX\tex/latex/graphics\color.sty
+Package: color 2020/02/24 v1.2b Standard LaTeX Color (DPC)
+
+(C:\Program Files\MiKTeX\tex/latex/graphics-cfg\color.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package color Info: Driver file: pdftex.def on input line 149.
+
+(C:\Program Files\MiKTeX\tex/latex/graphics-def\pdftex.def
+File: pdftex.def 2020/10/05 v1.2a Graphics/color driver for pdftex
+))
+(C:\Users\ctran\AppData\Roaming\MiKTeX\tex/latex/spotcolor\spotcolor.sty
+Package: spotcolor 2006/11/15 v1.2 Package for adding Spot Color support to pdf
+LaTeX.
+
+(C:\Program Files\MiKTeX\tex/latex/graphics\graphics.sty
+Package: graphics 2021/03/04 v1.4d Standard LaTeX Graphics (DPC,SPQR)
+
+(C:\Program Files\MiKTeX\tex/latex/graphics\trig.sty
+Package: trig 2016/01/03 v1.10 sin cos tan (DPC)
+)
+(C:\Program Files\MiKTeX\tex/latex/graphics-cfg\graphics.cfg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: pdftex.def on input line 107.
+)
+\thecolorprofile=\count198
+\thecolor=\count199
+)
+\PANTONE=\toks19
+Package color Info: Redefining color black on input line 287.
+\figbox=\box52
+\titlewidth=\skip50
+\abstractwidth=\skip51
+\c@addrCtr=\count266
+\abstractbox=\box53
+\indexbox=\box54
+\absht=\dimen163
+\kwdht=\dimen164
+\@tempcntc=\count267
+\titlepgskip=\skip52
+\maketitlebox=\box55
+)
+(C:\Users\ctran\AppData\Roaming\MiKTeX\tex/latex/cite\cite.sty
+LaTeX Info: Redefining \cite on input line 302.
+LaTeX Info: Redefining \nocite on input line 332.
+Package: cite 2015/02/27  v 5.5
+)
+(C:\Program Files\MiKTeX\tex/latex/amsmath\amsmath.sty
+Package: amsmath 2021/04/20 v2.17j AMS math features
+\@mathmargin=\skip53
+
+For additional information on amsmath, use the `?' option.
+(C:\Program Files\MiKTeX\tex/latex/amsmath\amstext.sty
+Package: amstext 2000/06/29 v2.01 AMS text
+
+(C:\Program Files\MiKTeX\tex/latex/amsmath\amsgen.sty
+File: amsgen.sty 1999/11/30 v2.0 generic functions
+\@emptytoks=\toks20
+\ex@=\dimen165
+))
+(C:\Program Files\MiKTeX\tex/latex/amsmath\amsbsy.sty
+Package: amsbsy 1999/11/29 v1.2d Bold Symbols
+\pmbraise@=\dimen166
+)
+(C:\Program Files\MiKTeX\tex/latex/amsmath\amsopn.sty
+Package: amsopn 2016/03/08 v2.02 operator names
+)
+\inf@bad=\count268
+LaTeX Info: Redefining \frac on input line 234.
+\uproot@=\count269
+\leftroot@=\count270
+LaTeX Info: Redefining \overline on input line 399.
+\classnum@=\count271
+\DOTSCASE@=\count272
+LaTeX Info: Redefining \ldots on input line 496.
+LaTeX Info: Redefining \dots on input line 499.
+LaTeX Info: Redefining \cdots on input line 620.
+\Mathstrutbox@=\box56
+\strutbox@=\box57
+\big@size=\dimen167
+LaTeX Font Info:    Redeclaring font encoding OML on input line 743.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 744.
+\macc@depth=\count273
+\c@MaxMatrixCols=\count274
+\dotsspace@=\muskip16
+\c@parentequation=\count275
+\dspbrk@lvl=\count276
+\tag@help=\toks21
+\row@=\count277
+\column@=\count278
+\maxfields@=\count279
+\andhelp@=\toks22
+\eqnshift@=\dimen168
+\alignsep@=\dimen169
+\tagshift@=\dimen170
+\tagwidth@=\dimen171
+\totwidth@=\dimen172
+\lineht@=\dimen173
+\@envbody=\toks23
+\multlinegap=\skip54
+\multlinetaggap=\skip55
+\mathdisplay@stack=\toks24
+LaTeX Info: Redefining \[ on input line 2923.
+LaTeX Info: Redefining \] on input line 2924.
+)
+(C:\Program Files\MiKTeX\tex/latex/amsfonts\amssymb.sty
+Package: amssymb 2013/01/14 v3.01 AMS font symbols
+
+(C:\Program Files\MiKTeX\tex/latex/amsfonts\amsfonts.sty
+Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
+\symAMSa=\mathgroup4
+\symAMSb=\mathgroup5
+LaTeX Font Info:    Redeclaring math symbol \hbar on input line 98.
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
+))
+(C:\Users\ctran\AppData\Roaming\MiKTeX\tex/latex/algorithms\algorithmic.sty
+Package: algorithmic 2009/08/24 v0.1 Document Style `algorithmic'
+
+(C:\Program Files\MiKTeX\tex/latex/base\ifthen.sty
+Package: ifthen 2020/11/24 v1.1c Standard LaTeX ifthen package (DPC)
+)
+\c@ALC@unique=\count280
+\c@ALC@line=\count281
+\c@ALC@rem=\count282
+\c@ALC@depth=\count283
+\ALC@tlm=\skip56
+\algorithmicindent=\skip57
+)
+(C:\Program Files\MiKTeX\tex/latex/graphics\graphicx.sty
+Package: graphicx 2020/12/05 v1.2c Enhanced LaTeX Graphics (DPC,SPQR)
+\Gin@req@height=\dimen174
+\Gin@req@width=\dimen175
+)
+(C:\Program Files\MiKTeX\tex/latex/base\textcomp.sty
+Package: textcomp 2020/02/02 v2.0n Standard LaTeX package
+)
+(C:\Program Files\MiKTeX\tex/latex/l3backend\l3backend-pdftex.def
+File: l3backend-pdftex.def 2021-05-07 L3 backend support: PDF output (pdfTeX)
+\l__color_backend_stack_int=\count284
+\l__pdf_internal_box=\box58
+)
+No file access.aux.
+\openout1 = `access.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 9.
+LaTeX Font Info:    ... okay on input line 9.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 9.
+LaTeX Font Info:    ... okay on input line 9.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 9.
+LaTeX Font Info:    ... okay on input line 9.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 9.
+LaTeX Font Info:    ... okay on input line 9.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 9.
+LaTeX Font Info:    ... okay on input line 9.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 9.
+LaTeX Font Info:    ... okay on input line 9.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 9.
+LaTeX Font Info:    ... okay on input line 9.
+-- Lines per column: 56 (exact).
+\symNewLetters=\mathgroup6
+\symxsymbols=\mathgroup7
+LaTeX Font Info:    Redeclaring math symbol \ddagger on input line 9.
+LaTeX Font Info:    Redeclaring math symbol \dagger on input line 9.
+\c@mv@regular=\count285
+LaTeX Font Info:    Encoding `OT1' has changed to `T1' for symbol font
+(Font)              `operators' in the math version `regular' on input line 9.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `regular'
+(Font)                  OT1/cmr/m/n --> T1/formata/n/n on input line 9.
+LaTeX Font Info:    Overwriting symbol font `NewLetters' in version `regular'
+(Font)                  T1/times/n/it --> T1/formata/n/it on input line 9.
+LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `regular'
+(Font)                  T1/formata/n/n --> T1/formata/n/n on input line 9.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `regular'
+(Font)                  OT1/cmr/m/it --> T1/formata/n/it on input line 9.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `regular'
+(Font)                  OT1/cmr/bx/n --> T1/formata/m/n on input line 9.
+LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `regular'
+(Font)                  OT1/cmtt/m/n --> OT1/pcr/m/n on input line 9.
+\c@mv@medium=\count286
+LaTeX Font Info:    Encoding `OT1' has changed to `T1' for symbol font
+(Font)              `operators' in the math version `medium' on input line 9.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `medium'
+(Font)                  OT1/cmr/m/n --> T1/formata/m/n on input line 9.
+LaTeX Font Info:    Overwriting symbol font `NewLetters' in version `medium'
+(Font)                  T1/times/n/it --> T1/formata/m/it on input line 9.
+LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `medium'
+(Font)                  > T1/formata/m/n on input line 9.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `medium'
+(Font)                  OT1/cmr/m/it --> T1/formata/m/it on input line 9.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `medium'
+(Font)                  OT1/cmr/bx/n --> T1/formata/b/n on input line 9.
+LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `medium'
+(Font)                  OT1/cmtt/m/n --> OT1/pcr/b/n on input line 9.
+\c@mv@black=\count287
+LaTeX Font Info:    Encoding `OT1' has changed to `T1' for symbol font
+(Font)              `operators' in the math version `black' on input line 9.
+LaTeX Font Info:    Overwriting symbol font `operators' in version `black'
+(Font)                  OT1/cmr/m/n --> T1/formata/b/n on input line 9.
+LaTeX Font Info:    Overwriting symbol font `NewLetters' in version `black'
+(Font)                  T1/times/n/it --> T1/formata/b/it on input line 9.
+LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `black'
+(Font)                  > T1/formata/b/n on input line 9.
+LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `black'
+(Font)                  OT1/cmr/m/it --> T1/formata/b/it on input line 9.
+LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `black'
+(Font)                  OT1/cmr/bx/n --> T1/formata/b/n on input line 9.
+LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `black'
+(Font)                  OT1/cmtt/m/n --> OT1/pcr/b/n on input line 9.
+LaTeX Font Info:    Trying to load font information for T1+ptm on input line 9.
+
+(C:\Users\ctran\AppData\Roaming\MiKTeX\tex/latex/psnfss\t1ptm.fd
+File: t1ptm.fd 2001/06/04 font definitions for T1/ptm.
+)
+LaTeX Font Info:    Trying to load font information for T1+times on input line 
+9.
+LaTeX Font Info:    No file T1times.fd. on input line 9.
+
+
+LaTeX Font Warning: Font shape `T1/times/m/n' undefined
+(Font)              using `T1/cmr/m/n' instead on input line 9.
+
+
+LaTeX Font Warning: Font shape `T1/times/n/n' undefined
+(Font)              using `T1/times/m/n' instead on input line 9.
+
+(C:\Program Files\MiKTeX\tex/context/base/mkii\supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count288
+\scratchdimen=\dimen176
+\scratchbox=\box59
+\nofMPsegments=\count289
+\nofMParguments=\count290
+\everyMPshowfont=\toks25
+\MPscratchCnt=\count291
+\MPscratchDim=\dimen177
+\MPnumerator=\count292
+\makeMPintoPDFobject=\count293
+\everyMPtoPDFconversion=\toks26
+) (C:\Program Files\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-base.sty
+Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
+85.
+
+(C:\Program Files\MiKTeX\tex/latex/00miktex\epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
+))
+<bullet.png, id=3, 12.045pt x 35.38219pt>
+File: bullet.png Graphic file (type png)
+<use bullet.png>
+Package pdftex.def Info: bullet.png  used on input line 37.
+(pdftex.def)             Requested size: 4.99878pt x 14.68387pt.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 40.
+
+
+(C:\Program Files\MiKTeX\tex/latex/amsfonts\umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Trying to load font information for U+msb on input line 40.
+
+
+(C:\Program Files\MiKTeX\tex/latex/amsfonts\umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+)
+
+LaTeX Font Warning: Font shape `T1/times/n/it' undefined
+(Font)              using `T1/times/n/n' instead on input line 40.
+
+File: bullet.png Graphic file (type png)
+<use bullet.png>
+Package pdftex.def Info: bullet.png  used on input line 60.
+(pdftex.def)             Requested size: 4.99878pt x 14.68387pt.
+! Font T1/giovannistd/n/it/6=t1-giovannistd-bookitalic at 6.0pt not loadable: M
+etric (TFM) file not found.
+<to be read again> 
+                   relax 
+l.67 \maketitle
+               
+? R
+OK, entering nonstopmode...
+Missing character: There is no D in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no g in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no a in font nullfont!
+Missing character: There is no l in font nullfont!
+Missing character: There is no O in font nullfont!
+Missing character: There is no b in font nullfont!
+Missing character: There is no j in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no c in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no I in font nullfont!
+Missing character: There is no d in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no n in font nullfont!
+Missing character: There is no t in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no f in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no 1 in font nullfont!
+Missing character: There is no 0 in font nullfont!
+Missing character: There is no . in font nullfont!
+Missing character: There is no 1 in font nullfont!
+Missing character: There is no 1 in font nullfont!
+Missing character: There is no 0 in font nullfont!
+Missing character: There is no 9 in font nullfont!
+Missing character: There is no / in font nullfont!
+Missing character: There is no A in font nullfont!
+Missing character: There is no C in font nullfont!
+Missing character: There is no C in font nullfont!
+Missing character: There is no E in font nullfont!
+Missing character: There is no S in font nullfont!
+Missing character: There is no S in font nullfont!
+Missing character: There is no . in font nullfont!
+Missing character: There is no 2 in font nullfont!
+Missing character: There is no 0 in font nullfont!
+Missing character: There is no 2 in font nullfont!
+Missing character: There is no 2 in font nullfont!
+Missing character: There is no . in font nullfont!
+Missing character: There is no 0 in font nullfont!
+Missing character: There is no 0 in font nullfont!
+Missing character: There is no 9 in font nullfont!
+Missing character: There is no 2 in font nullfont!
+Missing character: There is no 3 in font nullfont!
+Missing character: There is no 1 in font nullfont!
+Missing character: There is no 6 in font nullfont!
+LaTeX Font Info:    Calculating math sizes for size <9.9> on input line 67.
+LaTeX Font Info:    Calculating math sizes for size <6.6> on input line 67.
+
+Overfull \hbox (9.26668pt too wide) in paragraph at lines 67--67
+[]  
+ []
+
+
+Overfull \hbox (9.26668pt too wide) in paragraph at lines 67--67
+[]  
+ []
+
+
+LaTeX Font Warning: Font shape `T1/times/b/n' undefined
+(Font)              using `T1/times/m/n' instead on input line 71.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 71--79
+[]\T1/times/b/n/10 HIS doc-u-ment is a tem-plate for L[]T[]X.
+ []
+
+
+Underfull \hbox (badness 5064) in paragraph at lines 71--79
+\T1/times/b/n/10 If you are read-ing a pa-per or PDF ver-
+ []
+
+
+Underfull \hbox (badness 3009) in paragraph at lines 71--79
+\T1/times/b/n/10 sion of this doc-u-ment, please down-load the La-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 71--79
+\T1/times/b/n/10 TeX tem-plate or the MS Word tem-plate of
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 71--79
+\T1/times/b/n/10 at $[]$
+ []
+
+
+Underfull \hbox (badness 6641) in paragraph at lines 71--79
+\T1/times/b/n/10 pare your manuscript. If you would pre-fer to
+ []
+
+
+Underfull \hbox (badness 5711) in paragraph at lines 71--79
+\T1/times/b/n/10 use La-TeX, down-load IEEE's La-TeX style and
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 71--79
+\T1/times/b/n/10 sam-ple files from the same Web page. You
+ []
+
+
+Underfull \hbox (badness 7238) in paragraph at lines 71--79
+\T1/times/b/n/10 can also ex-plore us-ing the Over-leaf ed-i-tor at
+ []
+
+
+Overfull \hbox (4.65494pt too wide) in paragraph at lines 71--79
+[]$
+ []
+
+
+Overfull \hbox (2.6832pt too wide) in paragraph at lines 71--79
+[]$
+ []
+
+
+Underfull \vbox (badness 4927) has occurred while \output is active []
+
+
+
+LaTeX Warning: Reference `eq' on page 1 undefined on input line 94.
+
+
+LaTeX Warning: Reference `eq' on page 1 undefined on input line 95.
+
+
+LaTeX Warning: Reference `eq' on page 1 undefined on input line 95.
+
+
+LaTeX Warning: Reference `eq' on page 1 undefined on input line 96.
+
+<logo.png, id=4, 206.27063pt x 53.44969pt>
+File: logo.png Graphic file (type png)
+<use logo.png>
+Package pdftex.def Info: logo.png  used on input line 97.
+(pdftex.def)             Requested size: 91.32pt x 23.66309pt.
+
+Overfull \hbox (505.12177pt too wide) has occurred while \output is active
+[]
+ []
+
+
+Overfull \hbox (505.12177pt too wide) has occurred while \output is active
+[]
+ []
+
+
+Overfull \hbox (505.12177pt too wide) has occurred while \output is active
+[]
+ []
+
+
+Underfull \hbox (badness 10000) has occurred while \output is active
+[]
+ []
+
+[1
+
+
+ <V:/WMSx1/template_latex/ACCESS_newFormata_frDCLdec16/access/logo.png> <V:/WMS
+x1/template_latex/ACCESS_newFormata_frDCLdec16/access/bullet.png>]
+
+LaTeX Warning: Reference `eq' on page 2 undefined on input line 124.
+
+
+LaTeX Warning: Reference `eq' on page 2 undefined on input line 132.
+
+
+LaTeX Warning: Reference `eq' on page 2 undefined on input line 132.
+
+
+LaTeX Warning: Reference `eq' on page 2 undefined on input line 133.
+
+
+LaTeX Warning: Reference `eq' on page 2 undefined on input line 133.
+
+LaTeX Font Info:    Trying to load font information for T1+pcr on input line 13
+8.
+(C:\Users\ctran\AppData\Roaming\MiKTeX\tex/latex/psnfss\t1pcr.fd
+File: t1pcr.fd 2001/06/04 font definitions for T1/pcr.
+)
+
+LaTeX Font Warning: Font shape `T1/times/m/sc' undefined
+(Font)              using `T1/times/m/n' instead on input line 154.
+
+<notaglinelogo.png, id=19, 169.38281pt x 42.91031pt>
+File: notaglinelogo.png Graphic file (type png)
+<use notaglinelogo.png>
+Package pdftex.def Info: notaglinelogo.png  used on input line 205.
+(pdftex.def)             Requested size: 91.32pt x 23.1352pt.
+
+LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
+(Font)              using `T1/formata/m/it' instead on input line 205.
+
+
+Overfull \hbox (505.12177pt too wide) has occurred while \output is active
+[]
+ []
+
+
+Overfull \hbox (505.12177pt too wide) has occurred while \output is active
+[]
+ []
+
+
+Underfull \hbox (badness 10000) has occurred while \output is active
+[]
+ []
+
+[2 <V:/WMSx1/template_latex/ACCESS_newFormata_frDCLdec16/access/notaglinelogo.p
+ng>]
+<fig1.png, id=29, 249.3315pt x 189.22694pt>
+File: fig1.png Graphic file (type png)
+<use fig1.png>
+Package pdftex.def Info: fig1.png  used on input line 208.
+(pdftex.def)             Requested size: 249.33087pt x 189.22647pt.
+File: fig1.png Graphic file (type png)
+<use fig1.png>
+Package pdftex.def Info: fig1.png  used on input line 208.
+(pdftex.def)             Requested size: 249.33087pt x 189.22647pt.
+
+Underfull \hbox (badness 7851) in paragraph at lines 223--225
+[]\T1/times/m/sc/10 A gen-eral IEEE styleguide is avail-able at 
+ []
+
+
+Overfull \hbox (2.61826pt too wide) in paragraph at lines 256--256
+[]\T1/times/n/it/8 Symbol| 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 267--267
+[]\T1/times/n/it/8 magnetic field
+ []
+
+
+Underfull \hbox (badness 3989) in paragraph at lines 279--279
+[]\T1/times/n/it/8 specific mag-ne-ti-za-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 285--285
+[]\T1/times/n/it/8 magnetic
+ []
+
+
+Underfull \hbox (badness 5374) in paragraph at lines 297--297
+[]\T1/times/n/it/8 relative per-me-abil-
+ []
+
+
+Underfull \hbox (badness 5417) in paragraph at lines 303--303
+[]\T1/times/n/it/8 demagnetizing fac-
+ []
+
+
+Overfull \hbox (14.32645pt too wide) in paragraph at lines 254--314
+[][]
+ []
+
+
+LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
+(Font)              using `T1/formata/m/it' instead on input line 349.
+
+File: notaglinelogo.png Graphic file (type png)
+<use notaglinelogo.png>
+Package pdftex.def Info: notaglinelogo.png  used on input line 349.
+(pdftex.def)             Requested size: 91.32pt x 23.1352pt.
+
+Overfull \hbox (505.12177pt too wide) has occurred while \output is active
+[]
+ []
+
+
+Overfull \hbox (505.12177pt too wide) has occurred while \output is active
+[]
+ []
+
+
+Underfull \hbox (badness 10000) has occurred while \output is active
+[]
+ []
+
+[3]
+Underfull \hbox (badness 3746) in paragraph at lines 363--368
+\T1/times/m/sc/10 The term color space refers to the en-tire sum
+ []
+
+
+Underfull \hbox (badness 2181) in paragraph at lines 363--368
+\T1/times/m/sc/10 medium. For our pur-poses, the three main color
+ []
+
+File: notaglinelogo.png Graphic file (type png)
+<use notaglinelogo.png>
+Package pdftex.def Info: notaglinelogo.png  used on input line 407.
+(pdftex.def)             Requested size: 91.32pt x 23.1352pt.
+
+LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
+(Font)              using `T1/formata/m/it' instead on input line 407.
+
+
+Overfull \hbox (505.12177pt too wide) has occurred while \output is active
+[]
+ []
+
+
+Overfull \hbox (505.12177pt too wide) has occurred while \output is active
+[]
+ []
+
+
+Underfull \hbox (badness 10000) has occurred while \output is active
+[]
+ []
+
+[4 <V:/WMSx1/template_latex/ACCESS_newFormata_frDCLdec16/access/fig1.png (PNG c
+opy)>]
+
+LaTeX Warning: Reference `formats' on page 5 undefined on input line 443.
+
+
+LaTeX Font Warning: Font shape `T1/times/m/it' undefined
+(Font)              using `T1/times/m/n' instead on input line 450.
+
+
+LaTeX Warning: Reference `table' on page 5 undefined on input line 473.
+
+
+LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
+(Font)              using `T1/formata/m/it' instead on input line 500.
+
+File: notaglinelogo.png Graphic file (type png)
+<use notaglinelogo.png>
+Package pdftex.def Info: notaglinelogo.png  used on input line 500.
+(pdftex.def)             Requested size: 91.32pt x 23.1352pt.
+
+Overfull \hbox (505.12177pt too wide) has occurred while \output is active
+[]
+ []
+
+
+Overfull \hbox (505.12177pt too wide) has occurred while \output is active
+[]
+ []
+
+
+Underfull \hbox (badness 10000) has occurred while \output is active
+[]
+ []
+
+[5]
+Overfull \hbox (16.70755pt too wide) in paragraph at lines 508--515
+[]$
+ []
+
+
+Underfull \hbox (badness 3780) in paragraph at lines 542--549
+[]\T1/times/m/sc/10 Because repli-ca-tion is re-quired for sci-en-tific
+ []
+
+
+LaTeX Warning: Citation `b1' on page 6 undefined on input line 560.
+
+
+LaTeX Warning: Citation `b2' on page 6 undefined on input line 560.
+
+
+LaTeX Warning: Citation `b3' on page 6 undefined on input line 564.
+
+
+LaTeX Warning: Citation `b5' on page 6 undefined on input line 564.
+
+
+LaTeX Warning: Citation `b6' on page 6 undefined on input line 568.
+
+
+LaTeX Warning: Citation `b7' on page 6 undefined on input line 568.
+
+
+LaTeX Warning: Citation `b8' on page 6 undefined on input line 572.
+
+
+LaTeX Warning: Citation `b9' on page 6 undefined on input line 572.
+
+
+LaTeX Warning: Citation `b10' on page 6 undefined on input line 579.
+
+
+LaTeX Warning: Citation `b13' on page 6 undefined on input line 579.
+
+
+LaTeX Warning: Citation `b14' on page 6 undefined on input line 583.
+
+
+LaTeX Warning: Citation `b16' on page 6 undefined on input line 583.
+
+File: notaglinelogo.png Graphic file (type png)
+<use notaglinelogo.png>
+Package pdftex.def Info: notaglinelogo.png  used on input line 584.
+(pdftex.def)             Requested size: 91.32pt x 23.1352pt.
+
+LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
+(Font)              using `T1/formata/m/it' instead on input line 584.
+
+
+Overfull \hbox (505.12177pt too wide) has occurred while \output is active
+[]
+ []
+
+
+Overfull \hbox (505.12177pt too wide) has occurred while \output is active
+[]
+ []
+
+
+Underfull \hbox (badness 10000) has occurred while \output is active
+[]
+ []
+
+[6]
+
+LaTeX Warning: Citation `b17' on page 7 undefined on input line 587.
+
+
+LaTeX Warning: Citation `b18' on page 7 undefined on input line 591.
+
+
+LaTeX Warning: Citation `b19' on page 7 undefined on input line 591.
+
+
+LaTeX Warning: Citation `b20' on page 7 undefined on input line 595.
+
+
+LaTeX Warning: Citation `b21' on page 7 undefined on input line 599.
+
+
+LaTeX Warning: Citation `b22' on page 7 undefined on input line 603.
+
+
+LaTeX Warning: Citation `b23' on page 7 undefined on input line 606.
+
+
+LaTeX Warning: Citation `b24' on page 7 undefined on input line 610.
+
+
+LaTeX Warning: Citation `b25' on page 7 undefined on input line 617.
+
+
+LaTeX Warning: Citation `b26' on page 7 undefined on input line 617.
+
+
+LaTeX Warning: Citation `b27' on page 7 undefined on input line 625.
+
+
+LaTeX Warning: Citation `b29' on page 7 undefined on input line 625.
+
+
+LaTeX Warning: Citation `b30' on page 7 undefined on input line 632.
+
+
+LaTeX Warning: Citation `b31' on page 7 undefined on input line 632.
+
+
+LaTeX Warning: Citation `b32' on page 7 undefined on input line 635.
+
+
+LaTeX Warning: Citation `b33' on page 7 undefined on input line 635.
+
+
+LaTeX Warning: Citation `b34' on page 7 undefined on input line 638.
+
+LaTeX Font Info:    Calculating math sizes for size <7.61> on input line 654.
+
+Underfull \hbox (badness 10000) in paragraph at lines 678--681
+[]\T1/times/n/it/8 The Founders' Con-sti-tu-tion, Philip B. Kur-land
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 678--681
+\T1/times/n/it/8 and Ralph Lerner, eds., Chicago, IL, USA:
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 678--681
+\T1/times/n/it/8 Univ. Chicago Press, 1987. [On-line]. Avail-able:
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 682--685
+[]\T1/times/n/it/8 The Ter-a-hertz Wave eBook. ZOmega Ter-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 682--685
+\T1/times/n/it/8 a-hertz Corp., 2014. [On-line]. Avail-able:
+ []
+
+
+Overfull \hbox (7.75401pt too wide) in paragraph at lines 682--685
+[]$\T1/times/n/it/8 .
+ []
+
+
+Underfull \hbox (badness 2828) in paragraph at lines 686--690
+\T1/times/n/it/8 1987, Ac-cessed on: Feb. 28, 2010, [On-line] Avail-able:
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 695--696
+[]\T1/times/n/it/8 P. Kopyt et al., ``Elec-tric prop-er-ties of graphene-
+ []
+
+
+Underfull \hbox (badness 7981) in paragraph at lines 695--696
+\T1/times/n/it/8 based con-duc-tive lay-ers from DC up to ter-a-hertz
+ []
+
+
+LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
+(Font)              using `T1/formata/m/it' instead on input line 701.
+
+File: notaglinelogo.png Graphic file (type png)
+<use notaglinelogo.png>
+Package pdftex.def Info: notaglinelogo.png  used on input line 701.
+(pdftex.def)             Requested size: 91.32pt x 23.1352pt.
+
+Overfull \hbox (505.12177pt too wide) has occurred while \output is active
+[]
+ []
+
+
+Overfull \hbox (505.12177pt too wide) has occurred while \output is active
+[]
+ []
+
+
+Underfull \hbox (badness 10000) has occurred while \output is active
+[]
+ []
+
+[7]
+Underfull \hbox (badness 1436) in paragraph at lines 702--703
+[]\T1/times/m/n/8 R. J. Hi-j-mans and J. van Et-ten, ``Raster: Ge-o-graphic
+ []
+
+
+Underfull \hbox (badness 7012) in paragraph at lines 702--703
+\T1/times/m/n/8 anal-y-sis and mod-el-ing with raster data,'' R Pack-
+ []
+
+
+Underfull \hbox (badness 2005) in paragraph at lines 702--703
+\T1/times/m/n/8 age Ver-sion 2.0-12, Jan. 12, 2012. [On-line]. Avail-able:
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 704--707
+[]\T1/times/m/n/8 Teralyzer. Lytera UG, Kirch-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 704--707
+\T1/times/m/n/8 hain, Ger-many [On-line]. Avail-able:
+ []
+
+
+Overfull \hbox (28.89746pt too wide) in paragraph at lines 704--707
+[]$\T1/times/m/n/8 ,
+ []
+
+<author1.png, id=55, 225.84375pt x 282.30469pt>
+File: author1.png Graphic file (type png)
+<use author1.png>
+Package pdftex.def Info: author1.png  used on input line 740.
+(pdftex.def)             Requested size: 72.27147pt x 90.33934pt.
+File: author1.png Graphic file (type png)
+<use author1.png>
+Package pdftex.def Info: author1.png  used on input line 740.
+(pdftex.def)             Requested size: 72.27147pt x 90.33934pt.
+<author2.png, id=59, 225.84375pt x 282.30469pt>
+File: author2.png Graphic file (type png)
+<use author2.png>
+Package pdftex.def Info: author2.png  used on input line 760.
+(pdftex.def)             Requested size: 72.27147pt x 90.33934pt.
+File: author2.png Graphic file (type png)
+<use author2.png>
+Package pdftex.def Info: author2.png  used on input line 760.
+(pdftex.def)             Requested size: 72.27147pt x 90.33934pt.
+
+Underfull \hbox (badness 2050) in paragraph at lines 760--786
+[]\T1/formata/m/n/8 SECOND B. AU-THOR \T1/times/m/n/8 (M'76--SM'81--F'87)
+ []
+
+
+Underfull \hbox (badness 3098) in paragraph at lines 760--786
+\T1/times/m/n/8 Bi-ogra-phies are of-ten not in-cluded in
+ []
+
+File: notaglinelogo.png Graphic file (type png)
+<use notaglinelogo.png>
+Package pdftex.def Info: notaglinelogo.png  used on input line 790.
+(pdftex.def)             Requested size: 91.32pt x 23.1352pt.
+
+LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
+(Font)              using `T1/formata/m/it' instead on input line 790.
+
+
+Overfull \hbox (505.12177pt too wide) has occurred while \output is active
+[]
+ []
+
+
+Overfull \hbox (505.12177pt too wide) has occurred while \output is active
+[]
+ []
+
+
+Underfull \hbox (badness 10000) has occurred while \output is active
+[]
+ []
+
+[8 <V:/WMSx1/template_latex/ACCESS_newFormata_frDCLdec16/access/author1.png> <V
+:/WMSx1/template_latex/ACCESS_newFormata_frDCLdec16/access/author2.png>]
+<author3.png, id=69, 225.84375pt x 282.30469pt>
+File: author3.png Graphic file (type png)
+<use author3.png>
+Package pdftex.def Info: author3.png  used on input line 790.
+(pdftex.def)             Requested size: 72.27147pt x 90.33934pt.
+File: author3.png Graphic file (type png)
+<use author3.png>
+Package pdftex.def Info: author3.png  used on input line 790.
+(pdftex.def)             Requested size: 72.27147pt x 90.33934pt.
+File: bullet.png Graphic file (type png)
+<use bullet.png>
+Package pdftex.def Info: bullet.png  used on input line 809.
+(pdftex.def)             Requested size: 4.99878pt x 14.68387pt.
+
+
+LaTeX Font Warning: Font shape `T1/formata/m/sl' undefined
+(Font)              using `T1/formata/m/it' instead on input line 811.
+
+File: notaglinelogo.png Graphic file (type png)
+<use notaglinelogo.png>
+Package pdftex.def Info: notaglinelogo.png  used on input line 811.
+(pdftex.def)             Requested size: 91.32pt x 23.1352pt.
+
+Overfull \hbox (505.12177pt too wide) has occurred while \output is active
+[]
+ []
+
+
+Overfull \hbox (505.12177pt too wide) has occurred while \output is active
+[]
+ []
+
+
+Underfull \hbox (badness 10000) has occurred while \output is active
+[]
+ []
+
+[9
+
+ <V:/WMSx1/template_latex/ACCESS_newFormata_frDCLdec16/access/author3.png>]
+(access.aux)
+
+LaTeX Font Warning: Some font shapes were not available, defaults substituted.
+
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 4336 strings out of 478864
+ 64162 string characters out of 2858517
+ 398113 words of memory out of 3000000
+ 22180 multiletter control sequences out of 15000+600000
+ 463088 words of font info for 153 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 72i,14n,80p,376b,510s stack positions out of 5000i,500n,10000p,200000b,80000s
+ <C:\Users\ctran\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm
+0600.pk>{C:/Program Files/MiKTeX/fonts/enc/dvips/base/8r.enc} <C:\Users\ctran\A
+ppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi1749\ecrm1000.pk> <C:\Users\
+ctran\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1000.pk> <C:\
+Users\ctran\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm0800.pk
+> <C:\Users\ctran\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm0
+700.pk> <C:\Users\ctran\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600
+\ecrm0500.pk><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb
+><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi6.pfb><C:/Program 
+Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Program Files/MiKTeX/
+fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Program Files/MiKTeX/fonts/type1/p
+ublic/amsfonts/cm/cmr10.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfont
+s/cm/cmr6.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb>
+<C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Program Fi
+les/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files/MiKTeX/f
+onts/type1/public/amsfonts/cm/cmsy6.pfb><C:/Program Files/MiKTeX/fonts/type1/pu
+blic/amsfonts/cm/cmsy7.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts
+/cm/cmsy8.pfb><C:/Program Files/MiKTeX/fonts/type1/public/amsfonts/symbols/msam
+10.pfb><V:/WMSx1/template_latex/ACCESS_newFormata_frDCLdec16/access/t1-formata-
+bold.pfb><V:/WMSx1/template_latex/ACCESS_newFormata_frDCLdec16/access/t1-format
+a-condmedium.pfb><V:/WMSx1/template_latex/ACCESS_newFormata_frDCLdec16/access/t
+1-formata-medium.pfb><V:/WMSx1/template_latex/ACCESS_newFormata_frDCLdec16/acce
+ss/t1-formata-mediumitalic.pfb><V:/WMSx1/template_latex/ACCESS_newFormata_frDCL
+dec16/access/t1-formata-regular.pfb><C:/Program Files/MiKTeX/fonts/type1/urw/co
+urier/ucrr8a.pfb>
+Output written on access.pdf (9 pages, 640169 bytes).
+PDF statistics:
+ 403 PDF objects out of 1000 (max. 8388607)
+ 0 named destinations out of 1000 (max. 500000)
+ 80 words of extra memory for PDF output out of 10000 (max. 10000000)
+
