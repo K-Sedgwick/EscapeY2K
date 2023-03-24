@@ -73,28 +73,29 @@
 \end{IEEEkeywords}
 
 \section{Introduction}
-Escape rooms are a fun and engaging way to promote critical thinking and puzzle solving for children and adults 
-alike. In most established escape rooms, there is a level of behind the scenes interaction with a room operator, 
-triggering events and unlocking clues as the players progress. This usually works quite well and allows for some 
-additional variability if the operator is given some creative freedom with how they run the escape room. However, 
-it also has an inherited limitation with requiring an operator for the room to function. For our capstone senior 
-project, we will create an autonomous escape room experience with multiple puzzles and random clue selection to 
+Escape rooms are a fun and engaging way to promote critical thinking and puzzle solving for children and adults
+alike. In most established escape rooms, there is a level of behind the scenes interaction with a room operator,
+triggering events and unlocking clues as the players progress. This usually works quite well and allows for some
+additional variability if the operator is given some creative freedom with how they run the escape room. However,
+it also has an inherited limitation with requiring an operator for the room to function. For our capstone senior
+project, we will create an autonomous escape room experience with multiple puzzles and random clue selection to
 operate with some level of variance without the requirement of an external human operator.
 \\
-\indent In general, innovation in the escape room industry is minimal; if you’ve been to one or two you’ve seen how 
-pretty much any of them are going to work. The level of difficulty from room to room may vary, and some of the 
-puzzles could be interesting, but there haven’t been any groundbreaking changes made to the scene since its inception. 
-Our goal is to create a system and design philosophy that will allow for a more streamlined and easily modifiable 
-design process for making more complex and dynamic escape rooms. We will accomplish this with custom analog and digital 
-systems, as well as a variable program to be executed on a central microcontroller to drive the escape room's 
+\indent In general, innovation in the escape room industry is minimal; if you've been to one or two you've seen how
+pretty much any of them are going to work. The level of difficulty from room to room may vary, and some of the
+puzzles could be interesting, but there haven't been any groundbreaking changes made to the scene since its inception.
+Our goal is to create a system and design philosophy that will allow for a more streamlined and easily modifiable
+design process for making more complex and dynamic escape rooms. We will accomplish this with custom analog and digital
+systems, as well as a variable program to be executed on a central microcontroller to drive the escape room's
 interactive elements.
 \\
-\indent The theming of Escape Y2K is an time-traveling analog horror experience. The story and aesthetics of the room 
-will be inspired by the public panic spurred from the unknown consequences to possibly occur as digital system 
-clocks update their year count to '00', and the ambiguity between it's interpretation as '2000' (Y2K) or '1900'. 
-The room will incorporate 'time-traveling' elements to play into this ambiguity and assume that a total system 
+\indent The theming of Escape Y2K is an time-traveling analog horror experience. The story and aesthetics of the room
+will be inspired by the public panic spurred from the unknown consequences to possibly occur as digital system
+clocks update their year count to '00', and the ambiguity between it's interpretation as '2000' (Y2K) or '1900'.
+The room will incorporate 'time-traveling' elements to play into this ambiguity and assume that a total system
 failure would happen in all digital systems when the game clock strikes 12:00 AM on the turn of the century.
 \\
+
 
 \section{Our Vision}
 Our vision for this project is to take a unique spin on the formula that is most commonly used in escape rooms.
@@ -110,13 +111,27 @@ these puzzles are more traditional, such as solving a cypher or figuring out a c
 while others make the players think a little bit deeper. Many of these puzzles are on the simple size in
 an attempt to have a good balance of fun and difficulty. And, many of these rooms attempt to fit their
 puzzles within a certain theme, such as escaping from an Egyptian tomb or trying to escape from the zombie
-apcalypse.
-\\
-\indent There are a variety of escape rooms all throughout Utah and in other parts of the US as well.
+apcalypse \cite{wikipediaEscapeRoom}.
+
+\subsection*{History of Escape Rooms}
+There are a variety of escape rooms all throughout Utah and in other parts of the world as well. The phenomenon
+started between 1981 and 1984 with the introduction of TV game shows "The Adventure Game", "The Crystal Maze",
+"Fort Boyard", and "Knightmare" \cite{wikipediaEscapeRoom}. Other mediums, such as escape the room video games, were also gaining traction
+during these years and after, and in 2003 the first prototype escape room was showcased at GenCon Indy by
+an individual named Jeff Martin. 2007, however, was the first year when escape rooms really began to pick up speed
+with the creation of Real Escape Game by Takao Kato in Kyoto, Japan \cite{whatIsAnEscapeRoom}. The first commercially available escape rooms
+began to show up in the United States around the years 2012-2014, and as of November 2019 there are over 50,000 escape
+rooms worldwide \cite{wikipediaEscapeRoom}.
 
 \subsection*{Our motive behind the project}
 This section will detail our inspiration and goals with this capstone project
 in more detail with further revisions of this document.
+
+\subsection*{How players will know what to do}
+Many escape rooms use a type of "Mission Video" to explain what is going to happen in the escape room \cite{whatIsAnEscapeRoom}.
+For our escape room, we are going to use a tape player that gives the people in the room information about
+the story and why they are in the room in the first place. This tape player will also have other uses, which are
+explained in more detail in the section about all of the puzzles in the escape room.
 
 
 \section{What makes our escape room unique?}
@@ -130,6 +145,15 @@ In life, horror is an incredibly good motivator. Imagine you are being hunted by
 destroy the world and the only way to escape is so solve a collection of puzzles; you would gladly partipate!
 In our escape room, this exact situation is something that we will be utilizing to push players to solve the puzzles
 as fast as possible.
+
+\subsubsection*{The Monster}
+All horror experiences begin with a mysterious and dangerous monster that is on the hunt. Our room will feature such a monster
+that will come out when spesific events are triggered or when the player clock reaches a certain time.
+
+\subsubsection*{CRT TVs}
+This section will talk about what we plan on doing with the CRT TVs and how the players will interact with them. Also how The
+monster will affect the world through the TVs.
+
 
 \section{Puzzles in our Escape Room}
 This section contains a list of all of the puzzles that our escape room will feature, as well as
@@ -154,25 +178,33 @@ catastrophic end of the world due to Y2K.
 A small bust of a statue's head will be attached on a disc and situated
 on a podium. This bust can be rotated physically, which will rotate the
 disc under it as well. On the podium is a small hole that may contain a key
-or chess piece. The disc will also have an indent on it. When the players 
+or chess piece. The disc will also have an indent on it. When the players
 rotate the bust, if the disc is rotated so that the indent is overlapping
 with the hole on the podium, the players are able to retrieve the key
 or chess piece. As a bonus, the direction the bust is facing will be either
 the lock the key unlocks or a clue as to where the chess piece goes.
 
-\subsection{Puzzle 3}
-
 \subsection{Tape Player}
-An audio cassette player will be centered in the room, with one tape nearby 
-to be played as players first enter the room. The general function of the tape 
-player will be to both give the players story elements and instructions on 
-puzzles as they play, as well as be used to play clues or hints to the active 
-puzzle that the players are working on. Beyond these basic functions of the 
-cassette player, we will run wires from our microcontroller and digital audio 
-player into the built-in speaker of the cassette player to inject noises or music 
-files while the cassette player is not actively in use, or no tape is even in the 
-deck. This will add to the horror experience, and emulate rouge transmissions 
+An audio cassette player will be centered in the room, with one tape nearby
+to be played as players first enter the room. The general function of the tape
+player will be to both give the players story elements and instructions on
+puzzles as they play, as well as be used to play clues or hints to the active
+puzzle that the players are working on. Beyond these basic functions of the
+cassette player, we will run wires from our microcontroller and digital audio
+player into the built-in speaker of the cassette player to inject noises or music
+files while the cassette player is not actively in use, or no tape is even in the
+deck. This will add to the horror experience, and emulate rouge transmissions
 being received over the duration of the escape experience.
+
+\subsection{Puzzle 4}
+
+\subsection{Puzzle 5}
+
+\subsection{All other puzzles...}
+This subsection won't actually include the details for every other puzzle that we plan on including
+in the escape room. Instead, this is just a placeholder for all of the other sections that we are
+going to write once we figure out what types of puzzles we want players to solve and the solution
+to those puzzles.
 
 \section{Materials Needed}
 This section will detail all of the materials that we are using to build this escape room and how they fit in with the project.
@@ -187,7 +219,7 @@ Sensors that we will be using will be outlined here. A brief, bulleted list of c
 - MP3 digital audio controller\\
 - Motors (To act as lock releases)\\
 - Solenoids\\
-- Wireless communicaion modules\\ 
+- Wireless communicaion modules\\
 - Storage containers\\
 - Busts with detachable modules\\
 - Turntable podium\\
@@ -212,7 +244,7 @@ as a whole to make sure that players are able to complete it. It may also
 be necessary to bring in people unfamiliar with the game to try it out
 themselves, that way feedback can be given of whether certain puzzles
 need to be harder or easier. For the stretch goal, each possible combination
-of puzzles would have to be tested to make sure there are no dead end routes. 
+of puzzles would have to be tested to make sure there are no dead end routes.
 
 \section{Demo}
 The demo planned for this proposal is the clock that will be integral to
@@ -232,6 +264,15 @@ help towards scripting certain events in the escape room.
 
 \section{Conclusion}
 Conclusion
+
+\begin{thebibliography}{00}
+
+    \bibitem{wikipediaEscapeRoom} “Escape room,” Wikipedia, 10-Feb-2023. [Online]. Available: \url{https://en.wikipedia.org/wiki/Escape_room}. [Accessed: 24-Mar-2023].
+    \bibitem{whatIsAnEscapeRoom} A. Ascalon, “Escape rooms: Everything you need to know (2022),” Escape Rooms | Everything You Need To Know (2022), 01-Dec-2022. [Online]. Available:  \url{https://theescapegame.com/blog/what-is-an-escape-room/}. [Accessed: 24-Mar-2023].
+
+\end{thebibliography}
+
+
 
 
 \end{document}
