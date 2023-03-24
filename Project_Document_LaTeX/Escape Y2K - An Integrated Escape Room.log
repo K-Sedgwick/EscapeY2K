@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 23.1) (preloaded format=pdflatex 2023.3.23)  24 MAR 2023 17:03
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 23.1) (preloaded format=pdflatex 2023.3.23)  24 MAR 2023 17:18
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -309,22 +309,22 @@ Underfull \hbox (badness 10000) in paragraph at lines 76--98
 
 
 ] [2]
-Underfull \hbox (badness 10000) in paragraph at lines 219--235
+Underfull \hbox (badness 10000) in paragraph at lines 226--242
 
  []
 
 <Images/big-clock.jpg, id=12, 2276.505pt x 2198.2125pt>
 File: Images/big-clock.jpg Graphic file (type jpg)
 <use Images/big-clock.jpg>
-Package pdftex.def Info: Images/big-clock.jpg  used on input line 244.
+Package pdftex.def Info: Images/big-clock.jpg  used on input line 251.
 (pdftex.def)             Requested size: 214.20154pt x 206.81984pt.
 [3 <./Images/big-clock.jpg>]
-Underfull \hbox (badness 7504) in paragraph at lines 292--293
+Underfull \hbox (badness 7504) in paragraph at lines 299--300
 []\OT1/ptm/m/n/8 A. Ascalon, \Es-cape rooms: Ev-ery-thing you need to know
  []
 
 
-Underfull \hbox (badness 6493) in paragraph at lines 292--293
+Underfull \hbox (badness 6493) in paragraph at lines 299--300
 \OT1/ptm/m/n/8 01-Dec-2022. [On-line]. Avail-able: $https : / / theescapegame . com / blog /
  []
 
@@ -351,7 +351,7 @@ Here is how much of TeX's memory you used:
  1141 hyphenation exceptions out of 8191
  57i,11n,62p,427b,343s stack positions out of 10000i,1000n,20000p,200000b,200000s
 {C:/Users/jake.bales/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc}<C:/Users/jake.bales/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmb8a.pfb><C:/Users/jake.bales/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmbi8a.pfb><C:/Users/jake.bales/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmr8a.pfb><C:/Users/jake.bales/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmri8a.pfb>
-Output written on "Escape Y2K - An Integrated Escape Room.pdf" (4 pages, 2126441 bytes).
+Output written on "Escape Y2K - An Integrated Escape Room.pdf" (4 pages, 2126846 bytes).
 PDF statistics:
  37 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
