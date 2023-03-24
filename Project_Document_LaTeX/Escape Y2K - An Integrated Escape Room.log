@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 23.1) (preloaded format=pdflatex 2023.3.23)  23 MAR 2023 15:32
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 23.1) (preloaded format=pdflatex 2023.3.23)  23 MAR 2023 21:53
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -296,20 +296,12 @@ LaTeX Font Info:    Trying to load font information for U+msb on input line 38.
  (C:\Users\jake.bales\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-Underfull \hbox (badness 1655) in paragraph at lines 40--66
-\OT1/ptm/b/n/9 im-mer-sive, sci-fi, hor-ror ex-pe-ri-ence. A va-ri-ety of sen-sors
- []
+Underfull \vbox (badness 1910) has occurred while \output is active []
+
+ [1{C:/Users/jake.bales/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 40--66
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 40--66
-
- []
-
+]
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -321,22 +313,21 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[1{C:/Users/jake.bales/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}
-
+[2
 
 ] (Escape Y2K - An Integrated Escape Room.aux) ) 
 Here is how much of TeX's memory you used:
  4440 strings out of 476334
  71936 string characters out of 5785611
- 1866382 words of memory out of 5000000
+ 1868382 words of memory out of 5000000
  24827 multiletter control sequences out of 15000+600000
  546986 words of font info for 97 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  57i,11n,62p,348b,333s stack positions out of 10000i,1000n,20000p,200000b,200000s
 {C:/Users/jake.bales/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc}<C:/Users/jake.bales/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmb8a.pfb><C:/Users/jake.bales/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmbi8a.pfb><C:/Users/jake.bales/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmr8a.pfb><C:/Users/jake.bales/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmri8a.pfb>
-Output written on "Escape Y2K - An Integrated Escape Room.pdf" (1 page, 63948 bytes).
+Output written on "Escape Y2K - An Integrated Escape Room.pdf" (2 pages, 67665 bytes).
 PDF statistics:
- 27 PDF objects out of 1000 (max. 8388607)
+ 30 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
