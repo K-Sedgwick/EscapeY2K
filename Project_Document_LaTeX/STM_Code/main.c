@@ -58,21 +58,21 @@ int backButtonPressed = 0;
 void configureLEDS()
 {
     // CONFIGURE MODER
-    // Set bit 12, 14, 16, and 18 (6 IS FOR PC3, THE SLEEP FOR THE MOTOR DRIVER)
+    // Set bit 12, 14, 16, and 18
     GPIOC->MODER |= ((1 << 12) | (1 << 14) | (1 << 16) | (1 << 18));
-    // Clear bit 13, 15, 17, and 19 (7 IS FOR PC3, THE SLEEP FOR THE MOTOR DRIVER)
-    GPIOC->MODER &= ((1 << 13) | (1 << 15) | (1 << 17) | (1 << 19));
+    // Clear bit 13, 15, 17, and 19
+    GPIOC->MODER &= ~((1 << 13) | (1 << 15) | (1 << 17) | (1 << 19));
 
     // CONFIGURE OTYPE
-    // Clear bits 6, 7, 8, and 9 (3 is for motor driver sleep)
+    // Clear bits 6, 7, 8, and 9
     GPIOC->OTYPER &= ~((1 << 6) | (1 << 7) | (1 << 8) | (1 << 9));
 
     // CONFIGURE OSPEEDR
-    // Clear bits 12, 14, 16, and 18 (the others dont matter) (6 and 7 are for motor driver sleep)
+    // Clear bits 12, 14, 16, and 18 (the others dont matter)
     GPIOC->OSPEEDR &= ~((1 << 12) | (1 << 14) | (1 << 16) | (1 << 18));
 
     // CONFIGURE PUPDR
-    // Clear bits 12, 13, 14, 15, 16, 17, 18, and 19 (6 and 7 are for motor driver sleep)
+    // Clear bits 12, 13, 14, 15, 16, 17, 18, and 19
     GPIOC->PUPDR &= ~((1 << 12) | (1 << 13) | (1 << 14) | (1 << 15) | (1 << 16) | (1 << 17) | (1 << 18) | (1 << 19));
 }
 
@@ -109,6 +109,7 @@ int main(void)
 
     RCC->AHBENR |= RCC_AHBENR_GPIOCEN;        // Configure the clock for the GPIOC pin
     RCC->AHBENR |= RCC_AHBENR_GPIOAEN;        // Configure the clock for the GPIOA pin
+    RCC->AHBENR |= RCC_AHBENR_GPIOBEN;        // Configure the clock for the GPIOA pin
     RCC->APB2ENR |= RCC_APB2ENR_SYSCFGCOMPEN; // Enable peripheral clock for the SYSCFG peripheral
 
     // USER BUTTON SECTION
@@ -125,30 +126,28 @@ int main(void)
     // Clear bit 0
     GPIOA->PUPDR &= ~(1 << 0);
 
+    // CONFIGURE MODER
+    // Clear bits 0 and 1
+    GPIOA->MODER &= ~((1 << 0) | (1 << 1));
+    // CONFIGURE OSPEEDR
+    // Clear bit 0
+    GPIOA->OSPEEDR &= ~(1 << 0);
+
+    // CONFIGURE PUPDR
+    // Set bit 1
+    GPIOA->PUPDR |= (1 << 1);
+    // Clear bit 0
+    GPIOA->PUPDR &= ~(1 << 0);
+
     // END USER BUTTON SECTION
 
     // LED SECTION
-    // CONFIGURE MODER
-    // Set bit 12, 14, 16, and 18
-    GPIOC->MODER |= ((1 << 12) | (1 << 14) | (1 << 16) | (1 << 18));
-    // Clear bit 13, 15, 17, and 19
-    GPIOC->MODER &= ~((1 << 13) | (1 << 15) | (1 << 17) | (1 << 19));
 
-    // CONFIGURE OTYPE
-    // Clear bits 6, 7, 8, and 9
-    GPIOC->OTYPER &= ~((1 << 6) | (1 << 7) | (1 << 8) | (1 << 9));
-
-    // CONFIGURE OSPEEDR
-    // Clear bits 12, 14, 16, and 18 (the others dont matter)
-    GPIOC->OSPEEDR &= ~((1 << 12) | (1 << 14) | (1 << 16) | (1 << 18));
-
-    // CONFIGURE PUPDR
-    // Clear bits 12, 13, 14, 15, 16, 17, 18, and 19
-    GPIOC->PUPDR &= ~((1 << 12) | (1 << 13) | (1 << 14) | (1 << 15) | (1 << 16) | (1 << 17) | (1 << 18) | (1 << 19));
+    configureLEDS();
 
     // END LED SECTION
 
-    // EXTI SECTION
+    // Button 1
     // Falling edge of button
     EXTI->IMR |= EXTI_IMR_IM0;
     EXTI->RTSR |= EXTI_RTSR_RT0;
@@ -156,20 +155,30 @@ int main(void)
 
     // Rising edge of button
     EXTI->FTSR |= EXTI_FTSR_FT0;
-    SYSCFG->EXTICR[1] |= SYSCFG_EXTICR1_EXTI0_PA;
     NVIC_SetPriority(EXTI0_1_IRQn, 3);
     NVIC_EnableIRQ(EXTI0_1_IRQn);
+
+    // Button 2
+    // Falling edge of button
+    EXTI->IMR |= EXTI_IMR_IM2;
+    EXTI->RTSR |= EXTI_RTSR_RT2;
+    SYSCFG->EXTICR[0] |= (1 << 8);
+
+    // Rising edge of button
+    EXTI->FTSR |= EXTI_FTSR_FT2;
+    NVIC_SetPriority(EXTI2_3_IRQn, 2);
+    NVIC_EnableIRQ(EXTI2_3_IRQn);
 
     // END EXTI SECTION
     while (1)
     {
-        HAL_Delay(800);
-        if (!backButtonPressed)
-        {
-            prendeLED(GPIO_PIN_6);
-            HAL_Delay(200);
-            apagaLED(GPIO_PIN_6);
-        }
+        // HAL_Delay(800);
+        // if (!backButtonPressed)
+        //{
+        // prendeLED(GPIO_PIN_6);
+        // HAL_Delay(200);
+        // apagaLED(GPIO_PIN_6);
+        //}
     }
 }
 
@@ -181,12 +190,29 @@ int main(void)
 void EXTI0_1_IRQHandler()
 {
     // Let the Clock Tick function know the state of the button
-    backButtonPressed = !backButtonPressed;
+    // backButtonPressed = !backButtonPressed;
     // Toggle the blue LED and turn the red LED off
-    toggleLED(GPIO_PIN_7);
-    apagaLED(GPIO_PIN_6);
+    // toggleLED(GPIO_PIN_7);
+    // apagaLED(GPIO_PIN_6);
+    toggleLED(GPIO_PIN_9);
     // Clear the flag
-    EXTI->PR &= ~(0 << 0);
+    EXTI->PR |= 1;
+}
+
+/*
+ * This function runs every time the USER button is pressesd or released!
+ * The code that exists inside is multi-functional, and changes state back and forth
+ *  between two states (the button being pressed and the button being released).
+ */
+void EXTI2_3_IRQHandler()
+{
+    // Let the Clock Tick function know the state of the button
+    // backButtonPressed = !backButtonPressed;
+    // Toggle the blue LED and turn the red LED off
+    toggleLED(GPIO_PIN_8);
+    // apagaLED(GPIO_PIN_6);
+    //  Clear the flag
+    EXTI->PR |= (1 << 2);
 }
 
 /**
