@@ -91,7 +91,7 @@ void configureTimers()
 	
 	// Get TIM3 to 5 Hz
 	TIM3->PSC = 7999;
-	TIM3->ARR = 200;
+	TIM3->ARR = 20;
 	
 	// Enable update interrupts
 	TIM2->DIER |= TIM_DIER_UIE;
@@ -206,7 +206,7 @@ int main(void)
 
     // Falling edge of button
     EXTI->FTSR |= EXTI_FTSR_FT4;
-    NVIC_SetPriority(EXTI4_15_IRQn, 2);
+    NVIC_SetPriority(EXTI4_15_IRQn, 1);
     NVIC_EnableIRQ(EXTI4_15_IRQn);
 
     // END EXTI SECTION
