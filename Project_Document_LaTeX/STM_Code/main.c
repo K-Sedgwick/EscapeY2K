@@ -188,23 +188,23 @@ int main(void)
 		// END TIMER SECTION
 
     // Button 1
-    // Falling edge of button
+    // Rising edge of button
     EXTI->IMR |= EXTI_IMR_IM0;
     EXTI->RTSR |= EXTI_RTSR_RT0;
     SYSCFG->EXTICR[0] |= SYSCFG_EXTICR1_EXTI0_PA;
 
-    // Rising edge of button
+    // Falling edge of button
     EXTI->FTSR |= EXTI_FTSR_FT0;
     NVIC_SetPriority(EXTI0_1_IRQn, 2);
     NVIC_EnableIRQ(EXTI0_1_IRQn);
 
     // Button 2
-    // Falling edge of button
+    // Rising edge of button
     EXTI->IMR |= EXTI_IMR_IM4;
     EXTI->RTSR |= EXTI_RTSR_RT4;
-    //SYSCFG->EXTICR[0] |= (1 << 8);
+    SYSCFG->EXTICR[1] |= SYSCFG_EXTICR2_EXTI4_PA;
 
-    // Rising edge of button
+    // Falling edge of button
     EXTI->FTSR |= EXTI_FTSR_FT4;
     NVIC_SetPriority(EXTI4_15_IRQn, 2);
     NVIC_EnableIRQ(EXTI4_15_IRQn);
@@ -243,15 +243,13 @@ void EXTI4_15_IRQHandler()
 {
 		TIM2->CNT = 0;
     // Toggle the orange LED
-		if (forwardRising) {
+		if (GPIOA->IDR & GPIO_IDR_4) {
 			prendeLED(GPIO_PIN_6);
 			prendeLED(GPIO_PIN_8);
-			forwardRising = 0;
 		}
 		else {
 			apagaLED(GPIO_PIN_6);
 			apagaLED(GPIO_PIN_8);
-			forwardRising = 1;
 		}
     
     //  Clear the flag
