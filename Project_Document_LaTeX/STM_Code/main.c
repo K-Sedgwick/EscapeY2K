@@ -52,7 +52,7 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-int backButtonPressed = 0;
+volatile int forwardRising = 1;
 
 // This is a helper method to enable all of the LEDS on GPIOC.
 void configureLEDS()
@@ -96,6 +96,12 @@ void prendeLED(int pin)
     GPIOC->BSRR = (uint32_t)pin;
 }
 
+// Returns state of LED
+int checkLED(int pin)
+{
+		return GPIOC->ODR & pin;
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -128,16 +134,16 @@ int main(void)
 
     // CONFIGURE MODER
     // Clear bits 0 and 1
-    GPIOA->MODER &= ~((1 << 0) | (1 << 1));
+    GPIOA->MODER &= ~((1 << 8) | (1 << 9));
     // CONFIGURE OSPEEDR
     // Clear bit 0
-    GPIOA->OSPEEDR &= ~(1 << 0);
+    GPIOA->OSPEEDR &= ~(1 << 8);
 
     // CONFIGURE PUPDR
     // Set bit 1
-    GPIOA->PUPDR |= (1 << 1);
+    GPIOA->PUPDR |= (1 << 9);
     // Clear bit 0
-    GPIOA->PUPDR &= ~(1 << 0);
+    GPIOA->PUPDR &= ~(1 << 8);
 
     // END USER BUTTON SECTION
 
@@ -160,25 +166,25 @@ int main(void)
 
     // Button 2
     // Falling edge of button
-    EXTI->IMR |= EXTI_IMR_IM2;
-    EXTI->RTSR |= EXTI_RTSR_RT2;
-    SYSCFG->EXTICR[0] |= (1 << 8);
+    EXTI->IMR |= EXTI_IMR_IM4;
+    EXTI->RTSR |= EXTI_RTSR_RT4;
+    //SYSCFG->EXTICR[0] |= (1 << 8);
 
     // Rising edge of button
-    EXTI->FTSR |= EXTI_FTSR_FT2;
-    NVIC_SetPriority(EXTI2_3_IRQn, 2);
-    NVIC_EnableIRQ(EXTI2_3_IRQn);
+    EXTI->FTSR |= EXTI_FTSR_FT4;
+    NVIC_SetPriority(EXTI4_15_IRQn, 2);
+    NVIC_EnableIRQ(EXTI4_15_IRQn);
 
     // END EXTI SECTION
     while (1)
     {
-        // HAL_Delay(800);
-        // if (!backButtonPressed)
-        //{
-        // prendeLED(GPIO_PIN_6);
-        // HAL_Delay(200);
-        // apagaLED(GPIO_PIN_6);
-        //}
+        HAL_Delay(800);
+        if (!checkLED(GPIO_PIN_6) && !checkLED(GPIO_PIN_7))
+        {
+					prendeLED(GPIO_PIN_6);
+					HAL_Delay(200);
+					apagaLED(GPIO_PIN_6);
+        }
     }
 }
 
@@ -189,11 +195,9 @@ int main(void)
  */
 void EXTI0_1_IRQHandler()
 {
-    // Let the Clock Tick function know the state of the button
-    // backButtonPressed = !backButtonPressed;
     // Toggle the blue LED and turn the red LED off
-    // toggleLED(GPIO_PIN_7);
-    // apagaLED(GPIO_PIN_6);
+    toggleLED(GPIO_PIN_7);
+    apagaLED(GPIO_PIN_6);
     toggleLED(GPIO_PIN_9);
     // Clear the flag
     EXTI->PR |= 1;
@@ -204,13 +208,20 @@ void EXTI0_1_IRQHandler()
  * The code that exists inside is multi-functional, and changes state back and forth
  *  between two states (the button being pressed and the button being released).
  */
-void EXTI2_3_IRQHandler()
+void EXTI4_15_IRQHandler()
 {
-    // Let the Clock Tick function know the state of the button
-    // backButtonPressed = !backButtonPressed;
-    // Toggle the blue LED and turn the red LED off
-    toggleLED(GPIO_PIN_8);
-    // apagaLED(GPIO_PIN_6);
+    // Toggle the orange LED
+		if (forwardRising) {
+			prendeLED(GPIO_PIN_6);
+			prendeLED(GPIO_PIN_8);
+			forwardRising = 0;
+		}
+		else {
+			apagaLED(GPIO_PIN_6);
+			apagaLED(GPIO_PIN_8);
+			forwardRising = 1;
+		}
+    
     //  Clear the flag
     EXTI->PR |= (1 << 2);
 }
