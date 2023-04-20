@@ -52,7 +52,8 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-volatile int forwardRising = 1;
+int pwmArr = 125;
+int pwmVal = 100;
 
 // This is a helper method to enable all of the LEDS on GPIOC.
 void configureLEDS()
@@ -78,30 +79,64 @@ void configureLEDS()
 
 void configureTimers()
 {
-	// Enable timers
-	RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
-	RCC->APB1ENR |= RCC_APB1ENR_TIM3EN;
-	
-	// Set TIM3 to one-pulse mode
-	TIM3->CR1 |= TIM_CR1_OPM;
-	
-	// Get TIM2 to 1 Hz
-	TIM2->PSC = 7999;
-	TIM2->ARR = 1000;
-	
-	// Get TIM3 to 5 Hz
-	TIM3->PSC = 7999;
-	TIM3->ARR = 200;
-	
-	// Enable update interrupts
-	TIM2->DIER |= TIM_DIER_UIE;
-	TIM3->DIER |= TIM_DIER_UIE;
-	
-	// Enable interrupt handlers
-	NVIC_SetPriority(TIM2_IRQn, 3);
-	NVIC_SetPriority(TIM3_IRQn, 3);
-	NVIC_EnableIRQ(TIM2_IRQn);
-	NVIC_EnableIRQ(TIM3_IRQn);
+    // Enable timers
+    RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
+    RCC->APB1ENR |= RCC_APB1ENR_TIM7EN;
+
+    // Set TIM7 to one-pulse mode
+    TIM7->CR1 |= TIM_CR1_OPM;
+
+    // Get TIM2 to 1 Hz
+    TIM2->PSC = 7999;
+    TIM2->ARR = 1000;
+
+    // Get TIM7 to 5 Hz
+    TIM7->PSC = 7999;
+    TIM7->ARR = 20;
+
+    // Enable update interrupts
+    TIM2->DIER |= TIM_DIER_UIE;
+    TIM7->DIER |= TIM_DIER_UIE;
+
+    // Enable interrupt handlers
+    NVIC_SetPriority(TIM2_IRQn, 3);
+    NVIC_SetPriority(TIM7_IRQn, 3);
+    NVIC_EnableIRQ(TIM2_IRQn);
+    NVIC_EnableIRQ(TIM7_IRQn);
+}
+
+void configurePWMTimers()
+{
+    // Enable timers
+    RCC->APB1ENR |= RCC_APB1ENR_TIM3EN;
+
+    TIM3->CCER &= 0;
+
+    // PSC and ARR
+    TIM3->ARR = pwmArr;
+    TIM3->PSC = 79;
+
+    // Enable Capture/Compare Mode Register 1
+    TIM3->CCMR1 &= ~((3 << 8) | 3);
+
+    // Set OC1M to PWM Mode 1 (110, bits 6-4)
+    TIM3->CCMR1 |= (6 << 4);
+
+    // Set OC2M to PWM Mode 1 (110, bits 14-12)
+    TIM3->CCMR1 |= (6 << 12);
+
+    // Enable output compare preload for both parts
+    TIM3->CCMR1 |= ((1 << 11) | (1 << 3));
+
+    // Set output enable bits for channels 1 and 2
+    TIM3->CCER |= ((1 << 0) | (1 << 4));
+
+    // Reset CCRx registers
+    TIM3->CCR1 = 0;
+    TIM3->CCR2 = 0;
+
+    // Enable timer
+    TIM3->CR1 |= TIM_CR1_CEN;
 }
 
 // This method toggles an LED
@@ -127,7 +162,7 @@ void prendeLED(int pin)
 // Returns state of LED
 int checkLED(int pin)
 {
-		return GPIOC->ODR & pin;
+    return GPIOC->ODR & pin;
 }
 
 /* USER CODE END 0 */
@@ -179,13 +214,18 @@ int main(void)
 
     configureLEDS();
 
+    // Need to set PC6 and PC7 to alernate function mode
+    GPIOC->MODER &= ~((3 << 12) | (3 << 14));
+    GPIOC->MODER |= (1 << 13) | (1 << 15);
+
     // END LED SECTION
-		
-		// TIMER SECTION
-		
-		configureTimers();
-		
-		// END TIMER SECTION
+
+    // TIMER SECTION
+
+    configureTimers();
+    configurePWMTimers();
+
+    // END TIMER SECTION
 
     // Button 1
     // Rising edge of button
@@ -206,13 +246,13 @@ int main(void)
 
     // Falling edge of button
     EXTI->FTSR |= EXTI_FTSR_FT4;
-    NVIC_SetPriority(EXTI4_15_IRQn, 2);
+    NVIC_SetPriority(EXTI4_15_IRQn, 1);
     NVIC_EnableIRQ(EXTI4_15_IRQn);
 
     // END EXTI SECTION
-		
-		// Start Clock
-		TIM2->CR1 |= TIM_CR1_CEN;
+
+    // Start Clock
+    TIM2->CR1 |= TIM_CR1_CEN;
     while (1)
     {
     }
@@ -225,11 +265,24 @@ int main(void)
  */
 void EXTI0_1_IRQHandler()
 {
-		TIM2->CNT = 0;
     // Toggle the blue LED and turn the red LED off
-    toggleLED(GPIO_PIN_7);
-    apagaLED(GPIO_PIN_6);
-    toggleLED(GPIO_PIN_9);
+    // toggleLED(GPIO_PIN_7);
+
+    // If we are to be moving forward in time,
+    //  toggle the PWM that controls the blue LED
+    if (GPIOA->IDR & GPIO_IDR_0)
+    {
+        TIM2->CR1 |= TIM_CR1_CEN;
+        TIM3->CCR2 = pwmVal;
+    }
+    // Otherwise, turn off the blue LED
+    else
+    {
+        TIM2->CR1 &= ~TIM_CR1_CEN;
+        TIM3->CCR2 = 0;
+    }
+    // apagaLED(GPIO_PIN_6);
+    TIM3->CCR1 = 0;
     // Clear the flag
     EXTI->PR |= 1;
 }
@@ -241,39 +294,63 @@ void EXTI0_1_IRQHandler()
  */
 void EXTI4_15_IRQHandler()
 {
-		TIM2->CNT = 0;
+    TIM2->CNT = 0;
     // Toggle the orange LED
-		if (GPIOA->IDR & GPIO_IDR_4) {
-			prendeLED(GPIO_PIN_6);
-			prendeLED(GPIO_PIN_8);
-		}
-		else {
-			apagaLED(GPIO_PIN_6);
-			apagaLED(GPIO_PIN_8);
-		}
-    
+    if (GPIOA->IDR & GPIO_IDR_4)
+    {
+        // prendeLED(GPIO_PIN_6);
+        TIM3->CCR1 = pwmVal;
+        prendeLED(GPIO_PIN_8);
+    }
+    else
+    {
+        // apagaLED(GPIO_PIN_6);
+        TIM3->CCR1 = 0;
+        apagaLED(GPIO_PIN_8);
+    }
+
     //  Clear the flag
     EXTI->PR |= (1 << 2);
 }
 
 void TIM2_IRQHandler()
 {
-		// Only tick if clock isn't time traveling
-		if (!checkLED(GPIO_PIN_6) && !checkLED(GPIO_PIN_7)) {
-			prendeLED(GPIO_PIN_6);
-			TIM3->CR1 |= TIM_CR1_CEN;
-		}
-		
-		TIM2->SR &= ~TIM_SR_UIF;
+    // Only tick if clock isn't time traveling
+    /*
+if (!checkLED(GPIO_PIN_6) && !checkLED(GPIO_PIN_7))
+{
+    prendeLED(GPIO_PIN_6);
+    TIM7->CR1 |= TIM_CR1_CEN;
+}
+    */
+
+    if ((TIM3->CCR1 == 0) && (TIM3->CCR2 == 0))
+    {
+        TIM3->CCR1 = pwmArr;
+        TIM7->CR1 = TIM_CR1_CEN;
+    }
+
+    TIM2->SR &= ~TIM_SR_UIF;
 }
 
-void TIM3_IRQHandler()
+void TIM7_IRQHandler()
 {
-		// Stop motor tick after certain amount of time
-		apagaLED(GPIO_PIN_6);
-	
-		TIM3->SR &= ~TIM_SR_UIF;
+    // Stop motor tick after certain amount of time
+    // apagaLED(GPIO_PIN_6);
+    TIM3->CCR1 = 0;
+
+    TIM7->SR &= ~TIM_SR_UIF;
 }
+
+/*
+void TIM15_IRQHandler()
+{
+    // Toggle the LEDS
+    toggleLED(GPIO_PIN_7);
+    // Clear the flag
+    TIM2->SR &= ~(1 << 0);
+}
+*/
 
 /**
  * @brief System Clock Configuration
