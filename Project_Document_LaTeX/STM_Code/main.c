@@ -91,7 +91,7 @@ void configureTimers()
 	
 	// Get TIM3 to 5 Hz
 	TIM3->PSC = 7999;
-	TIM3->ARR = 20;
+	TIM3->ARR = 17;
 	
 	// Enable update interrupts
 	TIM2->DIER |= TIM_DIER_UIE;
