@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 23.1) (preloaded format=pdflatex 2023.3.23)  3 MAY 2023 15:35
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 23.1) (preloaded format=pdflatex 2023.3.23)  3 MAY 2023 16:47
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -312,22 +312,32 @@ Underfull \hbox (badness 10000) in paragraph at lines 76--98
 <Images/pebble charger.jpg, id=12, 573.64313pt x 560.0925pt>
 File: Images/pebble charger.jpg Graphic file (type jpg)
 <use Images/pebble charger.jpg>
-Package pdftex.def Info: Images/pebble charger.jpg  used on input line 221.
-(pdftex.def)             Requested size: 214.20154pt x 209.1368pt.
+Package pdftex.def Info: Images/pebble charger.jpg  used on input line 227.
+(pdftex.def)             Requested size: 189.0pt x 184.53197pt.
  [3 <./Images/pebble charger.jpg>]
-<Images/big-clock.jpg, id=17, 2276.505pt x 2198.2125pt>
+<Images/big-clock.jpg, id=16, 2276.505pt x 2198.2125pt>
 File: Images/big-clock.jpg Graphic file (type jpg)
 <use Images/big-clock.jpg>
-Package pdftex.def Info: Images/big-clock.jpg  used on input line 284.
+Package pdftex.def Info: Images/big-clock.jpg  used on input line 307.
 (pdftex.def)             Requested size: 214.20154pt x 206.81984pt.
  [4 <./Images/big-clock.jpg>]
-Underfull \hbox (badness 7504) in paragraph at lines 381--382
+Underfull \hbox (badness 7504) in paragraph at lines 433--434
 []\OT1/ptm/m/n/8 A. Ascalon, \Es-cape rooms: Ev-ery-thing you need to know
  []
 
 
-Underfull \hbox (badness 6493) in paragraph at lines 381--382
+Underfull \hbox (badness 6493) in paragraph at lines 433--434
 \OT1/ptm/m/n/8 01-Dec-2022. [On-line]. Avail-able: $https : / / theescapegame . com / blog /
+ []
+
+
+Underfull \hbox (badness 7291) in paragraph at lines 435--436
+\OT1/ptm/m/n/8 Tu-to-ri-als Point, 17-Mar-2022. [On-line]. Avail-able: $https : / / www .
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 435--436
+\OT1/ptm/m/n/8 tutorialspoint . com / what-[]are-[]the-[]dierences-[]between-[]zigbee-[]and-[]wi-[]^^L$.
  []
 
 
@@ -341,19 +351,17 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[5
-
-] (Escape Y2K - An Integrated Escape Room.aux) ) 
+[5] (Escape Y2K - An Integrated Escape Room.aux) ) 
 Here is how much of TeX's memory you used:
- 4483 strings out of 476334
- 72648 string characters out of 5785611
+ 4484 strings out of 476334
+ 72662 string characters out of 5785611
  1868382 words of memory out of 5000000
- 24863 multiletter control sequences out of 15000+600000
+ 24864 multiletter control sequences out of 15000+600000
  551380 words of font info for 115 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  57i,11n,62p,427b,343s stack positions out of 10000i,1000n,20000p,200000b,200000s
 {C:/Users/jake.bales/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc}<C:/Users/jake.bales/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/jake.bales/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmb8a.pfb><C:/Users/jake.bales/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmbi8a.pfb><C:/Users/jake.bales/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmr8a.pfb><C:/Users/jake.bales/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmri8a.pfb>
-Output written on "Escape Y2K - An Integrated Escape Room.pdf" (5 pages, 2195044 bytes).
+Output written on "Escape Y2K - An Integrated Escape Room.pdf" (5 pages, 2198899 bytes).
 PDF statistics:
  46 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)

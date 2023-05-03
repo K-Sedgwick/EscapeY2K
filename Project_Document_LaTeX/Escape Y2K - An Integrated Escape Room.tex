@@ -185,8 +185,9 @@ and especially how the room is designed. We have a few ideas for how we want our
 the portability aspect of our room may make intricate decorations difficult. However, we want to make
 our escape room experience as multi-dimensional as possible.
 
+%Kyle, not sure if this is where you wanna put the info about the room layout, but it wouldnt be the worst spot, at least :P
 The above image is an early prototype of the layout of the room. This may be modified in the future,
-depending on space requirements %add more here
+depending on space requirements
 
 
 \section{Puzzles in our Escape Room}
@@ -214,13 +215,30 @@ arranged in the correct format, will open the door that is keeping players in th
 catastrophic end of the world due to Y2K.
 
 We have two ideas for the chess board puzzle. Both ideas are based off the gold contact pins that are used
-to charge a pebble watch (and in other places in electronics as well).
+to charge a pebble watch (and in other places in electronics as well). Basically, the idea
+is to have these golden pins in each (or at least a lot) of the spaces of the chess board, with
+a magnet underneath to help align the chess pieces when placed by the user. Only the pins that are used in
+the solution would be wired up, decreasing the amount of soldering that would be required to make the chess
+board and also leaving all of the other spaces as "dummy" spaces. The image below shows such a
+mechanism, one that would be used for charging a smartwatch.
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.85\columnwidth]{Images/pebble charger.jpg}
+    \includegraphics[width=0.75\columnwidth]{Images/pebble charger.jpg}
     \caption{Depiction of the contact pins that we plan on using for chess piece identification.}
 \end{figure}
+
+For our first idea, we are thinking of imbedding resistors with different values into
+each of the chess pieces. Then, if the chess piece is placed on a space that is wired for the solution,
+the resistor value from that piece would be read and analyzed. If it is the correct value for that space,
+part of the puzzle would unlock. And, if every piece is placed in the correct location, the door to the room
+will open and the players will be able to escape!
+
+The second idea is a bit less flushed out, however, the premise is the same. However, instead of using
+a resistor to denote which piece is in which location, we would hook up some sort of tiny microcontroller that
+has been programmed to, when powered on, just transmit its name over and over. This would allow a computer
+to read the value that is being transmitted and determine if the piece has been placed in the correct location.
+
 
 \subsection{Bust}
 A small bust of a statue's head will be attached on a disc and situated
@@ -245,6 +263,7 @@ deck. This will add to the horror experience, and emulate rouge transmissions
 being received over the duration of the escape experience.
 
 \subsection{Puzzle 4}
+%KYLE, DONT FORGET TO TALK ABOUT YOUR SUPER DOPE ANALOG WAVE PUZZLE IDEA WITH PLAYING THE RIGHT CASSETTE TAPE
 
 \subsection{Puzzle 5}
 
@@ -274,16 +293,28 @@ A list of these materials have been included below
 \end{itemize}
 
 \subsection*{Clock}
-We have already gotten a big clock that we can use for the player clock! Not much
-research has been done about how the clock functions, but we are confident that it will
-work for what we are needing it to do. A picture of the clock has been included (this
-picture will be changed later with a cleaner version).
+The clock that we have planned to use will be controlled through a single motor that turns the
+dial used to set the clock (if you were planning on using it normally). We have already created
+a mechanism that will control the clock and also allow others to control the clock as well. Under
+no user input, the clock will function as normal, ticking forward at a constant rate of one hour per
+minute. There are also two buttons, a fast-forward and a reverse button, that give players control
+over the time that the clock is displaying. Once a button is pressed, the clock will spin quickly
+either forward or backwards, adjusting the events that are taking place in the room. An image of
+the clockhas been included below.
 
 \begin{figure}[ht]
     \centering
     \includegraphics[width=0.85\columnwidth]{Images/big-clock.jpg}
     \caption{The big clock that we are using for the "Player Clock".}
 \end{figure}
+
+Our early prototype for this control is incredibly rough and does not use the microcontroller or the
+motor that we are hoping to use in the final project, and is mostly just a proof of concept. In the
+final project we are going to use a stepper motor that will allow us to have a much finer level of
+control over what time the clock is displaying, and will also help the central computer keep track of
+what time is being displayed. Furthermore, we are going to be 3D printing mounting brackets and other
+components that will help the motor stay in place, rather than the mess of broken popsicle sticks and
+duct tape that it currently is.
 
 \section{Communication Protocols}
 As of now, we are trying to decide between two communication protocols that will be used
@@ -294,10 +325,24 @@ will be more of a secondary communication protocol and will not be the driving f
 how our components will communicate with each other.
 
 \subsection*{Wi-Fi}
-Why wifi is good
+Wi-Fi will act as an incredibly reliable and secure option for our senior project. One of the benefits of Wi-Fi
+is that is it so widely supported. There are lots of libraries that would make communication and connection over
+Wi-Fi as simple as possible. Plus, the connection range is incredibly good over Wi-Fi, and the data rate is quite high
+(around 54 Mbps) \cite{wifiVsZigbee}. There are two drawbacks to Wi-Fi, however, the first being that it uses a bit more energy than Zigbee
+to operate, which may become a problem depending on how many of our components need to operate on a portable energy
+source. The second is that there are so many other devices that operate using Wi-Fi, and we may want the privacy that
+a connection through Zigbee would provide.
 
 \subsection*{Zigbee}
-why zigbee is good
+On the other hand, Zigbee would be an interesting option for a variety of reasons. The most beneficial reason to using
+Zigbee would be its topology. Zigbee uses a mesh network topology, which allows each of the network devices to connect with
+one another, rather than being dependent upon a central hub to manage the details of the escape room. This would decrease
+the number of "network-hops" a command would need to traverse, allowing components to tell locks when their puzzle has been
+solved. We may end up needing a central hub, so this benefit could nullified, but I digress. Furthermore, Zigbee is much less
+widely used than Wi-Fi providing us with a unique experience when trying to get all of our components to communicate
+with one another. It also consumes less energy and has a lower data transmission rate than Wi-Fi (maxing out at 250 Kbps),
+which could help our wireless components be more energy efficient \cite{wifiVsZigbee}. These details are yet to be explored,
+however, and will need to be more properly considered when we have a more developed plan as to what our escape room is going to require.
 
 \section{Risk and Mitigation Assessment}
 There are various risks that we have identitifed, however, more may present
@@ -348,13 +393,20 @@ need to be harder or easier. For the stretch goal, each possible combination
 of puzzles would have to be tested to make sure there are no dead end routes.
 
 \section{Resources}
-This escape room is marginally different from other escape rooms that we have
-encountered in the wild, due to the autonomous nature of our project. However,
-we are planning on completing various escape rooms throughout the summer and
-next semester to use them as inspiration for the puzzles that we will include
-in our own escape room. Also, there are some documents that have been released
-by groups of people who have attempted a similar project. One of which is from
-a group of germans ADD IN STUFF ABOUT GERMAN PAPER THINGY.
+We are going to need a lot of resources in order to complete this senior project.
+Our escape room is going to be marginally different from other escape rooms that we have
+encountered in the wild due to the autonomous nature of the project. However,
+one of the resources that we will be taking advantage of are other escape rooms,
+as we would like to do a few before next semester to use them as inspiration for
+the puzzles that we will include in our own escape room.
+
+Furthermore, we are going to
+be doing a fair amount of research to find documents written by people who have attempted
+projects similar to ours. One of which is from a group of Germans who titled their paper
+"Teaching Embedded Systems by Constructing an Escape Room" \cite{germanEscapeRoom}. Their
+escape room was constructed as a collection of individual projects completed by various groups
+of students, however, the escape room that they were able to create is a great source
+of inspiration and we will be on the hunt for other articles such as this.
 
 \section{Demo}
 The demo planned for this proposal is the clock that will be integral to
@@ -380,6 +432,7 @@ Conclusion
     \bibitem{wikipediaEscapeRoom} “Escape room,” Wikipedia, 10-Feb-2023. [Online]. Available: \url{https://en.wikipedia.org/wiki/Escape_room}. [Accessed: 24-Mar-2023].
     \bibitem{whatIsAnEscapeRoom} A. Ascalon, “Escape rooms: Everything you need to know (2022),” Escape Rooms | Everything You Need To Know (2022), 01-Dec-2022. [Online]. Available:  \url{https://theescapegame.com/blog/what-is-an-escape-room/}. [Accessed: 24-Mar-2023].
     \bibitem{germanEscapeRoom} M. Pfeifer, B. Völker, S. Böttcher, S. Köhler, and P. M. Scholl, “Teaching embedded systems by constructing an escape room,” Proceedings of the 52nd ACM Technical Symposium on Computer Science Education, 2021.
+    \bibitem{wifiVsZigbee} B. Priya, “What are the differences between Zigbee and Wi-Fi,” Tutorials Point, 17-Mar-2022. [Online]. Available: \url{https://www.tutorialspoint.com/what-are-the-differences-between-zigbee-and-wi-fi}. [Accessed: 03-May-2023].
 
 \end{thebibliography}
 

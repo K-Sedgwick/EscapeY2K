@@ -372,6 +372,7 @@ INPUT .\Images\pebble charger.jpg
 INPUT .\Images\pebble charger.jpg
 INPUT .\Images\pebble charger.jpg
 INPUT .\Images\pebble charger.jpg
+INPUT C:\Users\jake.bales\AppData\Local\Programs\MiKTeX\fonts\vf\adobe\times\ptmr7t.vf
 INPUT C:\Users\jake.bales\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\cmextra\cmex7.tfm
 INPUT C:\Users\jake.bales\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\cmextra\cmex7.tfm
 INPUT C:\Users\jake.bales\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msam10.tfm
@@ -380,7 +381,6 @@ INPUT C:\Users\jake.bales\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfont
 INPUT C:\Users\jake.bales\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm10.tfm
 INPUT C:\Users\jake.bales\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm7.tfm
 INPUT C:\Users\jake.bales\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\symbols\msbm5.tfm
-INPUT C:\Users\jake.bales\AppData\Local\Programs\MiKTeX\fonts\vf\adobe\times\ptmr7t.vf
 INPUT .\Images\big-clock.jpg
 INPUT .\Images\big-clock.jpg
 INPUT Images\big-clock.jpg
