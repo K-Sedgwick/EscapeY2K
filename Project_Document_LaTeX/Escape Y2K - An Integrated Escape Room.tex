@@ -185,7 +185,8 @@ and especially how the room is designed. We have a few ideas for how we want our
 the portability aspect of our room may make intricate decorations difficult. However, we want to make
 our escape room experience as multi-dimensional as possible.
 
-The above image is an early prototype of the layout of the room.
+The above image is an early prototype of the layout of the room. This may be modified in the future,
+depending on space requirements %add more here
 
 
 \section{Puzzles in our Escape Room}
@@ -211,6 +212,15 @@ This puzzle will be one of the first things that players see, but also the last 
 Throughout the room and after solving various puzzles, players will receive chess pieces that, when
 arranged in the correct format, will open the door that is keeping players in the room and stop the
 catastrophic end of the world due to Y2K.
+
+We have two ideas for the chess board puzzle. Both ideas are based off the gold contact pins that are used
+to charge a pebble watch (and in other places in electronics as well).
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.85\columnwidth]{Images/pebble charger.jpg}
+    \caption{Depiction of the contact pins that we plan on using for chess piece identification.}
+\end{figure}
 
 \subsection{Bust}
 A small bust of a statue's head will be attached on a disc and situated
@@ -245,22 +255,23 @@ going to write once we figure out what types of puzzles we want players to solve
 to those puzzles.
 
 \section{Materials Needed}
-This section will detail all of the materials that we are using to build this escape room and how they fit in with the project.
-Sensors that we will be using will be outlined here. A brief, bulleted list of currently recognized materials is available below.
-\\
-- Central microcontroller\\
-- Visual sensors (on "windows" for sensing players)\\
-- Analog or soft-image displays (to act as windows)\\
-- Chess board\\
-- Audio cassette player\\
-\indent - Writable audio cassette tapes\\
-- MP3 digital audio controller\\
-- Motors (To act as lock releases)\\
-- Solenoids\\
-- Wireless communicaion modules\\
-- Storage containers\\
-- Busts with detachable modules\\
-- Turntable podium\\
+In order to have a functioning project that we can be proud of, we are going to need a lot of materials.
+A list of these materials have been included below
+\begin{itemize}
+    \item Central microcontroller
+    \item Visual sensors (on "windows" for sensing players)
+    \item Analog or soft-image displays (to act as windows)
+    \item Chess board
+    \item Audio cassette player
+    \item Writable audio cassette tapes
+    \item MP3 digital audio controller
+    \item Motors (To act as lock releases)
+    \item Solenoids
+    \item Wireless communicaion modules
+    \item Storage containers
+    \item Busts with detachable modules
+    \item Turntable podium
+\end{itemize}
 
 \subsection*{Clock}
 We have already gotten a big clock that we can use for the player clock! Not much
@@ -273,6 +284,20 @@ picture will be changed later with a cleaner version).
     \includegraphics[width=0.85\columnwidth]{Images/big-clock.jpg}
     \caption{The big clock that we are using for the "Player Clock".}
 \end{figure}
+
+\section{Communication Protocols}
+As of now, we are trying to decide between two communication protocols that will be used
+to control majority of the connections in our room. These two protocols are Wi-Fi and Zigbee,
+and each of these have their unique benefits associated with them. A third communication
+protocol, bluetooth, is also something that we are thinging of incorporating, however, this
+will be more of a secondary communication protocol and will not be the driving force behind
+how our components will communicate with each other.
+
+\subsection*{Wi-Fi}
+Why wifi is good
+
+\subsection*{Zigbee}
+why zigbee is good
 
 \section{Risk and Mitigation Assessment}
 There are various risks that we have identitifed, however, more may present
@@ -354,6 +379,7 @@ Conclusion
 
     \bibitem{wikipediaEscapeRoom} “Escape room,” Wikipedia, 10-Feb-2023. [Online]. Available: \url{https://en.wikipedia.org/wiki/Escape_room}. [Accessed: 24-Mar-2023].
     \bibitem{whatIsAnEscapeRoom} A. Ascalon, “Escape rooms: Everything you need to know (2022),” Escape Rooms | Everything You Need To Know (2022), 01-Dec-2022. [Online]. Available:  \url{https://theescapegame.com/blog/what-is-an-escape-room/}. [Accessed: 24-Mar-2023].
+    \bibitem{germanEscapeRoom} M. Pfeifer, B. Völker, S. Böttcher, S. Köhler, and P. M. Scholl, “Teaching embedded systems by constructing an escape room,” Proceedings of the 52nd ACM Technical Symposium on Computer Science Education, 2021.
 
 \end{thebibliography}
 
