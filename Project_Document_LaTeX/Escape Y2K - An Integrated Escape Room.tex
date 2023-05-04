@@ -45,27 +45,6 @@
     movement sensors. Other technology to be implemented includes image/audio processing,
     bluetooth, and digital/analog circuit design. A stretch goal for this project is to make this
     room modular and portable, allowing it to be set up in any place and with any size of room.
-    %\\
-    %\indent One of the major themes of the escape room is time travel. The experience will run
-    %on a clock that ticks between 1:00 PM and 12:00 (midnight) where certain events are
-    %dependent on the time. This can include cabinets opening during a specific time interval or
-    %locks having different passcode combinations depending on the hour hand. Players in the
-    %room are able to rewind or forward the time however they wish based on the minimum and
-    %maximum the time can go. Past 8:00, the game will transition to a nighttime mode where
-    %fake windows in the room will shine a light to simulate a creature looking inside. If a player is
-    %caught in this light, the room enters a danger state and the team will incur a penalty to the
-    %amount of time they have to escape. This penalty will also occur if the clock reaches 12:00.
-    %The game will conclude either when the players all exit the room safely, or the game clock
-    %expires.
-    %\\
-    %\indent The maximum amount of time players will have to escape will be 30 minutes,
-    %however, this may lessen if the player clock reaches midnight or if any of the players are
-    %seen by the monster. Each puzzle will take between 3 and 5 minutes to solve, allowing for a
-    %maximum of 7 or 8 (maybe) puzzles. Another stretch goal is to create a pool of puzzles from
-    %which the room can draw, giving each group that comes into the room a unique escape
-    %experience. These puzzles will be hard, but will still be easy enough to actually allow players
-    %to enjoy the experience and not be frustrated by the difficulty level of the puzzles.
-    %\\
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -94,19 +73,27 @@ will be inspired by the public panic spurred from the unknown consequences to po
 clocks update their year count to '00', and the ambiguity between it's interpretation as '2000' (Y2K) or '1900'.
 The room will incorporate 'time-traveling' elements to play into this ambiguity and assume that a total system
 failure would happen in all digital systems when the game clock strikes 12:00 AM on the turn of the century.
-\\
-
 
 \section{Our Vision}
 Our vision for this project is to take a unique spin on the formula that is most commonly used in escape rooms.
-Instead of using a large amount of analog puzzles and a "host" that is in charge of controlling which parts of
+Instead of using a large amount of analog puzzles and a ``host'' that is in charge of controlling which parts of
 the room are locked and unlocked when players complete certain actions, the room will adapt and progress on its
 own as players advance through the various puzzles.
+\\
+\indent One of the major themes of the escape room is time travel. The experience will run
+on a physical game clock that ticks between 1:00 PM and 12:00 (midnight) where certain events are
+dependent on the time. This can include cabinets opening during a specific time interval or
+locks having different passcode combinations depending on the hour hand. Players in the
+room are able to rewind or forward the time however they wish based on the minimum and
+maximum the time can go. Past 8:00, the game will transition to a darker, nighttime mode where
+more horror elements will come into play that can affect the game's timer. The maximum amount 
+of time players will have to escape will be 30 minutes, however, it may speed up under
+certain conditions and give players less time.
 
-\subsection*{What is an escape room?}
-If you arent very familiar with escape rooms, the basic idea is to provide people with an interactive
-and exciting puzzle experience. Players start by being "locked" in a room (you're never actually locked
-in, for safety reasons) with a set of instructions that lead them through a series of puzzles. Some of
+\subsection*{What is an Escape Room?}
+Escape rooms provide participants with an interactive and exciting puzzle experience. 
+Players start by being ``locked'' in a room (for safety reasons, players are never really
+locked inside) with a set of instructions that lead them through a series of puzzles. Some of
 these puzzles are more traditional, such as solving a cypher or figuring out a combination for a lock,
 while others make the players think a little bit deeper. Many of these puzzles are on the simple size in
 an attempt to have a good balance of fun and difficulty. And, many of these rooms attempt to fit their
@@ -115,15 +102,15 @@ apcalypse \cite{wikipediaEscapeRoom}.
 
 \subsection*{History of Escape Rooms}
 There are a variety of escape rooms all throughout Utah and in other parts of the world as well. The phenomenon
-started between 1981 and 1984 with the introduction of TV game shows "The Adventure Game", "The Crystal Maze",
-"Fort Boyard", and "Knightmare" \cite{wikipediaEscapeRoom}. Other mediums, such as escape the room video games, were also gaining traction
+started between 1981 and 1984 with the introduction of TV game shows ``The Adventure Game'', ``The Crystal Maze'',
+``Fort Boyard'', and ``Knightmare'' \cite{wikipediaEscapeRoom}. Other mediums, such as escape the room video games, were also gaining traction
 during these years and after, and in 2003 the first prototype escape room was showcased at GenCon Indy by
 an individual named Jeff Martin. 2007, however, was the first year when escape rooms really began to pick up speed
 with the creation of Real Escape Game by Takao Kato in Kyoto, Japan \cite{whatIsAnEscapeRoom}. The first commercially available escape rooms
 began to show up in the United States around the years 2012-2014, and as of November 2019 there are over 50,000 escape
 rooms worldwide \cite{wikipediaEscapeRoom}.
 
-\subsection*{Our motive behind the project}
+\subsection*{Our Motive}
 Although not the first idea for our senior project, we feel that an escape room checks all of the
 boxes that we are hoping to fulfill with the project. Some of these requirements were that our project
 have some sort of meaning or functional purpose, that our project be fun or interactive, and that
@@ -134,20 +121,19 @@ We also thought of a variety of different games we could create, however, nothin
 every member of the group. The escape room is something unique, interesting, interactive, and will hopefully
 provide those that are able to play with a fun and memorable experience!
 
-\subsection*{How players will know what to do}
-Many escape rooms use a type of "Mission Video" to explain what is going to happen in the escape room \cite{whatIsAnEscapeRoom}.
+\subsection*{Player Motivation}
+Many escape rooms use a type of ``Mission Video'' to explain what is going to happen in the escape room \cite{whatIsAnEscapeRoom}.
 For our escape room, we are going to use a tape player that gives the people in the room information about
 the story and why they are in the room in the first place. This tape player will also have other uses, which are
 explained in more detail in the section about all of the puzzles in the escape room.
 
-
-\section{What makes our escape room unique?}
-Because this escape room is being developed as a comuter engineering senior project, it will have a distinct emphasis
-on puzzles that involve imbedded computing, giving our room a deeper sense of connection between the separate parts.
+\section{What Makes This Escape Room Unique?}
+Because this escape room is being developed as a computer engineering senior project, it will have a distinct emphasis
+on puzzles that involve embedded computing, giving our room a deeper sense of connection between the separate parts.
 This means that we will be using technology as a central theme throughout the room to help convey the emotions that we
 are hoping the players will feel and also make the puzzles more interesting.
 
-\subsection*{How horror plays a role}
+\subsection*{How Horror Plays a Role}
 In life, horror is an incredibly good motivator. Imagine you are being hunted by some alien creature that is here to
 destroy the world and the only way to escape is so solve a collection of puzzles; you would gladly partipate!
 In our escape room, this exact situation is something that we will be utilizing to push players to solve the puzzles
@@ -155,19 +141,30 @@ as fast as possible.
 
 \subsubsection*{The Monster}
 All horror experiences begin with a mysterious and dangerous monster that is on the hunt. Our room will feature such a monster
-that will come out when spesific events are triggered or when the player clock reaches a certain time.
+that will come out when specific events are triggered or when the player clock reaches a certain time.
+If the monster is revealed to the players, this will activate an event which will
+speed up the game timer which shortens the time it takes to complete the room. The monster is an 
+active threat that the players must watch out for to avoid losing precious time to
+solve every puzzle.
 
 \subsubsection*{CRT TVs}
-Something that we wanted to incorporate into our escape room was a sense that you could still see the
-"outside world". Our original idea was to create some sort of false window box that we would mount on
-the wall or a TV with an image of "outside", but we decided to adjust that vision a little bit.
-Now the idea is more in line with the idea of analog horror, as we will be using CRT TVs to
+An original idea for the escape room was to create some sort of false window box that mounts on
+the wall or a TV with an image of ``outside world'', but the vision had to be adjusted a little bit for flexibility.
+Now the idea is more in line with the idea of analog horror, as CRT TVs
 give players a glimpse into what is happening outside as Y2K approaches.
 
-The main image that we will be showing on the tvs is a picture of the old Windows XP wallpaper (pictured below).
-This image will slowly shift to a more horrifying version of the wallpaper as the player clock advances, giving
-players a sense of the urgency that the world is going to end. Secondly, these tvs will be used as the windows
-through which the monster is able to interact with the players. We are hoping to find a way to fill the room
+The main image that the tvs show is an animated version of the old Windows XP wallpaper (pictured below).
+This image will slowly shift to a more unsettling, discolored version of the wallpaper as the player clock advances. If the
+clock reaches midnight, the monster event will occur which speeds up the game timer. At any time if the players
+choose to speed up or reverse time, the TVs will play an effect similar to fast forwarding or reversing a tape.
+Using a microcontroller, multiple video files will be stocked and played on the TV depending on the state of the
+game. The time position chosen for the video is also synced with the time on the clock.
+
+These TVs are also where the monster will appear to the players during the monster events. At certain moments
+during the nighttime segment, a light will shine out of the television screen across the room. This light acts as
+the ``vision'' of the monster, and if a player is caught in the light then the monster will appear for the players,
+speeding 
+ We are hoping to find a way to fill the room
 with a red floodlight if the monster is looking into the room and a player is caught in its sight. %ADD MORE
 
 The tvs will be positioned in a way that prevents players from doing certain things while the monster is
@@ -250,7 +247,7 @@ to charge a pebble watch (and in other places in electronics as well). Basically
 is to have these golden pins in each (or at least a lot) of the spaces of the chess board, with
 a magnet underneath to help align the chess pieces when placed by the user. Only the pins that are used in
 the solution would be wired up, decreasing the amount of soldering that would be required to make the chess
-board and also leaving all of the other spaces as "dummy" spaces. The image below shows such a
+board and also leaving all of the other spaces as ``dummy'' spaces. The image below shows such a
 mechanism, one that would be used for charging a smartwatch.
 
 \begin{figure}[ht]
@@ -346,7 +343,7 @@ the clockhas been included below.
 \begin{figure}[ht]
     \centering
     \includegraphics[width=0.85\columnwidth]{Images/big-clock.jpg}
-    \caption{The big clock that we are using for the "Player Clock".}
+    \caption{The big clock that we are using for the ``Player Clock''.}
 \end{figure}
 
 Our early prototype for this control is incredibly rough and does not use the microcontroller or the
@@ -449,7 +446,7 @@ a connection through Zigbee would provide.
 On the other hand, Zigbee would be an interesting option for a variety of reasons. The most beneficial reason to using
 Zigbee would be its topology. Zigbee uses a mesh network topology, which allows each of the network devices to connect with
 one another, rather than being dependent upon a central hub to manage the details of the escape room. This would decrease
-the number of "network-hops" a command would need to traverse, allowing components to tell locks when their puzzle has been
+the number of ``network-hops'' a command would need to traverse, allowing components to tell locks when their puzzle has been
 solved. We may end up needing a central hub, so this benefit could nullified, but I digress. Furthermore, Zigbee is much less
 widely used than Wi-Fi providing us with a unique experience when trying to get all of our components to communicate
 with one another. It also consumes less energy and has a lower data transmission rate than Wi-Fi (maxing out at 250 Kbps),
@@ -515,7 +512,7 @@ the puzzles that we will include in our own escape room.
 Furthermore, we are going to
 be doing a fair amount of research to find documents written by people who have attempted
 projects similar to ours. One of which is from a group of Germans who titled their paper
-"Teaching Embedded Systems by Constructing an Escape Room" \cite{germanEscapeRoom}. Their
+``Teaching Embedded Systems by Constructing an Escape Room'' \cite{germanEscapeRoom}. Their
 escape room was constructed as a collection of individual projects completed by various groups
 of students, however, the escape room that they were able to create is a great source
 of inspiration and we will be on the hunt for other articles such as this.
