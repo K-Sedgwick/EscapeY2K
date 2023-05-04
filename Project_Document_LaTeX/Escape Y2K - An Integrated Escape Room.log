@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 23.4) (preloaded format=pdflatex 2023.5.4)  4 MAY 2023 10:53
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 23.4) (preloaded format=pdflatex 2023.5.4)  4 MAY 2023 11:14
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -356,12 +356,16 @@ File: Images/OpenLock.png Graphic file (type png)
 <use Images/OpenLock.png>
 Package pdftex.def Info: Images/OpenLock.png  used on input line 419.
 (pdftex.def)             Requested size: 214.20154pt x 154.87595pt.
-<Images/OpenContainer.png, id=27, 907.13907pt x 615.0478pt>
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [5 <./Images/LockMech.png> <./Images/ClosedLock.png>]
+<Images/OpenContainer.png, id=32, 907.13907pt x 615.0478pt>
 File: Images/OpenContainer.png Graphic file (type png)
 <use Images/OpenContainer.png>
 Package pdftex.def Info: Images/OpenContainer.png  used on input line 425.
 (pdftex.def)             Requested size: 214.20154pt x 145.23073pt.
-[5 <./Images/LockMech.png> <./Images/ClosedLock.png>] [6 <./Images/OpenLock.png> <./Images/OpenContainer.png>]
+ [6 <./Images/OpenLock.png> <./Images/OpenContainer.png>]
 Underfull \hbox (badness 7504) in paragraph at lines 548--549
 []\OT1/ptm/m/n/8 A. Ascalon, \Es-cape rooms: Ev-ery-thing you need to know
  []
@@ -394,15 +398,15 @@ Before submitting the final camera ready copy, remember to:
 
 [7] (Escape Y2K - An Integrated Escape Room.aux) ) 
 Here is how much of TeX's memory you used:
- 4527 strings out of 476315
- 73408 string characters out of 5786725
+ 4528 strings out of 476315
+ 73418 string characters out of 5786725
  1868068 words of memory out of 5000000
- 24924 multiletter control sequences out of 15000+600000
+ 24925 multiletter control sequences out of 15000+600000
  551380 words of font info for 115 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  57i,11n,62p,548b,343s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Users/nobody/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/nobody/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmb8a.pfb><C:/Users/nobody/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmbi8a.pfb><C:/Users/nobody/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmr8a.pfb><C:/Users/nobody/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmri8a.pfb>
-Output written on "Escape Y2K - An Integrated Escape Room.pdf" (7 pages, 3052413 bytes).
+Output written on "Escape Y2K - An Integrated Escape Room.pdf" (7 pages, 3052488 bytes).
 PDF statistics:
  65 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
