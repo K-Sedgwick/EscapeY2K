@@ -269,7 +269,7 @@ We have three ideas for the chess board puzzle. Two of the three ideas are based
 This puzzle will be one of the first things that players see, but also the last puzzle that they will solve.
 Throughout the room and after solving various puzzles, players will receive chess pieces that, when
 arranged in the correct format, will open the door that is keeping players in the room and stop the
-catastrophic end of the world due to Y2K. 
+catastrophic end of the world due to Y2K.
 
 We have two ideas for the chess board puzzle. Both ideas are based off the gold contact pins that are used
 to charge a pebble watch (and in other places in electronics as well). Basically, the idea
@@ -336,6 +336,20 @@ or audio cassette have a ``key'' encoded in the audio that will need to be trans
 device in the room to unlock a lock box or clue. For example, a voice recorder may be found which has
 a password spoken by a specific person's voice as a room access key. This recording will be played
 to the correct access point to complete the puzzle and unlock the next item.
+
+\subsection{Pressure Sensitive Chair}
+Another idea that we have for a puzzle is something that requires every member of the escape room to participate.
+Essentially, the idea is to have a number of chairs scattered throughout the room. Within each of these chairs
+we will embed a pressure sensor that can detect when one of the players in the room has sat down in that chair.
+Once every player in the room sits in the chairs that are scattered about, a lock of some sort will open and the
+players will be able to progress!
+
+In order to properly implement this puzzle we are going to need a few things. First of all, we are hoping that the
+players will be able to move the chairs around the room freely, giving the illusion that they are just normal chairs.
+This is going to require a small microcontroller to be hidden within the base of the chair that has Wi-Fi capabilities
+(most likely the ESP 32 board, due to its small size and on-board Wi-Fi) and at least one GPIO pin to detect the change
+in pressure when a player sits down on the chair. Furthermore, the board needs to have a relatively low power consumption
+so that the chair battery doesn't die during the length of time the players will be in the escape room.
 
 \subsection{All other puzzles...}
 Currently, we have this limited number of planned puzzles, but more puzzles are expected to be added
