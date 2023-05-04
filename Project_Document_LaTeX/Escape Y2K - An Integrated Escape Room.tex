@@ -161,15 +161,18 @@ Using a microcontroller, multiple video files will be stocked and played on the 
 game. The time position chosen for the video is also synced with the time on the clock.
 
 These TVs are also where the monster will appear to the players during the monster events. At certain moments
-during the nighttime segment, a light will shine out of the television screen across the room. This light acts as
+during the nighttime segment, a light will occasionally shine out of the television screen across the room. This light acts as
 the ``vision'' of the monster, and if a player is caught in the light then the monster will appear for the players,
-speeding 
- We are hoping to find a way to fill the room
-with a red floodlight if the monster is looking into the room and a player is caught in its sight. %ADD MORE
+speeding up the game timer. During this monster event, time will stop and the players cannot change the
+time until they exit the monster's field of vision. To detect players, a proposed idea is installing a camera
+onto the TVs and using image processing to find players that are brightened by the light. There is also
+the potential solution of requiring players wear a vest with a color that the monster detects.
 
-The tvs will be positioned in a way that prevents players from doing certain things while the monster is
-looking into the room (unless they're willing to take the penalty of being seen).
-Such actions include reversing/fast-forwarding time on the player clock, using the tape player, %ADD MORE
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.90\columnwidth]{Images/tvsketch.png}
+    \caption{TVs shine light that can reveal players to the monster.}
+\end{figure}
 
 \subsubsection*{Audio}
 We've got a subwoofer that were okay with pushing to its limits. This section is going to be about the peripherals we are using
