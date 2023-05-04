@@ -357,6 +357,50 @@ what time is being displayed. Furthermore, we are going to be 3D printing mounti
 components that will help the motor stay in place, rather than the mess of broken popsicle sticks and
 duct tape that it currently is.
 
+\section{Initial Mechanical Plans}
+Traditional escape rooms use physical switches and locks to prevent access to certain information or
+items until their related puzzles are completed or their key is found. Often, this takes the form of
+traditional physical locks, with either combinations or keys. For the players to find the combination,
+there is a puzzle with the correct combination embedded within it, or the combination is hidden in some
+other form of media. Physical keys can be simply hidden arround the room, or be teased to the players
+to hint at what puzzle must be completed to gain access to the physical key (like using magnets to move
+the key out of a hole). While we will incorporate these traditional lock methods in our escape room,
+we will also try to use more novel methods of controlling player access to resources via computer controlled
+elements.
+
+\subsection{Electromagnetic Locks}
+Because many of our puzzles will include some form of electronic elements, it will be easy to add a
+electromagnetic locking system that holds a door or drawer closed while the electromagnet is powered,
+and at the completion of a puzzle, the magnet is turned off to grant access to the contents within the
+container. While this can be a simple solution to controlling player access to key materials or information,
+it may not be clear for players to identify what container has just become unlocked. An auditory cue may
+be heard when the magnet deactivates, but if there are other sounds when this happens, it can be difficult
+to identify where in the room the magnet has turned off.
+
+\subsection{NFC/RFID}
+Another electrical access control system is near-field communication and radio frequency identification
+systems. These are often used for apartment and hotel access systems, and use either a keycard or 
+fob with an internal inductive circuit to open doors. We could make use of a similar system to control
+access to certain areas of our escape room, but as this would require more specialized and expensive 
+equipment, we will only use this if a later-designed puzzle would benefit greatly from its implementation.
+
+\subsection{Self-opening Motorized Latch Control}
+In order to take advantage of the more unique control elements available to us by using computer
+systems to control an autonomous escape room, we have devised a custom access control system that
+will hold a container securely closed when locked, and open entirely on its own when unlocked. It
+will include a system consisting of either stepper motors or servo motors, and a solenoid. If the container
+includes a hinge, it will only require one motor and solenoid, but if the lid will remove entirely, 
+it will need at least two motors.
+\\
+\indent The motor(s) will have a metal arm attached to the motor shaft. This arm will rest between the
+door or lid of the container, and a metal plate attached to the inside of the door or lid when locked.
+This metal plate will only cover one half of the motor's movable range, and when the container is ``unlocked'',
+the motor will rotate its metal arm out from under this plate, allowing the door or lid to be freely moved.
+At this point, an active extruding solenoid will quickly activate and hit the door or lid of a container, to
+open it without the player needing to do so manually. This will remove any ambiguity about what container
+was just unlocked, so the players can quickly collect their earned materials and continue with the escape room
+experience.
+
 \section{Communication Protocols}
 As of now, we are trying to decide between two communication protocols that will be used
 to control majority of the connections in our room. These two protocols are Wi-Fi and Zigbee,
@@ -465,6 +509,9 @@ and update the display on the clock alongside transferring the value to
 a computer. This will make the time easily stored and tracked which will
 help towards scripting certain events in the escape room.
 
+%   ********************************************************************************************************
+%   ********************* CONCLUSION TO BE COMPLETED TOGETHER **********************************************
+%   ********************************************************************************************************
 \section{Conclusion}
 Conclusion
 
