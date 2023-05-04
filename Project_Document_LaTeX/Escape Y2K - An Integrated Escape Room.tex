@@ -346,36 +346,6 @@ and for users to play the escape room more than once and solve different puzzles
 Once we have more base systems in place to make puzzles designing to be more streamlined, we can add
 both to the number and complexity of puzzles.
 
-\section{Materials Needed}
-In order to have a functioning project that we can be proud of, we are going to need a lot of materials.
-A list of these materials have been included below
-\begin{itemize}
-    \item Programmable microcontrollers
-    \item Analog clock
-    \item Cameras
-    \item Small CRT televisions
-    \item Chess board and pieces
-    \item Audio cassette player
-    \item Writable audio cassette tapes
-    \item MP3 digital audio controller
-    \item Speakers
-    \item Motors (To act as lock releases)
-    \item Solenoids
-    \item LED Display
-    \item Adjustable RGB lights
-    \item Wireless communication modules
-    \item Storage containers
-    \item Busts with detachable modules
-    \item Turntable podium
-\end{itemize}
-
-Various furniture pieces, while not required for functionality, can be used to decorate
-the room for an immersive experience. Resistors, capacitors, breadboards, wires, and other
-various electronic parts might be required for wiring which can be obtained from the University
-of Utah stockroom. Other parts, equipment, or furniture not readily available in the stockroom
-will most likely be found sold in the University's surplus store, e-commerce websites like
-Amazon, or found in thrift stores and other secondhand locations.
-
 \subsection*{Clock}
 The clock that we have planned to use will be controlled through a single motor that turns the
 dial used to set the clock (if you were planning on using it normally). We have already created
@@ -405,64 +375,6 @@ shows the remaining amount of time left to complete the game and is visible at a
 monster is revealed to the player during certain nighttime segments, the timer will go down at a
 faster rate which will dissuade players from getting the monster's attention. Using an LED display,
 the time will be outputted based on the value retrieved from the central computer's internal timer.
-
-\section{Milestones}
-For the summer, the milestone set in place will be to obtain all the necessary parts to start work on
-the project at the start of the Fall semester. The following tables project what needs to be done by
-each team member in the following months:
-\begin{table}[ht]
-    \centering
-    \caption{Milestones for each team member by October.}
-    \resizebox{\columnwidth}{!}{
-        \begin{tabular}{|l|l|}
-            \hline
-                          & \multicolumn{1}{c|}{\textbf{\textit{By October}}}                                 \\
-            \hline
-            \textbf{Nami} & Find a room and plot the layout of where each puzzle and furniture piece will go. \\
-            \hline
-            \textbf{Kyle} & Build puzzles and other mechanical pieces.                                        \\
-            \hline
-            \textbf{Jake} & Build connections and communication protocols between puzzles and server.         \\
-            \hline
-        \end{tabular}
-    }
-\end{table}
-
-\begin{table}[ht]
-    \centering
-    \caption{Milestones for each team member by November.}
-    \resizebox{\columnwidth}{!}{
-        \begin{tabular}{|l|l|}
-            \hline
-                          & \multicolumn{1}{c|}{\textbf{\textit{By November}}}                                        \\
-            \hline
-            \textbf{Nami} & Program a timeline of events that the escape room will follow for the players to succeed. \\
-            \hline
-            \textbf{Kyle} & Create events, experiences, and plots that immerse players into the game world.           \\
-            \hline
-            \textbf{Jake} & Program and test functionality of individual modules and puzzles.                         \\
-            \hline
-        \end{tabular}
-    }
-\end{table}
-
-\begin{table}[ht]
-    \centering
-    \caption{Milestones for each team member by December.}
-    \resizebox{\columnwidth}{!}{
-        \begin{tabular}{|l|l|}
-            \hline
-                          & \multicolumn{1}{c|}{\textbf{\textit{By December}}}                             \\
-            \hline
-            \textbf{Nami} & Through playtesting, finetune escape room to be fairly solvable in time given. \\
-            \hline
-            \textbf{Kyle} & Test durability of parts and create substitute puzzles for emergency cases.    \\
-            \hline
-            \textbf{Jake} & Create new puzzles that can be used for stretch goals.                         \\
-            \hline
-        \end{tabular}
-    }
-\end{table}
 
 \section{Initial Mechanical Plans}
 Traditional escape rooms use physical switches and locks to prevent access to certain information or
@@ -563,6 +475,36 @@ with one another. It also consumes less energy and has a lower data transmission
 which could help our wireless components be more energy efficient~\cite{wifiVsZigbee}. These details are yet to be explored,
 however, and will need to be more properly considered when we have a more developed plan as to what our escape room is going to require.
 
+\section{Materials Needed}
+In order to have a functioning project that we can be proud of, we are going to need a lot of materials.
+A list of these materials have been included below
+\begin{itemize}
+    \item Programmable microcontrollers
+    \item Analog clock
+    \item Cameras
+    \item Small CRT televisions
+    \item Chess board and pieces
+    \item Audio cassette player
+    \item Writable audio cassette tapes
+    \item MP3 digital audio controller
+    \item Speakers
+    \item Motors (To act as lock releases)
+    \item Solenoids
+    \item LED Display
+    \item Adjustable RGB lights
+    \item Wireless communication modules
+    \item Storage containers
+    \item Busts with detachable modules
+    \item Turntable podium
+\end{itemize}
+
+Various furniture pieces, while not required for functionality, can be used to decorate
+the room for an immersive experience. Resistors, capacitors, breadboards, wires, and other
+various electronic parts might be required for wiring which can be obtained from the University
+of Utah stockroom. Other parts, equipment, or furniture not readily available in the stockroom
+will most likely be found sold in the University's surplus store, e-commerce websites like
+Amazon, or found in thrift stores and other secondhand locations.
+
 \section{Risk and Mitigation Assessment}
 There are various risks that we have identitifed, however, more may present
 themselves as we progress through the project. One of the major risks is
@@ -610,6 +552,64 @@ be necessary to bring in people unfamiliar with the game to try it out
 themselves, that way feedback can be given of whether certain puzzles
 need to be harder or easier. For the stretch goal, each possible combination
 of puzzles would have to be tested to make sure there are no dead end routes.
+
+\section{Milestones}
+For the summer, the milestone set in place will be to obtain all the necessary parts to start work on
+the project at the start of the Fall semester. The following tables project what needs to be done by
+each team member in the following months:
+\begin{table}[ht]
+    \centering
+    \caption{Milestones for each team member by October.}
+    \resizebox{\columnwidth}{!}{
+        \begin{tabular}{|l|l|}
+            \hline
+                          & \multicolumn{1}{c|}{\textbf{\textit{By October}}}                                 \\
+            \hline
+            \textbf{Nami} & Find a room and plot the layout of where each puzzle and furniture piece will go. \\
+            \hline
+            \textbf{Kyle} & Build puzzles and other mechanical pieces.                                        \\
+            \hline
+            \textbf{Jake} & Build connections and communication protocols between puzzles and server.         \\
+            \hline
+        \end{tabular}
+    }
+\end{table}
+
+\begin{table}[ht]
+    \centering
+    \caption{Milestones for each team member by November.}
+    \resizebox{\columnwidth}{!}{
+        \begin{tabular}{|l|l|}
+            \hline
+                          & \multicolumn{1}{c|}{\textbf{\textit{By November}}}                                        \\
+            \hline
+            \textbf{Nami} & Program a timeline of events that the escape room will follow for the players to succeed. \\
+            \hline
+            \textbf{Kyle} & Create events, experiences, and plots that immerse players into the game world.           \\
+            \hline
+            \textbf{Jake} & Program and test functionality of individual modules and puzzles.                         \\
+            \hline
+        \end{tabular}
+    }
+\end{table}
+
+\begin{table}[ht]
+    \centering
+    \caption{Milestones for each team member by December.}
+    \resizebox{\columnwidth}{!}{
+        \begin{tabular}{|l|l|}
+            \hline
+                          & \multicolumn{1}{c|}{\textbf{\textit{By December}}}                             \\
+            \hline
+            \textbf{Nami} & Through playtesting, finetune escape room to be fairly solvable in time given. \\
+            \hline
+            \textbf{Kyle} & Test durability of parts and create substitute puzzles for emergency cases.    \\
+            \hline
+            \textbf{Jake} & Create new puzzles that can be used for stretch goals.                         \\
+            \hline
+        \end{tabular}
+    }
+\end{table}
 
 \section{Resources}
 We are going to need a lot of resources in order to complete this senior project.
