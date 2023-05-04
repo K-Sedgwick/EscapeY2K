@@ -175,7 +175,7 @@ looking into the room (unless they're willing to take the penalty of being seen)
 Such actions include reversing/fast-forwarding time on the player clock, using the tape player, %ADD MORE
 
 \subsubsection*{Audio}
-Weve got a subwoofer that were okay with pushing to its limits. This section is going to be about the peripherals we are using
+We've got a subwoofer that were okay with pushing to its limits. This section is going to be about the peripherals we are using
 to interface with our audio devices and what we are going to do with the subwoofer to hopefully make the experience scarier.
 
 \subsection*{Decoration}
@@ -186,8 +186,34 @@ the portability aspect of our room may make intricate decorations difficult. How
 our escape room experience as multi-dimensional as possible.
 
 %Kyle, not sure if this is where you wanna put the info about the room layout, but it wouldnt be the worst spot, at least :P
-The above image is an early prototype of the layout of the room. This may be modified in the future,
-depending on space requirements
+% I'll put it just before the puzzles, so we can get the full room before adding sub-images for key puzzle parts
+%       - Kyle
+\section{Initial Room Layout}
+While many aspects of our escape room are likely to be somewhat modular, and able to be re-arranged quickly, 
+some puzzles and in-game events will demand certain elements of the room to be set up in specific locations relative 
+to each other. For example, the clock controls, game clock, and action clock should all be in close proximity to each 
+other for ease of access. The CRT ``windows'' should form a cross centered on the audio cassette player to limit 
+access to the player during certain events. Finally, certain props will be needing to be kept in repeatable 
+locations or lock boxes for consistency in certain puzzles.
+\\
+\indent In the below diagrams, there are a few key elements to notice. The black boxes with white screens
+represent the CRT ``windows'' that will have sensors and lights to trigger during in-game events. The 
+grey towers are filing cabinets, to play into the office aesthetic of the game. The light green slab on the
+desks in the corner is where we will have the chessboard, and the yellow head represents one of the busts
+that will be included in some puzzles. The center podium will hold the cassette player. Finally, the orange circle
+is the time clock, and the nearby green box represents the clock controls.
+
+\begin{figure}[RoomIso1]
+    \centering
+    \includegraphics[width=0.90\columnwidth]{Images/EscapeRoomIsoFront.jpg.jpg}
+    \caption{Front isometric scale depiction of the initial escape room layout.}
+\end{figure}
+
+\begin{figure}[RoomIso2]
+    \centering
+    \includegraphics[width=0.75\columnwidth]{Images/EscapeRoomIsoRear.jpg.jpg}
+    \caption{Rear isometric scale depiction of the initial escape room layout.}
+\end{figure}
 
 
 \section{Puzzles in our Escape Room}
@@ -196,6 +222,11 @@ the solution to each of them. If you haven't already experienced the escape room
 this section does contain spoilers and will prevent you from experiencing the joy of solving the
 puzzles on your own.
 \\
+
+% *************************************************************************************************************************************
+% ************************************* THIS SECTION MUST BE REVISED ******************************************************************
+% *************************************************************************************************************************************
+
 \indent This section will be greatly expanded on as we decide what other puzzles we want to incorporate and how they will function.
 A stretch goal we have is to have a pool of around 10-15 puzzles that can be randomly selected, so that each time a player is in the
 room the experience will be different from the last. More may be added, depending on time contstraints and how many ideas we
@@ -262,23 +293,33 @@ files while the cassette player is not actively in use, or no tape is even in th
 deck. This will add to the horror experience, and emulate rouge transmissions
 being received over the duration of the escape experience.
 
-\subsection{Puzzle 4}
+\subsection{Encoded Audio/Radio Signal}
 %KYLE, DONT FORGET TO TALK ABOUT YOUR SUPER DOPE ANALOG WAVE PUZZLE IDEA WITH PLAYING THE RIGHT CASSETTE TAPE
+There are many devices available to convert an audio signal, supplied via an AUX audio cable
+to a radio signal that can be transmitted via bluetooth or a similar radio protocol. One interesting
+application of this intended to be implemented in this project is to either have a personal voice recorder
+or audio cassette have a ``key'' encoded in the audio that will need to be transmitted to another
+device in the room to unlock a lock box or clue. For example, a voice recorder may be found which has
+a password spoken by a specific person's voice as a room access key. This recording will be played
+to the correct access point to complete the puzzle and unlock the next item.
 
 \subsection{Puzzle 5}
 
 \subsection{All other puzzles...}
-This subsection won't actually include the details for every other puzzle that we plan on including
-in the escape room. Instead, this is just a placeholder for all of the other sections that we are
-going to write once we figure out what types of puzzles we want players to solve and the solution
-to those puzzles.
+Currently, we have this limited number of planned puzzles, but more puzzles are expected to be added
+as stretch goals. We plan on having this escape room experience last only between 20 to 30 minutes, 
+but this is a flexable duration that may change if time permits us to add a system that selects
+only certain puzzles to be used in a given playthrough. This would allow for greater variability, 
+and for users to play the escape room more than once and solve different puzzles each time.
+Once we have more base systems in place to make puzzles designing to be more streamlined, we can add
+both to the number and complexity of puzzles.
 
 \section{Materials Needed}
 In order to have a functioning project that we can be proud of, we are going to need a lot of materials.
 A list of these materials have been included below
 \begin{itemize}
     \item Central microcontroller
-    \item Visual sensors (on "windows" for sensing players)
+    \item Visual sensors (on ``windows'' for sensing players)
     \item Analog or soft-image displays (to act as windows)
     \item Chess board
     \item Audio cassette player
