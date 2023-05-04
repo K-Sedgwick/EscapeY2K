@@ -389,6 +389,13 @@ will include a system consisting of either stepper motors or servo motors, and a
 includes a hinge, it will only require one motor and solenoid, but if the lid will remove entirely,
 it will need at least two motors.
 \\
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.85\columnwidth]{Images/LockMech.png}
+    \caption{A custom locking system. The yellow objects are motors with a metal arm, and the green object is a solenoid.}
+\end{figure}
+
 \indent The motor(s) will have a metal arm attached to the motor shaft. This arm will rest between the
 door or lid of the container, and a metal plate attached to the inside of the door or lid when locked.
 This metal plate will only cover one half of the motor's movable range, and when the container is ``unlocked'',
@@ -397,6 +404,26 @@ At this point, an active extruding solenoid will quickly activate and hit the do
 open it without the player needing to do so manually. This will remove any ambiguity about what container
 was just unlocked, so the players can quickly collect their earned materials and continue with the escape room
 experience.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.85\columnwidth]{Images/ClosedLock.png}
+    \caption{When the motor arms are under the metal plate, the container remains locked}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.85\columnwidth]{Images/OpenLock.png}
+    \caption{When the arms are rotated out from the metal plate, the container is unlocked and can manually be opened.}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.85\columnwidth]{Images/OpenContainer.png}
+    \caption{The internal solenoid can be used for several effects. For example, when facing the container opening, it can pop the 
+    door open automatically. If it is facing a wall, it will create a knock sound, or if it does not contact with anything, it can
+    make a clicking noise to signal the box is unlocked.}
+\end{figure}
 
 \section{Communication Protocols}
 As of now, we are trying to decide between two communication protocols that will be used
