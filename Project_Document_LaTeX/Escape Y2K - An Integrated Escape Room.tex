@@ -185,7 +185,8 @@ the ``vision'' of the monster, and if a player is caught in the light then the m
 speeding up the game timer. During this monster event, time will stop and the players cannot change the
 time until they exit the monster's field of vision. To detect players, a proposed idea is installing a camera
 onto the TVs and using image processing to find players that are brightened by the light. There is also
-the potential solution of requiring players wear a vest with a color that the monster detects.
+the potential solution of requiring players wear a vest with a color that the monster detects. The microcontroller
+will communicate with the central computer running the game to know what to play and notify if a player is detected.
 
 \begin{figure}[ht]
     \centering
@@ -268,7 +269,7 @@ One of the main puzzles that our room will be centered on is a chess board in th
 This puzzle will be one of the first things that players see, but also the last puzzle that they will solve.
 Throughout the room and after solving various puzzles, players will receive chess pieces that, when
 arranged in the correct format, will open the door that is keeping players in the room and stop the
-catastrophic end of the world due to Y2K.
+catastrophic end of the world due to Y2K. 
 
 We have two ideas for the chess board puzzle. Both ideas are based off the gold contact pins that are used
 to charge a pebble watch (and in other places in electronics as well). Basically, the idea
@@ -284,11 +285,13 @@ mechanism, one that would be used for charging a smartwatch.
     \caption{Depiction of the contact pins that we plan on using for chess piece identification.}
 \end{figure}
 
-For our first idea, we are thinking of imbedding resistors with different values into
+For our first idea, we are thinking of embedding resistors with different values into
 each of the chess pieces. Then, if the chess piece is placed on a space that is wired for the solution,
 the resistor value from that piece would be read and analyzed. If it is the correct value for that space,
-part of the puzzle would unlock. And, if every piece is placed in the correct location, the door to the room
-will open and the players will be able to escape!
+part of the puzzle would unlock. And, if every piece is placed in the correct location, when a button is
+pressed then the door to the room will open and the players will be able to escape! This will likely be done
+by communicating to the central computer when the button is pressed whether the players
+have successfully completed the puzzle or not.
 
 The second idea is a bit less flushed out, however, the premise is the same. However, instead of using
 a resistor to denote which piece is in which location, we would hook up some sort of tiny microcontroller that
@@ -352,6 +355,8 @@ A list of these materials have been included below
     \item Speakers
     \item Motors (To act as lock releases)
     \item Solenoids
+    \item LED Display
+    \item Adjustable RGB lights
     \item Wireless communication modules
     \item Storage containers
     \item Busts with detachable modules
@@ -388,6 +393,12 @@ control over what time the clock is displaying, and will also help the central c
 what time is being displayed. Furthermore, we are going to be 3D printing mounting brackets and other
 components that will help the motor stay in place, rather than the mess of broken popsicle sticks and
 duct tape that it currently is.
+
+On top of the game clock is the game timer which will be displayed next to the door. This timer
+shows the remaining amount of time left to complete the game and is visible at all times. When the
+monster is revealed to the player during certain nighttime segments, the timer will go down at a
+faster rate which will dissuade players from getting the monster's attention. Using an LED display,
+the time will be outputted based on the value retrieved from the central computer's internal timer.
 
 \section{Milestones}
 For the summer, the milestone set in place will be to obtain all the necessary parts to start work on
