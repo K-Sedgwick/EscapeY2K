@@ -133,6 +133,14 @@ on puzzles that involve embedded computing, giving our room a deeper sense of co
 This means that we will be using technology as a central theme throughout the room to help convey the emotions that we
 are hoping the players will feel and also make the puzzles more interesting.
 
+\subsection*{The Story}
+Our escape room will be inside the office of a computer engineer/scientist acutely aware of the existential threat 
+of a time traveling beast capable of destroying the world as we know it when the turn of the century occours on 
+new year's day 2000 (Y2K). At this time, the beast will gain access to our dimension through a software oversight
+with how dates are stored in computer systems of the time. The correction to this global flaw rests in the office
+the players find themselves in, and they must hurry to disseminate the correcting code before time runs out and the
+beast escapes.
+
 \subsection*{How Horror Plays a Role}
 In life, horror is an incredibly good motivator. Imagine you are being hunted by some alien creature that is here to
 destroy the world and the only way to escape is so solve a collection of puzzles; you would gladly partipate!
@@ -140,7 +148,7 @@ In our escape room, this exact situation is something that we will be utilizing 
 as fast as possible.
 
 \subsubsection*{The Monster}
-All horror experiences begin with a mysterious and dangerous monster that is on the hunt. Our room will feature such a monster
+Many horror experiences begin with a mysterious and dangerous monster that is on the hunt. Our room will feature such a monster
 that will come out when specific events are triggered or when the player clock reaches a certain time.
 If the monster is revealed to the players, this will activate an event which will
 speed up the game timer which shortens the time it takes to complete the room. The monster is an 
@@ -528,7 +536,7 @@ of students, however, the escape room that they were able to create is a great s
 of inspiration and we will be on the hunt for other articles such as this.
 
 \section{Prototype Demo and Current Status}
-The demo planned for this proposal is the clock that will be integral to
+The demo completed for this proposal was the clock that is integral to
 the puzzles in the escape room. Players must be expected to manipulate
 this clock to activate certain events in the game, along with the clock
 moving by itself throughout. Thus, a big analog clock will have controls
@@ -541,7 +549,22 @@ counter that counts on its own based on clock speed. By pressing either a
 ``forward'' or ``reverse'' button, the counter will increment or decrement
 and update the display on the clock alongside transferring the value to
 a computer. This will make the time easily stored and tracked which will
-help towards scripting certain events in the escape room.
+help towards scripting certain events in the escape room. For the prototype demonstration,
+the clock just used a standard DC motor, STM32F0 microcontroller, and some buttons
+to make the hands move at a rate of about one clock hour per real minute when idle, and
+maximum speed forward and backward when the appropriate button was pressed. To finish out
+the clock to function within the escape room itself, endstop switches will be placed at 
+the 1:00 and 12:00 hour times, as well as an encoder and counter to track the actual time
+of the game clock.
+\\
+\indent Aside from our prototype components, we have also collected many
+parts that will be used in the final project. We will be making extensive
+use of Arduino controllers, as well as raspberry pi computers for room control.
+We have collected the audio cassette player with 8 blank tapes, a remote MP3
+controller, 3D printing filament, some CRT displays and cables, and several
+electronic components that will be used to ``hack'' existing hardware for the
+purposes of this escape room (such as hijacking audio signals from the cassette
+player).
 
 %   ********************************************************************************************************
 %   ********************* CONCLUSION TO BE COMPLETED TOGETHER **********************************************
