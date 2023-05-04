@@ -40,11 +40,12 @@
 \begin{abstract}
     “ESCAPE Y2K” is an interactive escape room experience that relies on computer
     engineering as its main control source. The escape room is built to be an autonomous,
-    immersive, sci-fi, horror experience. A variety of sensors will be used to accomplish this
-    including a sonar range finder, noise sensor, pressure and heat sensors, nfc/rfid, and
-    movement sensors. Other technology to be implemented includes image/audio processing,
-    bluetooth, and digital/analog circuit design. A stretch goal for this project is to make this
-    room modular and portable, allowing it to be set up in any place and with any size of room.
+    immersive, sci-fi, horror experience using digital/analog circuit design, image/audio
+    processing, communication protocols, and embedded computing. Players
+    will interact and solve puzzles under a time limit while avoiding fictional threats within
+    the game in order to complete the experience and win. This is done with a time travel mechanic
+    that allows players to forward or reverse an artificial clock that changes the time within
+    the room and activates certain events that could both benefit and disadvantage them.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -87,7 +88,7 @@ locks having different passcode combinations depending on the hour hand. Players
 room are able to rewind or forward the time however they wish based on the minimum and
 maximum the time can go. Past 8:00, the game will transition to a darker, nighttime mode where
 more horror elements will come into play that can affect the game's timer. The maximum amount 
-of time players will have to escape will be 30 minutes, however, it may speed up under
+of time players will have to escape will be 30 minutes (subject to change), however, it may speed up under
 certain conditions and give players less time.
 
 \subsection*{What is an Escape Room?}
@@ -167,7 +168,7 @@ clock reaches midnight, the monster event will occur which speeds up the game ti
 choose to speed up or reverse time, the TVs will play an effect similar to fast forwarding or reversing a tape.
 Using a microcontroller, multiple video files will be stocked and played on the TV depending on the state of the
 game. The time position chosen for the video is also synced with the time on the clock.
-
+ 
 \begin{figure}[ht]
     \centering
     \includegraphics[width=0.90\columnwidth]{Images/tvcomparison.png}
@@ -333,20 +334,29 @@ both to the number and complexity of puzzles.
 In order to have a functioning project that we can be proud of, we are going to need a lot of materials.
 A list of these materials have been included below
 \begin{itemize}
-    \item Central microcontroller
-    \item Visual sensors (on ``windows'' for sensing players)
-    \item Analog or soft-image displays (to act as windows)
-    \item Chess board
+    \item Programmable microcontrollers
+    \item Analog clock
+    \item Cameras
+    \item Small CRT televisions
+    \item Chess board and pieces
     \item Audio cassette player
     \item Writable audio cassette tapes
     \item MP3 digital audio controller
+    \item Speakers
     \item Motors (To act as lock releases)
     \item Solenoids
-    \item Wireless communicaion modules
+    \item Wireless communication modules
     \item Storage containers
     \item Busts with detachable modules
     \item Turntable podium
 \end{itemize}
+
+Various furniture pieces, while not required for functionality, can be used to decorate
+the room for an immersive experience. Resistors, capacitors, breadboards, wires, and other
+various electronic parts might be required for wiring which can be obtained from the University
+of Utah stockroom. Other parts, equipment, or furniture not readily available in the stockroom
+will most likely be found sold in the University's surplus store, e-commerce websites like
+Amazon, or found in thrift stores and other secondhand locations.
 
 \subsection*{Clock}
 The clock that we have planned to use will be controlled through a single motor that turns the
