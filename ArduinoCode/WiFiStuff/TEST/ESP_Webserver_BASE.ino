@@ -26,7 +26,7 @@ void setup()
 {
     Serial.begin(115200);
     // Initialize the built-in LED
-    digitalWrite(LED_BUILTIN, LOW); // Turn the LED on (Note that LOW is the voltage level
+    pinMode(LED_BUILTIN, OUTPUT);  // Initialize the LED_BUILTIN pin as an output
 
     // Connect to Wi-Fi network with SSID and password
     Serial.print("Connecting to ");
@@ -72,8 +72,9 @@ void loop()
                         // HTTP headers always start with a response code (e.g. HTTP/1.1 200 OK)
                         // and a content-type so the client knows what's coming, then a blank line:
                         rcvClient.println("HTTP/1.1 200 OK");
-                        rcvClient.println("Content-type:text/html");
-                        rcvClient.println("Connection: close");
+                        rcvClient.println("Content-type: application/json");
+                        rcvClient.println("Content-Length: 20"); //THIS NEEDS TO BE DYNAMIC
+                        rcvClient.println("Access-Control-Allow-Origin: *");
                         rcvClient.println();
 
                         // PUT YOUR LOGIC HERE!
@@ -86,7 +87,7 @@ void loop()
                         }
 
                         // The HTTP response ends with another blank line
-                        rcvClient.println();
+                        rcvClient.println("{'success':'true'}"); //CONTENT LENGTH DYNAMIC BASED ON HOW LONG THIS IS (IN CHARACTERS) + 1
                         // Break out of the while loop
                         break;
                     }

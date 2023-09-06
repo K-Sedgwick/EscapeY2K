@@ -14,7 +14,7 @@ const char *password = "INSERT_PASSWORD_HERE";
 WiFiServer server(1234);
 
 // Variable to store the HTTP request
-string header;
+String header;
 
 // Auxiliar variables to store the current output state
 // 0 MEANS OFF
@@ -31,7 +31,7 @@ void setup()
 {
   Serial.begin(115200);
   // Initialize the built-in LED
-  digitalWrite(LED_BUILTIN, LOW); // Turn the LED on (Note that LOW is the voltage level
+  pinMode(LED_BUILTIN, OUTPUT);  // Initialize the LED_BUILTIN pin as an output
 
   // Connect to Wi-Fi network with SSID and password
   Serial.print("Connecting to ");
@@ -77,7 +77,9 @@ void loop()
             // HTTP headers always start with a response code (e.g. HTTP/1.1 200 OK)
             // and a content-type so the client knows what's coming, then a blank line:
             client.println("HTTP/1.1 200 OK");
-            client.println("Content-type:text/html");
+            client.println("Content-type: application/json");
+            client.println("Content-Length: 20"); //THIS NEEDS TO BE DYNAMIC
+            client.println("Access-Control-Allow-Origin: *");
             client.println("Connection: close");
             client.println();
 
@@ -94,7 +96,7 @@ void loop()
             }
 
             // The HTTP response ends with another blank line
-            client.println();
+            client.println("{'success':'true'}");
             // Break out of the while loop
             break;
           }
