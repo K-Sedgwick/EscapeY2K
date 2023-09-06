@@ -7,8 +7,8 @@
 #include <ESP8266WiFi.h>
 
 // Replace with your network credentials
-const char *ssid = "INSERT_SSID_HERE";
-const char *password = "INSERT_PASSWORD_HERE";
+const char *ssid = "Whitefire";
+const char *password = "R00tb33R";
 
 // THIS IS THE PORT FOR THIS ESP! When you send it requests you have to include the port!
 WiFiServer server(1234);

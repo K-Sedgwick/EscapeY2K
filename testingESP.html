@@ -18,10 +18,25 @@
             const response = fetch("http://10.0.0.181:1234?led=off");
             console.log('onButton response', response);
         }
+
+        const onButton1 = document.getElementById('turn-led-on-1');
+        const offButton1 = document.getElementById('turn-led-off-1');
+
+        onButton1.onclick = function(){
+            const response = fetch("http://10.0.0.225:1234?led=on");
+            console.log('onButton response', response);
+        }
+
+        offButton1.onclick = function(){
+            const response = fetch("http://10.0.0.225:1234?led=off");
+            console.log('onButton response', response);
+        }
     </script>
 </head>
 <body>
     <button id="turn-led-on">Turn LED On</button>
     <button id="turn-led-off">Turn LED Off</button>
+    <button id="turn-led-on-1">Turn LED On</button>
+    <button id="turn-led-off-1">Turn LED Off</button>
 </body>
 </html>
