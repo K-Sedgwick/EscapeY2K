@@ -10,12 +10,12 @@
         const offButton = document.getElementById('turn-led-off');
 
         onButton.onclick = function(){
-            const response = fetch("http://10.0.0.225:1234?led=on");
+            const response = fetch("http://10.0.0.181:1234?led=on");
             console.log('onButton response', response);
         }
 
         offButton.onclick = function(){
-            const response = fetch("http://10.0.0.225:1234?led=off");
+            const response = fetch("http://10.0.0.181:1234?led=off");
             console.log('onButton response', response);
         }
     </script>
