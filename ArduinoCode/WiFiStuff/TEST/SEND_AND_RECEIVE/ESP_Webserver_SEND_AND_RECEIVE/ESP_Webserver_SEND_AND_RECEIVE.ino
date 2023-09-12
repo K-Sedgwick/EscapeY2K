@@ -5,23 +5,23 @@
 
 // Load Wi-Fi library
 #include <ESP8266WiFi.h>
+#include <ESP8266HTTPClient.h>
+#include <WiFiClient.h>
 
 // Replace with your network credentials
-const char *ssid = "INSERT_SSID_HERE";
-const char *password = "INSERT_PASSWORD_HERE";
+const char *ssid = "Whitefire";
+const char *password = "R00tb33R";
 
 // THIS IS THE PORT FOR THIS ESP! When you send it requests you have to include the port!
 WiFiServer server(1234);
 
 // Variable to store the HTTP request
-string header;
+String header;
 
 // Add any variables that you might need here!
 String serverName = "http://10.0.0.225:1234";
 int stateOfOtherLED = 0; // 0 means off
 int allowOtherTick = 0;  // 0 means dont allow other ESP to tick
-// Set timer to 5 seconds (5000)
-unsigned long timerDelay = 1000;
 
 // Current time
 unsigned long currentTime = millis();
@@ -29,12 +29,15 @@ unsigned long currentTime = millis();
 unsigned long previousTime = 0;
 // Define timeout time in milliseconds (example: 2000ms = 2s)
 const long timeoutTime = 2000;
+unsigned long lastTime = 0;
+// Set timer to 5 seconds (5000)
+unsigned long timerDelay = 1000;
 
 void setup()
 {
     Serial.begin(115200);
     // Initialize the built-in LED
-    digitalWrite(LED_BUILTIN, LOW); // Turn the LED on (Note that LOW is the voltage level
+    pinMode(LED_BUILTIN, OUTPUT);  // Initialize the LED_BUILTIN pin as an output
 
     // Connect to Wi-Fi network with SSID and password
     Serial.print("Connecting to ");
@@ -80,8 +83,9 @@ void loop()
                         // HTTP headers always start with a response code (e.g. HTTP/1.1 200 OK)
                         // and a content-type so the client knows what's coming, then a blank line:
                         rcvClient.println("HTTP/1.1 200 OK");
-                        rcvClient.println("Content-type:text/html");
-                        rcvClient.println("Connection: close");
+                        rcvClient.println("Content-type: application/json");
+                        rcvClient.println("Content-Length: 20"); //THIS NEEDS TO BE DYNAMIC
+                        rcvClient.println("Access-Control-Allow-Origin: *");
                         rcvClient.println();
 
                         // turns the GPIOs on and off
@@ -99,7 +103,7 @@ void loop()
                         }
 
                         // The HTTP response ends with another blank line
-                        rcvClient.println();
+                        rcvClient.println("{'success':'true'}");
                         // Break out of the while loop
                         break;
                     }
@@ -132,23 +136,11 @@ void loop()
                 WiFiClient sendClient;
                 HTTPClient http;
 
-                // If its 0, turn it on
-                if (stateOfOtherLED == 0)
-                {
-                    String serverPath = serverName + "?led=on";
+                String serverPath = stateOfOtherLED == 0 ? serverName + "?led=on" : serverName + "?led=off";
 
-                    // Your Domain name with URL path or IP address with path
-                    http.begin(sendClient, serverPath.c_str());
-                    stateOfOtherLED = 1;
-                }
-                else
-                {
-                    String serverPath = serverName + "?led=off";
-
-                    // Your Domain name with URL path or IP address with path
-                    http.begin(sendClient, serverPath.c_str());
-                    stateOfOtherLED = 0;
-                }
+                // Your Domain name with URL path or IP address with path
+                http.begin(sendClient, serverPath.c_str());
+                stateOfOtherLED = !stateOfOtherLED;
 
                 // Send HTTP GET request
                 int httpResponseCode = http.GET();
