@@ -136,7 +136,7 @@ void loop()
                 WiFiClient sendClient;
                 HTTPClient http;
 
-                String serverPath = stateOfOtherLED == 0 ? serverName + "?led=on" : serverName + "?led=off";
+                String serverPath = stateOfOtherLED == 0 ? serverName + "/?led=on" : serverName + "/?led=off";
 
                 // Your Domain name with URL path or IP address with path
                 http.begin(sendClient, serverPath.c_str());
