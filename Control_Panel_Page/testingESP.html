@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test ESP</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="bootstrap.css">
+
+    <!-- JS -->
+    <script type="module" src="vue.js"></script>
+    <script type="module" src="vueConfig.js"></script>
+    <script type="module" src="vanilla.js"></script>
+
+</head>
+<body>
+    <div id="vue-root">
+        <div class="row mt-2 text-center">
+            <div class="col rounded shadow">
+                <h3>181 (SEND AND RECEIVE)</h3>
+                <button class="btn btn-dark" id="turn-led-on">Turn LED On</button>
+                <button class="btn btn-dark" id="turn-led-off">Turn LED Off</button>
+            </div>
+            <div class="col rounded shadow">
+                <h3>225 (ONLY RECEIVE)</h3>
+                <button class="btn btn-dark" id="turn-led-on-1">Turn LED On</button>
+                <button class="btn btn-dark" id="turn-led-off-1">Turn LED Off</button>
+            </div>
+        </div>
+        <div class="m-3 text-center card">
+            <div class="card-header">
+                <h3>Clock Stuff</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
+                        <h4>Current Time: {{currentTime}}</h4>
+                    </div>
+                    <div class="col">
+                        <h4>Clock Operation: {{clockOperation}}</h4>        
+                    </div>
+                </div>
+                <button class="btn btn-dark">Reset Clock</button>
+                <button class="btn btn-dark">Tick Normally</button>
+                <button class="btn btn-dark">Reverse</button>
+                <button class="btn btn-dark">Fast Forward</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
