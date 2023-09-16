@@ -1,2 +1,10 @@
+Wifi Password:
+    Username: EscapeY2K
+    Password: caNY0u3scAp3?!
+
+Router Login:
+    Username: EscapeY2K
+    Password: routerPassword!
+
 08:3A:8D:D1:B2:AF -> 10.0.0.225:1234
 08:3A:8D:D1:A0:29 -> 10.0.0.181:1234

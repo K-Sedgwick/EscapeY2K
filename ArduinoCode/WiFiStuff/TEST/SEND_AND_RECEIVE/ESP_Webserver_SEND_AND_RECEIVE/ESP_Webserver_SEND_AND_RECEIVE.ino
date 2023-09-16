@@ -9,8 +9,8 @@
 #include <WiFiClient.h>
 
 // Replace with your network credentials
-const char *ssid = "Whitefire";
-const char *password = "R00tb33R";
+const char *ssid = "EscapeY2K";
+const char *password = "caNY0u3scAp3?!";
 
 // THIS IS THE PORT FOR THIS ESP! When you send it requests you have to include the port!
 WiFiServer server(1234);

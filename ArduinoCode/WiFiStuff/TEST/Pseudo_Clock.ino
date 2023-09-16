@@ -7,8 +7,8 @@
 #include <ESP8266WiFi.h>
 
 // Replace with your network credentials
-const char *ssid = "Whitefire";
-const char *password = "R00tb33R";
+const char *ssid = "EscapeY2K";
+const char *password = "caNY0u3scAp3?!";
 
 // THIS IS THE PORT FOR THIS ESP! When you send it requests you have to include the port!
 WiFiServer server(1234);
@@ -19,8 +19,8 @@ WiFiServer server(1234);
 unsigned long currentTime = millis();
 // Previous time
 unsigned long previousTime = 0;
-// Define timeout time in milliseconds (example: 2000ms = 2s)
-const long timeoutTime = 2000;
+// Define timeout time in milliseconds (example: 1000ms = 1s)
+const long timeoutTime = 1000;
 
 void setup()
 {
@@ -111,9 +111,7 @@ void loop()
     }
     else
     {
-        // ENTER LOGIC FOR OTHER PROCESSES THAT YOU WANT THE ESP TO DO HERE
-        // FOR EXAMPLE, SENDING AN HTTP GET REQUEST
-        // Send an HTTP GET request depending on timerDelay
+        // Once per second I want the "clock" to advance
         if ((millis() - lastTime) > timerDelay)
         {
             // Check WiFi connection status
