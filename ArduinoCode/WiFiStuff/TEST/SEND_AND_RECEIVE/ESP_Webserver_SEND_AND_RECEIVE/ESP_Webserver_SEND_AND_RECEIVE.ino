@@ -19,7 +19,7 @@ WiFiServer server(1234);
 String header;
 
 // Add any variables that you might need here!
-String serverName = "http://10.0.0.225:1234";
+String serverName = "http://192.168.1.225:1234";
 int stateOfOtherLED = 0; // 0 means off
 int allowOtherTick = 0;  // 0 means dont allow other ESP to tick
 
