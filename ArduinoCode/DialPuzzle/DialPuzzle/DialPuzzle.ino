@@ -77,11 +77,6 @@ void loop() {
         checkpoints[1] = 0;
       }
 		}
-
-		Serial.print("Direction: ");
-		Serial.print(currentDir);
-		Serial.print(" | Counter: ");
-		Serial.println(counter);
 	}
 
 	// Remember last A state
