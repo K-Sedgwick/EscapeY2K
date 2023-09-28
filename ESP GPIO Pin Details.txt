@@ -1,0 +1,9 @@
+GPIO PINS THAT WORK
+   CODE  |  BOARD
+    0    ->   D3 -> WORKS AS INPUT
+    1    ->   TX -> WORKS AS INPUT
+    2    ->   D4
+    3    ->   RX
+    4    ->   D2 -> WORKS AS INPUT
+    5    ->   D1 -> WORKS AS INPUT
+    

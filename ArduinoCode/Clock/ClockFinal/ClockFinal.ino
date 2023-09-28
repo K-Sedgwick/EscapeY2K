@@ -7,8 +7,8 @@
 #include <Stepper.h>
 
 // ---- WIFI SECTION ----
-const char *ssid = "EscapeY2K";
-const char *password = "caNY0u3scAp3?!";
+const char *ssid = "EscapeY2K";//EscapeY2K
+const char *password = "caNY0u3scAp3?!";//caNY0u3scAp3?!
 WiFiServer server(1234);
 
 // ---- STEPPER SECTION ----
@@ -21,7 +21,7 @@ const int fastForwardSteps = 10;
 unsigned long ticksCompleted = 0;
 // Creates an instance of stepper class
 // Pins entered in sequence IN1-IN3-IN2-IN4 for proper step sequence
-Stepper clockStepper = Stepper(stepsPerRevolution, 11, 9, 10, 8);
+Stepper clockStepper = Stepper(stepsPerRevolution, 3, 4, 5, 2);
 
 // ---- SLOT INTERRUPTOR SECTION ----
 const int InterruptorAtOne = 2;
@@ -49,7 +49,12 @@ void setup()
 	// configure pin 2 and 3 as an input and enable the internal pull-up resistor
 	pinMode(InterruptorAtOne, INPUT_PULLUP);
 	pinMode(InterruptorAtTwelve, INPUT_PULLUP);
-	pinMode(LedPin, OUTPUT);
+
+  //Setup pins for stepper
+	pinMode(2, OUTPUT);
+  pinMode(3, OUTPUT);
+  pinMode(4, OUTPUT);
+  pinMode(5, OUTPUT);
 
 	// Rotate CW quickly at 10 RPM
 	// TODO: Figure out how to change direction
@@ -68,8 +73,9 @@ void loop()
 	// If the user hasnt selected a different time just tick normally
 	if (!timeCurrentlyControlledByUser && (millis() - previousTime) > TickDelayTime)
 	{
-		Serial.print("Tick");
+		//Serial.print("Tick");
 		clockStepper.step(tickSteps);
+    ticksCompleted += tickSteps;
 		previousTime = millis();
 	}
 	// If they selected reverse, tell the stepper to reverse until they ask to be done
@@ -102,7 +108,7 @@ void handleClientConnected(WiFiClient rcvClient)
 		if (rcvClient.available())
 		{							   // if there's bytes to read from the client,
 			char c = rcvClient.read(); // read a byte, then
-			Serial.write(c);		   // print it out the serial monitor
+			//Serial.write(c);		   // print it out the serial monitor
 			header += c;
 			if (c == '\n')
 			{ // if the byte is a newline character
@@ -110,9 +116,9 @@ void handleClientConnected(WiFiClient rcvClient)
 				// that's the end of the client HTTP request, so send a response:
 				if (currentLine.length() == 0)
 				{
-					String messageStart = "{'ticksCompleted':'";
+					String messageStart = "{\"ticksCompleted\":\"";
 					String messageData = messageStart + ticksCompleted;
-					String fullMessage = messageData + "'}";
+					String fullMessage = messageData + "\"}";
 
 					String contentLengthString = "Content-Length: " + fullMessage.length() + 2;
 
@@ -134,7 +140,7 @@ void handleClientConnected(WiFiClient rcvClient)
 					}
 					else if (header.indexOf("GET /?fastForward=on") >= 0)
 					{
-						Serial.println("Clock is reversing");
+						Serial.println("Clock is fast forwarding");
 						timeCurrentlyControlledByUser = true;
 						directionReverse = false;
 						directionFastForward = true;
@@ -142,11 +148,21 @@ void handleClientConnected(WiFiClient rcvClient)
 					}
 					else if (header.indexOf("GET /?normal=on") >= 0)
 					{
-						Serial.println("Clock is reversing");
+						Serial.println("Clock is running normally");
 						// Reset the variables that control clock function
 						directionFastForward = false;
 						directionFastForward = false;
 						timeCurrentlyControlledByUser = false;
+						digitalWrite(LED_BUILTIN, LOW); // Turn the LED on (Note that LOW is the voltage level
+					}
+          else if (header.indexOf("GET /?reset=on") >= 0)
+					{
+						Serial.println("Clock is running normally");
+						// Reset the variables that control clock function
+						directionFastForward = false;
+						directionFastForward = false;
+						timeCurrentlyControlledByUser = false;
+            ticksCompleted = 0;
 						digitalWrite(LED_BUILTIN, LOW); // Turn the LED on (Note that LOW is the voltage level
 					}
 
