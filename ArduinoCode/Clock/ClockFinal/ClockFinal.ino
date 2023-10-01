@@ -11,6 +11,10 @@ const char *ssid = "EscapeY2K";//EscapeY2K
 const char *password = "caNY0u3scAp3?!";//caNY0u3scAp3?!
 WiFiServer server(1234);
 
+//IP addresses of the devices that need to know about what time it is
+const int numOfTimeDependentDevices = 1;
+String timeDependentIPs[numOfTimeDependentDevices] = {"192.168.1.202:1234"};
+
 // ---- STEPPER SECTION ----
 // Defines the number of steps per rotation
 const int stepsPerRevolution = 2038;
@@ -19,13 +23,11 @@ const int stepperSpeed = 10;
 const int reverseSteps = -10;
 const int fastForwardSteps = 10;
 unsigned long ticksCompleted = 0;
-// Creates an instance of stepper class
-// Pins entered in sequence IN1-IN3-IN2-IN4 for proper step sequence
-Stepper clockStepper = Stepper(stepsPerRevolution, 3, 4, 5, 2);
+Stepper clockStepper = Stepper(stepsPerRevolution, 3, 4, 5, 2); // Pins entered in sequence IN1-IN3-IN2-IN4 for proper step sequence
 
 // ---- SLOT INTERRUPTOR SECTION ----
-const int InterruptorAtOne = 2;
-const int InterruptorAtTwelve = 3;
+const int InterruptorAtOne = 0;
+const int InterruptorAtTwelve = 1;
 bool timeCurrentlyControlledByUser = false;
 bool directionReverse = false;
 bool directionFastForward = false;
@@ -36,6 +38,7 @@ unsigned long currentTime = millis();
 unsigned long previousTime = 0;
 const long TickDelayTime = 500;
 bool midnight = false;
+bool manualOverride = false; //If the room admin has to do stuff allow them extra control while in this mode
 
 // ---- SETUP AND LOOP ----
 
@@ -70,25 +73,35 @@ void loop()
 		handleClientConnected(rcvClient);
 	}
 
-	// If the user hasnt selected a different time just tick normally
-	if (!timeCurrentlyControlledByUser && (millis() - previousTime) > TickDelayTime)
-	{
-		//Serial.print("Tick");
-		clockStepper.step(tickSteps);
-    ticksCompleted += tickSteps;
-		previousTime = millis();
-	}
-	// If they selected reverse, tell the stepper to reverse until they ask to be done
-	else if (directionReverse)
-	{
-		clockStepper.step(reverseSteps); // TODO: Figure out what direction is positive and what is negative
-		ticksCompleted += reverseSteps;
-	}
-	else if (directionFastForward)
-	{
-		clockStepper.step(10);
-		ticksCompleted += fastForwardSteps;
-	}
+  //If the admin hasnt requested control just operate normally
+  if(!manualOverride){
+    //If it's midnight send messages to all of the devices that need to know and dont allow the user to do any more adjusting of the time
+    if(midnight){
+      InformAllDevicesOfTime();
+    }
+    // If the user hasnt selected a different time just tick normally
+    else if (!timeCurrentlyControlledByUser && (millis() - previousTime) > TickDelayTime)
+    {
+      //Serial.print("Tick");
+      clockStepper.step(tickSteps);
+      ticksCompleted += tickSteps;
+      previousTime = millis();
+    }
+    // If they selected reverse, tell the stepper to reverse until they ask to be done
+    else if (directionReverse)
+    {
+      clockStepper.step(reverseSteps); // TODO: Figure out what direction is positive and what is negative
+      ticksCompleted += reverseSteps;
+    }
+    else if (directionFastForward)
+    {
+      clockStepper.step(10);
+      ticksCompleted += fastForwardSteps;
+    }
+  }
+  else{
+    //TODO: Decide if we want to add anything special here? Probably not, im assuming we just dont want the clock running rn :P
+  }
 }
 
 // ---- HELPER METHODS ----
@@ -130,13 +143,12 @@ void handleClientConnected(WiFiClient rcvClient)
 
 					// PUT YOUR LOGIC HERE!
 					// Change the strings after GET to what youre hoping the URL will have in it
-					if (header.indexOf("GET /?reverse=on") >= 0)
+					if (!midnight && header.indexOf("GET /?reverse=on") >= 0)
 					{
 						Serial.println("Clock is reversing");
 						timeCurrentlyControlledByUser = true;
 						directionFastForward = false;
 						directionReverse = true;
-						digitalWrite(LED_BUILTIN, LOW); // Turn the LED on (Note that LOW is the voltage level
 					}
 					else if (header.indexOf("GET /?fastForward=on") >= 0)
 					{
@@ -144,7 +156,6 @@ void handleClientConnected(WiFiClient rcvClient)
 						timeCurrentlyControlledByUser = true;
 						directionReverse = false;
 						directionFastForward = true;
-						digitalWrite(LED_BUILTIN, LOW); // Turn the LED on (Note that LOW is the voltage level
 					}
 					else if (header.indexOf("GET /?normal=on") >= 0)
 					{
@@ -153,7 +164,6 @@ void handleClientConnected(WiFiClient rcvClient)
 						directionFastForward = false;
 						directionFastForward = false;
 						timeCurrentlyControlledByUser = false;
-						digitalWrite(LED_BUILTIN, LOW); // Turn the LED on (Note that LOW is the voltage level
 					}
           else if (header.indexOf("GET /?reset=on") >= 0)
 					{
@@ -163,7 +173,28 @@ void handleClientConnected(WiFiClient rcvClient)
 						directionFastForward = false;
 						timeCurrentlyControlledByUser = false;
             ticksCompleted = 0;
-						digitalWrite(LED_BUILTIN, LOW); // Turn the LED on (Note that LOW is the voltage level
+					}
+          else if (header.indexOf("GET /?manualOverride=on") >= 0)
+					{
+						Serial.println("ADMIN MODE ON");
+            //First, let the system know the admin is in charge of the room currently
+            manualOverride = true;
+						// Reset the variables that control clock function
+						directionFastForward = false;
+						directionFastForward = false;
+						timeCurrentlyControlledByUser = false;
+						digitalWrite(LED_BUILTIN, LOW); // Turn the LED on
+					}
+          else if (header.indexOf("GET /?manualOverride=off") >= 0)
+					{
+						Serial.println("ADMIN MODE OFF");
+            //First, let the system know the admin is no longer in charge of the room currently
+            manualOverride = false;
+						// Reset the variables that control clock function
+						directionFastForward = false;
+						directionFastForward = false;
+						timeCurrentlyControlledByUser = false;
+						digitalWrite(LED_BUILTIN, HIGH); // Turn the LED off
 					}
 
 					// The HTTP response ends with another blank line
@@ -219,6 +250,16 @@ void processInterruptorSwitches()
 	{
 		digitalWrite(LedPin, HIGH);
 	}
+}
+
+//This makes sending the time to every ESP that needs to be aware of it easier. This might need to be offloaded to a different ESP if it becomes too slow
+void InformAllDevicesOfTime(){
+  String ticksCompletedString = String(ticksCompleted);
+  String currentTime  = midnight ? "midnight=on" : "ticksCompleted=" + ticksCompletedString;
+
+  for(int i = 0; i < numOfTimeDependentDevices; i++){
+    sendMessageToESP(currentTime, timeDependentIPs[i]);
+  }
 }
 
 /// @brief This simplifies sending a message to a server.
