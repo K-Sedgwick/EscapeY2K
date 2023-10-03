@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,6 +16,7 @@
     <!-- <script type="module" src="vanilla.js"></script> -->
 
 </head>
+
 <body>
     <div id="vue-root" class="container">
         <div class="m-3 text-center card">
@@ -24,7 +26,7 @@
                     <label for="admin-mode-checkbox">Admin Mode</label>
                 </div>
                 <h3>Clock Stuff</h3>
-                <div :class="{'dual-ring-load':true, 'd-none':!loading}"></div>
+                <div :class="{'dual-ring-load':true, 'd-none':!espModules.clock.loading}"></div>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -32,19 +34,44 @@
                         <h4>Current Time: {{currentTime}}</h4>
                     </div>
                     <div class="col">
-                        <h4>Clock Operation: {{clockOperation}}</h4>        
+                        <h4>Clock Status: {{espModules.clock.status}}</h4>
                     </div>
                 </div>
                 <div class="mt-2">
-                    <button class="btn btn-dark" @click="changeClockMode('pause', 'on')" :disabled="loading">Pause Clock</button>
-                    <button class="btn btn-dark" @click="changeClockMode('reset', 'on')" :disabled="loading">Reset Clock</button>
-                    <button class="btn btn-dark" @click="changeClockMode('normal', 'on')" :disabled="loading">Tick Normally</button>
-                    <button class="btn btn-dark" @click="changeClockMode('reverse', 'on')" :disabled="loading">Reverse</button>
-                    <button class="btn btn-dark" @click="changeClockMode('fastForward', 'on')" :disabled="loading">Fast Forward</button>    
+                    <button class="btn btn-dark" @click="changeClockMode('pause', 'on')"
+                        :disabled="espModules.clock.loading">Pause Clock</button>
+                    <button class="btn btn-dark" @click="changeClockMode('reset', 'on')"
+                        :disabled="espModules.clock.loading">Reset Clock</button>
+                    <button class="btn btn-dark" @click="changeClockMode('normal', 'on')"
+                        :disabled="espModules.clock.loading">Tick Normally</button>
+                    <button class="btn btn-dark" @click="changeClockMode('reverse', 'on')"
+                        :disabled="espModules.clock.loading">Reverse</button>
+                    <button class="btn btn-dark" @click="changeClockMode('fastForward', 'on')"
+                        :disabled="espModules.clock.loading">Fast Forward</button>
+                </div>
+            </div>
+        </div>
+        <div class="m-3 text-center card">
+            <div class="card-header">
+                <h3>Lockbox</h3>
+                <div :class="{'dual-ring-load':true, 'd-none':!espModules.lockbox.loading}"></div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
+                        <h4>Box status: {{espModules.lockbox.status}}</h4>
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <button class="btn btn-dark" @click="sendLockboxMessage('midnight', 'on')"
+                        :disabled="espModules.lockbox.loading">Open Box</button>
+                    <button class="btn btn-dark" @click="sendLockboxMessage('midnight', 'off')"
+                        :disabled="espModules.lockbox.loading">Close Box</button>
                 </div>
             </div>
         </div>
     </div>
 
 </body>
+
 </html>

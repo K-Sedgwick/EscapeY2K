@@ -13,7 +13,7 @@ WiFiServer server(1234);
 
 //IP addresses of the devices that need to know about what time it is
 const int numOfTimeDependentDevices = 1;
-String timeDependentIPs[numOfTimeDependentDevices] = {"192.168.1.202:1234"};
+String timeDependentIPs[numOfTimeDependentDevices] = {"192.168.1.211:1234"};
 
 // ---- STEPPER SECTION ----
 // Defines the number of steps per rotation
@@ -38,6 +38,7 @@ unsigned long currentTime = millis();
 unsigned long previousTime = 0;
 const long TickDelayTime = 500;
 bool midnight = false;
+bool informed = false;
 bool pause = false;
 bool manualOverride = false; //If the room admin has to do stuff allow them extra control while in this mode
 
@@ -83,7 +84,11 @@ void loop()
   if(!manualOverride && !pause){
     //If it's midnight send messages to all of the devices that need to know and dont allow the user to do any more adjusting of the time
     if(midnight){
-      //InformAllDevicesOfTime();
+      if(!informed){
+        informed = true;
+        //InformAllDevicesOfTime();
+        InformAllDevicesMidnight();
+      }
     }
     // If the user hasnt selected a different time just tick normally
     else if (!timeCurrentlyControlledByUser && (millis() - previousTime) > TickDelayTime)
@@ -273,12 +278,11 @@ void processInterruptorSwitches()
 }
 
 //This makes sending the time to every ESP that needs to be aware of it easier. This might need to be offloaded to a different ESP if it becomes too slow
-void InformAllDevicesOfTime(){
-  String ticksCompletedString = String(ticksCompleted);
-  String currentTime  = midnight ? "midnight=on" : "ticksCompleted=" + ticksCompletedString;
+void InformAllDevicesMidnight(){
+  String midnightMessage  = midnight ? "midnight=on" : "midnight=off";
 
   for(int i = 0; i < numOfTimeDependentDevices; i++){
-    sendMessageToESP(currentTime, timeDependentIPs[i]);
+    sendMessageToESP(midnightMessage, timeDependentIPs[i]);
   }
 }
 
