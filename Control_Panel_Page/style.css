@@ -1,0 +1,25 @@
+.dual-ring-load {
+    display: inline-block;
+    position: absolute;
+    top: 5%;
+    left: 90%;
+  }
+  .dual-ring-load:after {
+    content: " ";
+    display: block;
+    width: 40px;
+    height: 40px;
+    margin: 8px;
+    border-radius: 50%;
+    border: 6px solid #5c5c5c;
+    border-color: #5e5e5e transparent #575757 transparent;
+    animation: dual-ring-load 1.2s linear infinite;
+  }
+  @keyframes dual-ring-load {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }

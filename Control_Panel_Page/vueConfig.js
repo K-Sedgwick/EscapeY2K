@@ -14,60 +14,38 @@ const vue = new Vue({
       //Clock Stuff
       currentTime: 0,
       clockOperation: "none",
+			adminMode: false,
+
+			//General Stuff
+	  	loading: false
     };
   },
 
+	watch: {
+		adminMode(newMode){
+			const onOrOff = newMode ? 'on' : 'off';
+			this.changeClockMode('manualOverride', onOrOff);
+		}
+	},
+
   methods: {
-		reverse() {
+		changeClockMode(mode, onOrOff){
 			const vm = this;
+			this.loading = true;
 			const clock = this.espModules.clock;
 
-      fetch(`http://${clock.ipAddress}:${clock.port}?reverse=on`)
+      fetch(`http://${clock.ipAddress}:${clock.port}?${mode}=${onOrOff}`)
 				.then(resp => resp.json())
 				.then(apiObj => {
 					if(apiObj){
-						console.log('reverse - data from clock', apiObj);
-					}
-				});
-    },
-		fastForward() {
-			const vm = this;
-			const clock = this.espModules.clock;
+						if(apiObj.error){
+							console.log("An unexpected error occured.");
+						}
 
-      fetch(`http://${clock.ipAddress}:${clock.port}?fastForward=on`)
-				.then(resp => resp.json())
-				.then(apiObj => {
-					if(apiObj){
-						console.log('fastForward - data from clock', apiObj);
-						vm.currentTime = apiObj.ticksCompleted;
+						vm.clockOperation = apiObj.mode ?? "Undefined";
+						vm.loading = false;
 					}
 				});
-    },
-		normal() {
-			const vm = this;
-			const clock = this.espModules.clock;
-
-      fetch(`http://${clock.ipAddress}:${clock.port}?normal=on`)
-				.then(resp => resp.json())
-				.then(apiObj => {
-					if(apiObj){
-						console.log('normal - data from clock', apiObj);
-						vm.currentTime = apiObj.ticksCompleted;
-					}
-				});
-    },
-		reset() {
-			const vm = this;
-			const clock = this.espModules.clock;
-
-      fetch(`http://${clock.ipAddress}:${clock.port}?reset=on`)
-				.then(resp => resp.json())
-				.then(apiObj => {
-					if(apiObj){
-						console.log('normal - data from clock', apiObj);
-						vm.currentTime = apiObj.ticksCompleted;
-					}
-				});
-    },
+		},
   },
 });
