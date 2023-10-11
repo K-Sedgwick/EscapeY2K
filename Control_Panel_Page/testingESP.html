@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="bg-dark">
 
 <head>
     <meta charset="UTF-8">
@@ -17,12 +17,21 @@
 
 </head>
 
-<body>
-    <div id="vue-root" class="container">
+<body class="bg-dark">
+    <div id="vue-root" class="container bg-dark">
+        <div class="m-3 text-center card">
+            <div class="card-header">
+                <h3>Module 0 (UDP TEST)</h3>
+            </div>
+            <div class="mt-2 card-body">
+                <button class="btn btn-dark" @click="sendModuleMessage(0, 'led', 'on')">LED ON</button>
+                <button class="btn btn-dark" @click="sendModuleMessage(0, 'led', 'off')">LED OFF</button>
+            </div>
+        </div>
         <div class="m-3 text-center card">
             <div class="card-header">
                 <div class="position-absolute mt-2">
-                    <input id="admin-mode-checkbox" type="checkbox" v-for="adminMode" :disabled="loading">
+                    <input id="admin-mode-checkbox" type="checkbox" v-model="adminMode" :disabled="loading">
                     <label for="admin-mode-checkbox">Admin Mode</label>
                 </div>
                 <h3>Clock Stuff</h3>

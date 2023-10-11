@@ -14,7 +14,7 @@ unsigned long previousTime = 0;
 const long TickDelayTime = 500;
 bool midnight = false;
 int buttonPin = 0;
-String status = "";
+String status = "starting...";
 
 // ---- SETUP AND LOOP ----
 
@@ -29,8 +29,7 @@ void setup()
   pinMode(LED_BUILTIN, OUTPUT); 
   pinMode(buttonPin, OUTPUT);
   digitalWrite(LED_BUILTIN, LOW); // Turn the LED off
-
-  status = "starting...";
+  status = "Closed";
 }
 
 void loop()
@@ -154,7 +153,8 @@ String sendMessageToESP(String command, String address)
 		http.begin(sendClient, serverPath.c_str());
 
 		//Change timeout so its not so long (1 seconds for now, maybe change later)
-    http.setTimeout(1000);
+    	http.setTimeout(1000);
+
 		// Send HTTP GET request
 		int httpResponseCode = http.GET();
 
@@ -200,4 +200,55 @@ void connectToWifi()
 	Serial.println("IP address: ");
 	Serial.println(WiFi.localIP());
 	server.begin();
+}
+
+/// @brief This simplifies sending a message to a server.
+/// @param command What do you want to tell the server? Dont include the "/?" at the beginning, but if you're going to do a long query dont forget to add the extra "&" signs.
+/// @param address IP Address of the ESP module you want to communicate with. "IP:PORT"
+/// @return The string response that was retrieved from the server or an error message if an error occured.
+String sendMessageToESP(String command, String address)
+{
+	String response = "";
+
+	// Check WiFi connection status
+	if (WiFi.status() == WL_CONNECTED)
+	{
+		WiFiClient sendClient;
+		HTTPClient http;
+
+		String serverPath = "http://" + address + "/?" + command;
+
+		// Your Domain name with URL path or IP address with path
+		http.begin(sendClient, serverPath.c_str());
+
+    //Change timeout so its not so long (5 seconds for now, maybe change later)
+    http.setConnectTimeout(5000);
+    Serial.printf("Before http.GET() to %s \n", address);
+		// Send HTTP GET request
+		int httpResponseCode = http.GET();
+    Serial.printf("After http.GET() to %s \n", address);
+
+		if (httpResponseCode > 0)
+		{
+			Serial.print("HTTP Response code: ");
+			Serial.println(httpResponseCode);
+			response = http.getString();
+			Serial.println(response);
+		}
+		else
+		{
+			Serial.print("Error code: ");
+			Serial.println(httpResponseCode);
+			response = "An error occured. Please try again. Error code: " + httpResponseCode;
+		}
+		// Free resources
+		http.end();
+	}
+	else
+	{
+		Serial.println("WiFi Disconnected");
+		response = "This ESP has been disconnected from WiFi.";
+	}
+
+	return response;
 }
