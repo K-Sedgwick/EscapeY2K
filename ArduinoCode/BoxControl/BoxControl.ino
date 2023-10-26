@@ -1,5 +1,7 @@
 // Load Wi-Fi library
 #include <ESP8266WiFi.h>
+#include <ESP8266HTTPClient.h>
+#include <WiFiClient.h>
 
 // ---- WIFI SECTION ----
 const char *ssid = "EscapeY2K";//EscapeY2K
@@ -10,12 +12,9 @@ WiFiServer server(1234);
 unsigned long currentTime = millis();
 unsigned long previousTime = 0;
 const long TickDelayTime = 500;
-<<<<<<< HEAD
-=======
 bool midnight = false;
 int buttonPin = 0;
-String status = "";
->>>>>>> 360e7a5dfb036cb7e1599d5407d325be2c758976
+String status = "starting...";
 
 // ---- SETUP AND LOOP ----
 
@@ -28,9 +27,9 @@ void setup()
 
   //Setup pin for LED so we can test stuff
   pinMode(LED_BUILTIN, OUTPUT); 
+  pinMode(buttonPin, OUTPUT);
   digitalWrite(LED_BUILTIN, LOW); // Turn the LED off
-
-  status = "starting...";
+  status = "Closed";
 }
 
 void loop()
@@ -77,11 +76,8 @@ void handleClientConnected(WiFiClient rcvClient)
 				{
 					String fullMessage = "{";
 
-					if (header.indexOf("GET /?cmd1=true") >= 0)
+					if (header.indexOf("GET /?midnight=on") >= 0)
 					{
-<<<<<<< HEAD
-            //INCLUDE WHAT YOU WANT THIS COMMAND TO DO HERE
-=======
 						Serial.println("MIDNIGHT: OPEN BOX");
             midnight = true;
             digitalWrite(LED_BUILTIN, LOW); // Turn the LED on
@@ -89,13 +85,9 @@ void handleClientConnected(WiFiClient rcvClient)
             delay(200);
             digitalWrite(buttonPin, LOW);
             status = "Open";
->>>>>>> 360e7a5dfb036cb7e1599d5407d325be2c758976
 					}
-					else if (header.indexOf("GET /?cmd2=true") >= 0)
+					else if (header.indexOf("GET /?midnight=off") >= 0)
 					{
-<<<<<<< HEAD
-            //INCLUDE WHAT YOU WANT THIS COMMAND TO DO HERE
-=======
 						Serial.println("Clock is fast forwarding");
             midnight = false;
            digitalWrite(LED_BUILTIN, HIGH); // Turn the LED off
@@ -103,7 +95,6 @@ void handleClientConnected(WiFiClient rcvClient)
             delay(200);
             digitalWrite(buttonPin, LOW);
             status = "Closed";
->>>>>>> 360e7a5dfb036cb7e1599d5407d325be2c758976
 					}
           else if(header.indexOf("GET /?status=get" >= 0)){
             //We might need to add more metadata on to the response here someday, but for now we dont need to do anything extra here.
@@ -162,7 +153,8 @@ String sendMessageToESP(String command, String address)
 		http.begin(sendClient, serverPath.c_str());
 
 		//Change timeout so its not so long (1 seconds for now, maybe change later)
-    http.setTimeout(1000);
+    	http.setTimeout(1000);
+
 		// Send HTTP GET request
 		int httpResponseCode = http.GET();
 
@@ -208,4 +200,55 @@ void connectToWifi()
 	Serial.println("IP address: ");
 	Serial.println(WiFi.localIP());
 	server.begin();
+}
+
+/// @brief This simplifies sending a message to a server.
+/// @param command What do you want to tell the server? Dont include the "/?" at the beginning, but if you're going to do a long query dont forget to add the extra "&" signs.
+/// @param address IP Address of the ESP module you want to communicate with. "IP:PORT"
+/// @return The string response that was retrieved from the server or an error message if an error occured.
+String sendMessageToESP(String command, String address)
+{
+	String response = "";
+
+	// Check WiFi connection status
+	if (WiFi.status() == WL_CONNECTED)
+	{
+		WiFiClient sendClient;
+		HTTPClient http;
+
+		String serverPath = "http://" + address + "/?" + command;
+
+		// Your Domain name with URL path or IP address with path
+		http.begin(sendClient, serverPath.c_str());
+
+    //Change timeout so its not so long (5 seconds for now, maybe change later)
+    http.setConnectTimeout(5000);
+    Serial.printf("Before http.GET() to %s \n", address);
+		// Send HTTP GET request
+		int httpResponseCode = http.GET();
+    Serial.printf("After http.GET() to %s \n", address);
+
+		if (httpResponseCode > 0)
+		{
+			Serial.print("HTTP Response code: ");
+			Serial.println(httpResponseCode);
+			response = http.getString();
+			Serial.println(response);
+		}
+		else
+		{
+			Serial.print("Error code: ");
+			Serial.println(httpResponseCode);
+			response = "An error occured. Please try again. Error code: " + httpResponseCode;
+		}
+		// Free resources
+		http.end();
+	}
+	else
+	{
+		Serial.println("WiFi Disconnected");
+		response = "This ESP has been disconnected from WiFi.";
+	}
+
+	return response;
 }

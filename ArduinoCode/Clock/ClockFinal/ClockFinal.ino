@@ -41,6 +41,7 @@ bool midnight = false;
 bool informed = false;
 bool pause = false;
 bool manualOverride = false; //If the room admin has to do stuff allow them extra control while in this mode
+String status = "starting...";
 
 // ---- SETUP AND LOOP ----
 
@@ -67,6 +68,7 @@ void setup()
 	// Rotate CW quickly at 10 RPM
 	// TODO: Figure out how to change direction
 	clockStepper.setSpeed(stepperSpeed);
+  status = "Normal";
 }
 
 void loop()
@@ -146,80 +148,84 @@ void handleClientConnected(WiFiClient rcvClient)
 
 					if (header.indexOf("GET /?reverse=on") >= 0)
 					{
-						Serial.println("Clock is reversing");
+						//Serial.println("Clock is reversing");
 						timeCurrentlyControlledByUser = true;
 						directionFastForward = false;
 						directionReverse = true;
-            fullMessage = fullMessage + ",\"mode\":\"Reverse\"";
+            status = "Reverse";
 					}
 					else if (header.indexOf("GET /?fastForward=on") >= 0)
 					{
-						Serial.println("Clock is fast forwarding");
+						//Serial.println("Clock is fast forwarding");
 						timeCurrentlyControlledByUser = true;
 						directionReverse = false;
 						directionFastForward = true;
-            fullMessage = fullMessage + ",\"mode\":\"Fast Forward\"";
+            status = "Fast Forward";
 					}
 					else if (header.indexOf("GET /?normal=on") >= 0)
 					{
-						Serial.println("Clock is running normally");
+						//Serial.println("Clock is running normally");
 						// Reset the variables that control clock function
 						directionReverse = false;
 						directionFastForward = false;
 						timeCurrentlyControlledByUser = false;
-            fullMessage = fullMessage + ",\"mode\":\"Normal\"";
+            status = "Normal";
 					}
           else if (header.indexOf("GET /?reset=on") >= 0)
 					{
-						Serial.println("Clock is running normally");
+						//Serial.println("Clock is running normally");
 						// Reset the variables that control clock function
 						directionReverse = false;
 						directionFastForward = false;
 						timeCurrentlyControlledByUser = false;
             ticksCompleted = 0;
-            fullMessage = fullMessage + ",\"mode\":\"Normal\"";
+            status = "Normal";
 					}
           else if (header.indexOf("GET /?manualOverride=on") >= 0)
 					{
-						Serial.println("ADMIN MODE ON");
+						//Serial.println("ADMIN MODE ON");
             //First, let the system know the admin is in charge of the room currently
             manualOverride = true;
 						// Reset the variables that control clock function
 						directionReverse = false;
 						directionFastForward = false;
 						timeCurrentlyControlledByUser = false;
-            fullMessage = fullMessage + ",\"mode\":\"ADMIN\"";
+            fullMessage = fullMessage + ",\"admin\":\"on\"";
 					}
           else if (header.indexOf("GET /?manualOverride=off") >= 0)
 					{
-						Serial.println("ADMIN MODE OFF");
+						//Serial.println("ADMIN MODE OFF");
             //First, let the system know the admin is no longer in charge of the room currently
             manualOverride = false;
 						// Reset the variables that control clock function
 						directionReverse = false;
 						directionFastForward = false;
 						timeCurrentlyControlledByUser = false;
+            fullMessage = fullMessage + ",\"admin\":\"on\"";
 					}
           else if (header.indexOf("GET /?pause=on") >= 0)
 					{
-						Serial.println("PAUSE ON");
+						//Serial.println("PAUSE ON");
             pause = true;
             manualOverride = true;
-            fullMessage = fullMessage + ",\"mode\":\"Paused\"";
+            status = "Paused";
+            fullMessage = fullMessage + ",\"mode\":\"\"";
 					}
           else if (header.indexOf("GET /?pause=off") >= 0)
 					{
-						Serial.println("PAUSE OFF");
+						//Serial.println("PAUSE OFF");
             pause = false;
             manualOverride = false;
             directionReverse = false;
 						directionFastForward = false;
 						timeCurrentlyControlledByUser = false;
-            fullMessage = fullMessage + ",\"mode\":\"Normal\"";
+            status = "Normal";
 					}
+          else if(header.indexOf("GET /?status=get" >= 0)){
+            //We might need to add more metadata on to the response here someday, but for now we dont need to do anything extra here.
+          }
 
-          //This allows us to add any other properties we may want to add and then still close the response when were done
-          fullMessage = fullMessage + "}";
+          fullMessage = fullMessage + ",\"mode\":\"" + status + "\"}";
           String contentLengthString = "Content-Length: " + fullMessage.length() + 2;
 
 					rcvClient.println("HTTP/1.1 200 OK");
@@ -305,6 +311,8 @@ String sendMessageToESP(String command, String address)
 		// Your Domain name with URL path or IP address with path
 		http.begin(sendClient, serverPath.c_str());
 
+    //Change timeout so its not so long (5 seconds for now, maybe change later)
+    http.setConnectTimeout(5000);
 		// Send HTTP GET request
 		int httpResponseCode = http.GET();
 
