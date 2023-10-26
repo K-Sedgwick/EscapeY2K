@@ -1,3 +1,10 @@
+const tapeSongOptions = [
+  { title: "Kyle First Song", value: 1 },
+  { title: "Kyle Second Song", value: 2 },
+  { title: "Space - Jvke", value: 3 },
+  { title: "RICK ROLL", value: 4 }
+];
+
 const vue = new Vue({
   el: "#vue-root",
   data() {
@@ -23,8 +30,18 @@ const vue = new Vue({
             status: "Off",
             loading: false,
           }
-        ]
+        ],
+        tapePlayer: {
+          ipAddress: "10.0.0.41",
+          port: "1234",
+          status: "Paused",
+          loading: false,
+        }
       },
+
+      //Tape Player extras
+      tapeSongOptions: tapeSongOptions,
+      selectedSong: 1,
 
       //Clock Stuff
       currentTime: 0,
@@ -43,6 +60,26 @@ const vue = new Vue({
   },
 
   methods: {
+    sendESPMessage(module, message, state){
+      const vm = this;
+      const esp = this.espModules[module];
+      if(!state){
+        state = this.selectedSong;
+      }
+
+      fetch(`http://${esp.ipAddress}:${esp.port}?${message}=${state}`)
+        .then((resp) => resp.json())
+        .then((apiObj) => {
+          if (apiObj) {
+            if (apiObj.error) {
+              console.log("An unexpected error occured.");
+            }
+
+            console.log(`Response from ${module}`, apiObj);
+            vm.loading = false;
+          }
+        });
+    },
     sendLockboxMessage(message, state) {
       const vm = this;
       this.loading = true;

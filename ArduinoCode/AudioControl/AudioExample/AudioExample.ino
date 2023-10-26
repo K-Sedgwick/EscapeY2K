@@ -23,6 +23,10 @@ static int8_t select_SD_card[] = {0x7e, 0x03, 0X35, 0x01, 0xef}; // 7E 03 35 01 
 static int8_t play_first_song[] = {0x7e, 0x04, 0x41, 0x00, 0x01, 0xef}; // 7E 04 41 00 01 EF
 // Play with index: /01/002xxx.mp3
 static int8_t play_second_song[] = {0x7e, 0x04, 0x41, 0x00, 0x02, 0xef}; // 7E 04 41 00 02 EF
+// Play with index: /01/003xxx.mp3
+static int8_t play_third_song[] = {0x7e, 0x04, 0x41, 0x00, 0x03, 0xef}; // 7E 04 41 00 01 EF
+// Play with index: /01/004xxx.mp3
+static int8_t play_fourth_song[] = {0x7e, 0x04, 0x41, 0x00, 0x04, 0xef}; // 7E 04 41 00 02 EF
 // Play the song.
 static int8_t play[] = {0x7e, 0x02, 0x01, 0xef}; // 7E 02 01 EF
 // Pause the song.
@@ -48,11 +52,16 @@ void setup() {
   send_command_to_MP3_player(volDown, 4);
   send_command_to_MP3_player(volDown, 4);
   send_command_to_MP3_player(volDown, 4);
+  send_command_to_MP3_player(volDown, 4);
+  send_command_to_MP3_player(volDown, 4);
+  send_command_to_MP3_player(volDown, 4);
+  send_command_to_MP3_player(volDown, 4);
+  send_command_to_MP3_player(volDown, 4);
 }
 
 void loop() {
 	// Play the second song.
-  send_command_to_MP3_player(play_first_song, 6);
+  send_command_to_MP3_player(play_third_song, 6);
   delay(426000);
 
 	send_command_to_MP3_player(play_second_song, 6);

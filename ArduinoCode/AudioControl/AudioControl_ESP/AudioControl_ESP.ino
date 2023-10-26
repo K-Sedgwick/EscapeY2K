@@ -3,6 +3,10 @@
 #include <ESP8266WiFi.h>
 #include <SoftwareSerial.h>
 
+#define D1 5
+#define D2 4
+#define D3 0
+
 // ---- WIFI SECTION ----
 const char *ssid = "EscapeY2K";//EscapeY2K
 const char *password = "caNY0u3scAp3?!";//caNY0u3scAp3?!
@@ -11,27 +15,28 @@ WiFiServer server(1234);
 // ---- GENERAL SECTION ----
 unsigned long currentTime = millis();
 unsigned long previousTime = 0;
-const long TickDelayTime = 500;
+const long TickDelayTime = 1000;
+bool ledStatus = false;
 
 // ---- MP3 SECTION ----
-// Define the RX and TX pins to establish UART communication with the MP3 Player Module.
-#define MP3_RX 3 // to TX
-#define MP3_TX 1 // to RX
+#define MP3_RX D2
+#define MP3_TX D1
 
 // Define the required MP3 Player Commands:
-
 // Select storage device to TF card
 static int8_t select_SD_card[] = {0x7e, 0x03, 0X35, 0x01, 0xef}; // 7E 03 35 01 EF
-// Play with index: /01/00{SONG_NUM_HERE}xxx.mp3
-static int8_t play_default_song[] = {0x7e, 0x04, 0x41, 0x00, 0x01, 0xef}; // 7E 04 41 00 01 EF
+// Play with index: /01/00{SONG_NUM_HERE}xxx.mp3 (in this case 3)
+static int8_t play_default_song[] = {0x7e, 0x04, 0x41, 0x00, 0x03, 0xef}; // 7E 04 41 00 03 EF
 // Play the song.
-static int8_t play[] = {0x7e, 0x02, 0x01, 0xef}; // 7E 02 01 EF
+static int8_t play[] = {0x7e, 0x02, 0x01, 0xef};
 // Pause the song.
-static int8_t pause[] = {0x7e, 0x02, 0x02, 0xef}; // 7E 02 02 EF
+static int8_t pause[] = {0x7e, 0x02, 0x02, 0xef};
 // + Volume
-static int8_t volUp[] = {0x7e, 0x02, 0x05, 0xef}; // 7E 02 02 EF
+static int8_t volUp[] = {0x7e, 0x02, 0x05, 0xef};
 // - Volume
-static int8_t volDown[] = {0x7e, 0x02, 0x06, 0xef}; // 7E 02 02 EF
+static int8_t volDown[] = {0x7e, 0x02, 0x06, 0xef};
+// Set Volume
+static int8_t volMin[] = {0x7e, 0x03, 0x31, 0x01, 0xef};
 
 // Define the Serial MP3 Player Module.
 SoftwareSerial MP3(MP3_RX, MP3_TX);
@@ -44,22 +49,20 @@ void setup()
 	connectToWifi();
 
 	//Setup serial communication
-	Serial.begin(9600);
+	Serial.begin(115200);
 
-	// Initiate the Serial MP3 Player Module.
-  	MP3.begin(9600);
+  // Initiate the Serial MP3 Player Module.
+  MP3.begin(9600);
+
 	// Select the SD Card.
-  send_command_to_MP3_player(select_SD_card, 5);
+  send_command_to_MP3_player(select_SD_card, 6);
 	//And turn the volume down because I think it starts at max volume
-	send_command_to_MP3_player(volDown, 4);
-	send_command_to_MP3_player(volDown, 4);
-	send_command_to_MP3_player(volDown, 4);
-	send_command_to_MP3_player(volDown, 4);
-	send_command_to_MP3_player(volDown, 4);
+	send_command_to_MP3_player(volMin, 5);
+  send_command_to_MP3_player(play_default_song, 6);
 
 	//Setup pin for LED so we can test stuff
 	pinMode(LED_BUILTIN, OUTPUT); 
-	digitalWrite(LED_BUILTIN, LOW); // Turn the LED off
+	digitalWrite(LED_BUILTIN, HIGH); // Turn the LED off
 }
 
 void loop()
@@ -75,7 +78,15 @@ void loop()
   //This will run once every TickTimeDelays
   if ((millis() - previousTime) > TickDelayTime)
   {
-    
+    previousTime = millis();
+    if(ledStatus == true){
+      ledStatus = false;
+      digitalWrite(LED_BUILTIN, LOW); // Turn the LED off
+    }
+    else{
+      ledStatus = true;
+      digitalWrite(LED_BUILTIN, HIGH); // Turn the LED off
+    }
   }
 }
 
@@ -89,7 +100,7 @@ void handleClientConnected(WiFiClient rcvClient)
 	unsigned long clientConnectedTime = millis();
 	int previousClientConnectedTime = clientConnectedTime;
 
-	Serial.println("New Client."); // print a message out in the serial port
+	//Serial.println("New Client."); // print a message out in the serial port
 	while (rcvClient.connected() && clientConnectedTime - previousClientConnectedTime <= handleClientTimeout)
 	{ // loop while the client's connected
 		clientConnectedTime = millis();
@@ -104,33 +115,43 @@ void handleClientConnected(WiFiClient rcvClient)
 				// that's the end of the client HTTP request, so send a response:
 				if (currentLine.length() == 0)
 				{
-					String fullMessage = "{";
+					String fullMessage = "{\"message\":\"received\"";
 
-					if (header.indexOf("GET /?play=#") >= 0)
+					if (header.indexOf("GET /?play=") >= 0)
 					{
 						//TODO: Break up the string, parse the val sent as an int, then send that value over serial
-						int songNum = header[header.indexOf("GET /?song=play")+1];
-						static int8_t play_selected_song[6];
-						memcpy(play_selected_song, play_default_song, sizeof(play_default_song));
-						play_selected_song[4] = songNum;
+
+            String asciiSongNumVal = String(header[header.indexOf("GET /?play=")+11]);
+            int8_t selectedSong = lowByte(asciiSongNumVal.toInt());
+						int8_t play_selected_song[] = {0x7e, 0x04, 0x41, 0x00, selectedSong, 0xef}; // 7E 04 41 04 01 EF
 						send_command_to_MP3_player(play_selected_song, 6);
+            fullMessage = fullMessage + ",\"playing\":\"" + selectedSong + "\",\"status\":\"Playing\"";
 					}
           //This play is different, it just plays from where we paused instead of restarting the track
           else if (header.indexOf("GET /?song=play") >= 0)
 					{
   						send_command_to_MP3_player(play, 4);
+              fullMessage = fullMessage + ",\"status\":\"Playing\"";
 					}
 					else if (header.indexOf("GET /?song=pause") >= 0)
 					{
   						send_command_to_MP3_player(pause, 4);
+              fullMessage = fullMessage + ",\"status\":\"Paused\"";
 					}
 					else if (header.indexOf("GET /?vol=up") >= 0)
 					{
 						send_command_to_MP3_player(volUp, 4);
+            fullMessage = fullMessage + ",\"volume\":\"Raised\"";
 					}
 					else if (header.indexOf("GET /?vol=down") >= 0)
 					{
 						send_command_to_MP3_player(volDown, 4);
+            fullMessage = fullMessage + ",\"volume\":\"Lowered\"";
+					}
+          else if (header.indexOf("GET /?vol=min") >= 0)
+					{
+						send_command_to_MP3_player(volMin, 5);
+            fullMessage = fullMessage + ",\"volume\":\"Min\"";
 					}
 
           //This allows us to add any other properties we may want to add and then still close the response when were done
@@ -163,29 +184,33 @@ void handleClientConnected(WiFiClient rcvClient)
 	header = "";
 	// Close the connection
 	rcvClient.stop();
-	Serial.println("Client disconnected.");
-	Serial.println("");
+	//Serial.println("Client disconnected.");
+	//Serial.println("");
 }
 
 void send_command_to_MP3_player(int8_t command[], int len){
   Serial.print("\nMP3 Command => ");
-  for(int i=0;i<len;i++){ MP3.write(command[i]); Serial.print(command[i], HEX); }
+  for(int i=0;i<len;i++){
+    MP3.write(command[i]);
+    Serial.print(command[i], HEX);
+    delay(1);
+  }
   delay(1000);
 }
 
 void connectToWifi()
 {
 	// Connect to Wi-Fi network with SSID and password
-	Serial.print("Connecting to ");
-	Serial.println(ssid);
+	//Serial.print("Connecting to ");
+	//Serial.println(ssid);
 	WiFi.begin(ssid, password);
 	while (WiFi.status() != WL_CONNECTED)
 	{
 		delay(500);
-		Serial.print(".");
+		//Serial.print(".");
 	}
 	// Print local IP address and start web server
-	Serial.println("");
+	//Serial.println("");
 	Serial.println("WiFi connected.");
 	Serial.println("IP address: ");
 	Serial.println(WiFi.localIP());

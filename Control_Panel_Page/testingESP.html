@@ -21,11 +21,17 @@
     <div id="vue-root" class="container bg-dark">
         <div class="m-3 text-center card">
             <div class="card-header">
-                <h3>Module 0 (UDP TEST)</h3>
+                <h3>Tape Player</h3>
             </div>
             <div class="mt-2 card-body">
-                <button class="btn btn-dark" @click="sendModuleMessage(0, 'led', 'on')">LED ON</button>
-                <button class="btn btn-dark" @click="sendModuleMessage(0, 'led', 'off')">LED OFF</button>
+                <div class="d-flex justify-content-around">
+                    <select class="form-control" style="width:200px" v-model="selectedSong">
+                        <option v-for="song in tapeSongOptions" :value="song.value">{{song.title}}</option>
+                    </select>
+                    <button class="btn btn-dark" @click="sendESPMessage('tapePlayer', 'play')">Play song {{selectedSong}}</button>
+                    <button class="btn btn-dark" @click="sendESPMessage('tapePlayer', 'vol', 'min')">Set Volume Min</button>
+                    <button class="btn btn-dark" @click="sendESPMessage('tapePlayer', 'song', 'pause')">Pause</button>
+                </div>
             </div>
         </div>
         <div class="m-3 text-center card">
