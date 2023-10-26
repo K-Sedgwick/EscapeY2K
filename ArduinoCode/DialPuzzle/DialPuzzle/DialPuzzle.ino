@@ -1,7 +1,16 @@
+//ESP pins
+#define D0 16
+#define D1 5
+#define D2 4
+#define D3 0
+#define D4 2
+#define TXPIN 1
+#define RXPIN 3
+
 // Rotary Encoder Inputs
-#define A 2
-#define B 3
-#define BUTTON 4
+#define A D1
+#define B D2
+//#define BUTTON //MAKE THE BUTTON A PIN YOURE NOT USING
 
 int counter = 0;
 int currentStateA;
@@ -24,7 +33,15 @@ void setup() {
 	// Set encoder pins as inputs
 	pinMode(A,INPUT);
 	pinMode(B,INPUT);
-	pinMode(BUTTON, INPUT_PULLUP);
+	//pinMode(BUTTON, INPUT_PULLUP);
+
+  pinMode(D0, OUTPUT);
+  pinMode(D3, OUTPUT);
+  pinMode(D4, OUTPUT);
+
+  digitalWrite(D0, LOW);
+  digitalWrite(D3, LOW);
+  digitalWrite(D4, LOW);
 
 	// Setup Serial Monitor
 	Serial.begin(9600);
@@ -50,6 +67,7 @@ void loop() {
       //Checks to see if the players are rotating the correct direction and hit the correct value
       if(checkpoints[0] == 0 && counter == firstVal){
         Serial.print("First checkpoint passed");
+        digitalWrite(D4, HIGH);
         checkpoints[0] = 1;
       }
       //Check to see if we should reset the checkpoints
@@ -57,9 +75,11 @@ void loop() {
         Serial.print("Checkpoints reset");
         checkpoints[0] = 0;
         checkpoints[1] = 0;
+        resetLEDS();
       }
       else if(checkpoints[1] == 1 && counter == thirdVal){
         Serial.print("You did it!");
+        digitalWrite(D0, HIGH);
       }
 		} else {
 			// Encoder is rotating CW so increment
@@ -69,12 +89,14 @@ void loop() {
       if(checkpoints[0] == 1 && counter == secondVal){
         checkpoints[1] = 1;
         Serial.print("Second checkpoint passed");
+        digitalWrite(D3, HIGH);
       }
       //If we already set the second checkpoint and we're going CCW then reset the checkpoints
       else if(checkpoints[1] == 1){
         Serial.print("Checkpoints reset");
         checkpoints[0] = 0;
         checkpoints[1] = 0;
+        resetLEDS();
       }
 		}
 	}
@@ -99,4 +121,10 @@ void loop() {
 
 	// Put in a slight delay to help debounce the reading
   delay(1);
+}
+
+void resetLEDS(){
+  digitalWrite(D0, LOW);
+  digitalWrite(D3, LOW);
+  digitalWrite(D4, LOW);
 }
