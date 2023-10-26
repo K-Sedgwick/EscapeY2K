@@ -6,6 +6,7 @@
 #define D1 5
 #define D2 4
 #define D3 0
+#define D4 2
 
 // ---- WIFI SECTION ----
 const char *ssid = "EscapeY2K";//EscapeY2K
@@ -19,8 +20,8 @@ const long TickDelayTime = 1000;
 bool ledStatus = false;
 
 // ---- MP3 SECTION ----
-#define MP3_RX D2
-#define MP3_TX D1
+#define MP3_RX D4
+#define MP3_TX D3
 
 // Define the required MP3 Player Commands:
 // Select storage device to TF card
