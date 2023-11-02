@@ -32,10 +32,16 @@ const vue = new Vue({
           }
         ],
         tapePlayer: {
-          ipAddress: "10.0.0.41",
+          ipAddress: "192.168.1.211",
           port: "1234",
           status: "Paused",
           loading: false,
+        },
+        dialPuzzle: {
+          ipAddress: "10.0.0.225", //10.0.0.225, 192.168.1.225
+          port: "1234",
+          status: "LEDS OFF",
+          loading: false
         }
       },
 
@@ -61,11 +67,13 @@ const vue = new Vue({
 
   methods: {
     sendESPMessage(module, message, state){
+      console.log('sending message to: ', module);
       const vm = this;
       const esp = this.espModules[module];
-      if(!state){
-        state = this.selectedSong;
-      }
+      console.log(esp);
+      // if(!state){
+      //   state = this.selectedSong;
+      // }
 
       fetch(`http://${esp.ipAddress}:${esp.port}?${message}=${state}`)
         .then((resp) => resp.json())

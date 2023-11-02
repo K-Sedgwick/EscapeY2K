@@ -312,7 +312,7 @@ String sendMessageToESP(String command, String address)
 		http.begin(sendClient, serverPath.c_str());
 
     //Change timeout so its not so long (5 seconds for now, maybe change later)
-    http.setConnectTimeout(5000);
+    http.setTimeout(5000);
 		// Send HTTP GET request
 		int httpResponseCode = http.GET();
 

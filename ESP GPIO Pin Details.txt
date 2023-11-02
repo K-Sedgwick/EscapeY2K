@@ -6,4 +6,9 @@ GPIO PINS THAT WORK
     3    ->   RX
     4    ->   D2 -> WORKS AS INPUT
     5    ->   D1 -> WORKS AS INPUT
+    16   ->   D0
+    14   ->   D5
+    12   ->   D6
+    13   ->   D7
+    15   ->   D8
     
