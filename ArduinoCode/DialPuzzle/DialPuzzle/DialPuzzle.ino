@@ -65,6 +65,9 @@ void setup() {
 
 	// Read the initial state of A
 	lastStateA = digitalRead(A);
+
+  //Set the lastButtonPress so the button doesnt think it was pressed right off the bat
+	lastButtonPress = millis();
 }
 
 void loop()
@@ -177,7 +180,6 @@ void handleDialPuzzleLogic() {
 		//if 500ms have passed since last LOW pulse, it means that the
 		//button has been pressed, released and pressed again
 		if (millis() - lastButtonPress > 500) {
-      Serial.println("Button pressed!");
       counter = 0;
 		}
 
