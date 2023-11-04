@@ -32,7 +32,7 @@ const vue = new Vue({
           }
         ],
         tapePlayer: {
-          ipAddress: "192.168.1.211",
+          ipAddress: "10.0.0.197", //10.0.0.197 at Jakes house, 192.168.1.211 on the escapey2k wifi
           port: "1234",
           status: "Paused",
           loading: false,

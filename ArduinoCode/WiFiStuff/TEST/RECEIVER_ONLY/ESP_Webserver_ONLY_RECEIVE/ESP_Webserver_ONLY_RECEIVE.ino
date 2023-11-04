@@ -1,4 +1,6 @@
 // Load Wi-Fi library
+#include <ESP8266HTTPClient.h>
+#include <WiFiClient.h>
 #include <ESP8266WiFi.h>
 
 // ---- WIFI SECTION ----
@@ -10,12 +12,9 @@ WiFiServer server(1234);
 unsigned long currentTime = millis();
 unsigned long previousTime = 0;
 const long TickDelayTime = 500;
-<<<<<<< HEAD
-=======
 bool midnight = false;
 int buttonPin = 0;
 String status = "";
->>>>>>> 360e7a5dfb036cb7e1599d5407d325be2c758976
 
 // ---- SETUP AND LOOP ----
 
@@ -79,9 +78,6 @@ void handleClientConnected(WiFiClient rcvClient)
 
 					if (header.indexOf("GET /?cmd1=true") >= 0)
 					{
-<<<<<<< HEAD
-            //INCLUDE WHAT YOU WANT THIS COMMAND TO DO HERE
-=======
 						Serial.println("MIDNIGHT: OPEN BOX");
             midnight = true;
             digitalWrite(LED_BUILTIN, LOW); // Turn the LED on
@@ -89,13 +85,9 @@ void handleClientConnected(WiFiClient rcvClient)
             delay(200);
             digitalWrite(buttonPin, LOW);
             status = "Open";
->>>>>>> 360e7a5dfb036cb7e1599d5407d325be2c758976
 					}
 					else if (header.indexOf("GET /?cmd2=true") >= 0)
 					{
-<<<<<<< HEAD
-            //INCLUDE WHAT YOU WANT THIS COMMAND TO DO HERE
-=======
 						Serial.println("Clock is fast forwarding");
             midnight = false;
            digitalWrite(LED_BUILTIN, HIGH); // Turn the LED off
@@ -103,7 +95,6 @@ void handleClientConnected(WiFiClient rcvClient)
             delay(200);
             digitalWrite(buttonPin, LOW);
             status = "Closed";
->>>>>>> 360e7a5dfb036cb7e1599d5407d325be2c758976
 					}
           else if(header.indexOf("GET /?status=get" >= 0)){
             //We might need to add more metadata on to the response here someday, but for now we dont need to do anything extra here.

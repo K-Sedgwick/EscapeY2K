@@ -28,8 +28,7 @@
                     <select class="form-control" style="width:200px" v-model="selectedSong">
                         <option v-for="song in tapeSongOptions" :value="song.value">{{song.title}}</option>
                     </select>
-                    <button class="btn btn-dark" @click="sendESPMessage('tapePlayer', 'play')">Play song {{selectedSong}}</button>
-                    <button class="btn btn-dark" @click="sendESPMessage('tapePlayer', 'vol', 'min')">Set Volume Min</button>
+                    <button class="btn btn-dark" @click="sendESPMessage('tapePlayer', 'play', selectedSong)">Play song {{selectedSong}}</button>                    <button class="btn btn-dark" @click="sendESPMessage('tapePlayer', 'vol', 'min')">Set Volume Min</button>
                     <button class="btn btn-dark" @click="sendESPMessage('tapePlayer', 'song', 'pause')">Pause</button>
                     <button class="btn btn-dark" @click="sendESPMessage('tapePlayer', 'song', 'play')">Play</button>
                 </div>

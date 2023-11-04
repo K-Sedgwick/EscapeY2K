@@ -140,7 +140,7 @@ void handleDialPuzzleLogic() {
           digitalWrite(D3, HIGH);
         }
         //Let a box know that the puzzle has been solved
-        sendMessageToESP("play=3", "192.168.1.127");
+        sendMessageToESP("play=3", "10.0.0.197:1234");
       }
 		} else {
 			// Encoder is rotating CW so increment
