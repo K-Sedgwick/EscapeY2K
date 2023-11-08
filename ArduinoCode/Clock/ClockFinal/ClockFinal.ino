@@ -6,6 +6,27 @@
 // Includes the Arduino Stepper Library
 #include <Stepper.h>
 
+//ESP pins
+#define D0 16
+#define D1 5
+#define D2 4
+#define D3 0
+#define D4 2
+#define D5 14
+#define D6 12
+#define TXPIN 1
+#define RXPIN 3
+
+// Rotary Encoder Inputs
+#define A D5
+#define B D6
+
+//Encoder parameters
+int counter = 0;
+int currentStateA;
+int lastStateA;
+String currentDir ="";
+
 // ---- WIFI SECTION ----
 const char *ssid = "EscapeY2K";//EscapeY2K
 const char *password = "caNY0u3scAp3?!";//caNY0u3scAp3?!
@@ -44,6 +65,7 @@ bool manualOverride = false; //If the room admin has to do stuff allow them extr
 String status = "starting...";
 
 // ---- SETUP AND LOOP ----
+int numLoops = 0;
 
 void setup()
 {
@@ -61,6 +83,13 @@ void setup()
   pinMode(3, OUTPUT);
   pinMode(4, OUTPUT);
   pinMode(5, OUTPUT);
+
+  // Read the initial state of A
+	lastStateA = digitalRead(A);
+
+  // Set encoder pins as inputs
+	pinMode(A,INPUT);
+	pinMode(B,INPUT);
 
   //Setup pin for LED so we can test stuff
   // pinMode(LedPin, OUTPUT); 
@@ -80,7 +109,13 @@ void loop()
 		handleClientConnected(rcvClient);
 	}
 
-  processInterruptorSwitches();
+  //Handle logic that should happen as often as possible
+  //But limit it a little bit because it doesnt need to happen so much that it makes the motor chug weird
+  if(numLoops > 10){
+    numLoops = 0;
+    handleRotaryLogic();
+    processInterruptorSwitches();
+  }
 
   //If the admin hasnt requested control just operate normally
   if(!manualOverride && !pause){
@@ -115,6 +150,8 @@ void loop()
   else{
     //TODO: Decide if we want to add anything special here? Probably not, im assuming we just dont want the clock running rn :P
   }
+
+  numLoops++;
 }
 
 // ---- HELPER METHODS ----
@@ -281,6 +318,34 @@ void processInterruptorSwitches()
 		timeCurrentlyControlledByUser = false;
 		midnight = true;
 	}
+}
+
+void handleRotaryLogic() {
+	// Read the current state of A
+	currentStateA = digitalRead(A);
+
+	// If last and current state of A are different, then pulse occurred
+	// React to only 1 state change to avoid double count
+	if (currentStateA != lastStateA){
+
+    //Code that takes care of updating counter and direction
+		if (digitalRead(B) != currentStateA) {
+			counter ++;
+			currentDir ="CCW";
+		} else {
+			// Encoder is rotating CW so increment
+			counter --;
+			currentDir ="CW";
+		}
+    //Serial.print("Direction: " + currentDir + "Count: ");
+    Serial.println(counter);
+	}
+
+  // Remember last A state
+	lastStateA = currentStateA;
+
+	// Put in a slight delay to help debounce the reading
+  delay(5);
 }
 
 //This makes sending the time to every ESP that needs to be aware of it easier. This might need to be offloaded to a different ESP if it becomes too slow
