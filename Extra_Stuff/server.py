@@ -1,33 +1,22 @@
 # Server stuff
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from http.client import HTTPConnection, HTTPSConnection
-from urllib.parse import urlparse, parse_qs
+from pynput.keyboard import Key, Controller
+from http.client import HTTPConnection
+from urllib.parse import urlparse
 import json
 
 # Threading stuff
 import threading
 import time
 
-'''
 
-Okay, so here is my idea. I want to have the server process commands from every one of the ESP modules.
-This will allow it to create a "status of the room" object (probs a dictionary) which will contain info
-about each of the modules and what state it is in. Then, the console can just call "state=get" to the TVs
-and that will update every single object on the control panel at once.
-
-This will also allow us to process hints a bit easier because the TVs will know the state of every object
-in the room all the time. Once a hint is asked for the TVs will send a number response based on everything
-else that is happening and the number will be the track number on the SD card that should be played.
-
-
-'''
-
-class Handler(BaseHTTPRequestHandler):
+class ServerHandler(BaseHTTPRequestHandler):
     # Empty dictionary that contains status of all WiFi components that have spoken to it
     # Basically, its going to store information about which puzzles have been solved (not which havent)
     updateStatusDict = None
     statusDict = {}
-    statusLock = None
+    statusLock = None # This will get set by external code, so dont worry about the fact its None here XD
+    keyboardForVideoControl = Controller()
 
     def do_GET(self):
         return self.router()
@@ -41,10 +30,16 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("Content-Type", "application/json")
         self.end_headers()
 
-        # Maybe add more to this JSON? But I dont think the response needs to be very complicated
         self.wfile.write(json.dumps(dictToReturn).encode('utf-8'))
 
-    
+    '''
+        Okay, this method needs a lot of explanation
+            1. This essentially breaks apart the path and query string to get information and do stuff with it
+            2. The part that deals with the query string performs multiple checks for various variables. We check for...
+                a. Clockmode, to see what the clock is doing and change what the TVs are showing a cambio
+                b. Monster, to see if the monster should be shown on the screen or not
+                c. Midnight, to see if we should show the midnight scene
+    '''
     def processQueryComponents(self):
         # First, check if status is in the path and return the status object if it is
         if self.path == '/status':
@@ -52,6 +47,11 @@ class Handler(BaseHTTPRequestHandler):
             copyOfStatus = self.statusDict.copy()
             self.statusLock.release()
             return copyOfStatus
+        elif self.path == '/hint':
+            hintGiven = self.processHint()
+            print(f'The hint given was hint {hintGiven}')
+            return ConnectToESP("192.168.1.211", 1234, f'play={hintGiven}', 5)
+
 
         # Else, process query commands
         query_components = {}
@@ -63,50 +63,87 @@ class Handler(BaseHTTPRequestHandler):
                 queryParam = qc.split("=")
                 query_components[queryParam[0]] = queryParam[1]
 
-            self.statusLock.acquire()
-            self.statusDict.update(query_components)
-            self.statusLock.release()
+            # Save the statusDict first! So that once we activate the key presses
+            #  the other bits of code can read out the correct values from the statusDict
+            self.updateStatusDict(query_components)
+
+            # Check for a clock mode
+            clockmode = query_components.get("clockmode", None)
+            if clockmode == "fastForward" | clockmode == "reverse":
+                self.__pressAndRelease('r')
+            elif clockmode == "tick":
+                self.__pressAndRelease('g')
+
+            # Check if the monster is showing
+            monster = query_components.get("monster", None)
+            if monster == "true":
+                self.__pressAndRelease('x')
+            elif monster == "false":
+                self.__pressAndRelease('g')
+
+            # Check if midnight should be showing
+            midnight = query_components.get("midnight", None)
+            if midnight == 'true':
+                self.__pressAndRelease('m')
+
+            # HEY NAMI! Come here if you need to add more query string commands
+            #  that you would like the server to process (or if you need to change the keys that get pressed)
+
 
         # Tell the client their command was received
         return {'command':'received'}
 
-            
+    # This is just a helper function so I dont have to type press and release over and over XD
+    def __pressAndRelease(self, key):
+        self.keyboardForVideoControl.press(key)
+        self.keyboardForVideoControl.release(key)
+
+    def updateStatusDict(self, newStatusDict):
+        self.statusLock.acquire()
+        self.statusDict.update(newStatusDict)
+        self.statusLock.release()
 
     def processHint():
         # TODO: Add some complicated logic so we can determine which hint should get sent back to the user
         return 0
 
 class EscapeY2KServer:
-    statusDict = {}
+    __statusDict = {}
     statusLock = threading.Lock()
 
     def __init__(self):
-        Handler.statusLock = self.statusLock
-        self.statusDict = Handler.statusDict
+        ServerHandler.statusLock = self.statusLock
+        self.statusDict = ServerHandler.statusDict
 
     def startHTTPServer(self):
-        httpd = HTTPServer(('', 8001), Handler)
+        httpd = HTTPServer(('', 8001), ServerHandler)
         serverThread = threading.Thread(target=httpd.serve_forever)
         serverThread.daemon = True
         serverThread.start()
 
     def PrintStatus(self):
         self.statusLock.acquire()
-        print(self.statusDict)
+        print(self.__statusDict)
         self.statusLock.release()
 
     def GetStatus(self):
         self.statusLock.acquire()
-        copyOfStatus = self.statusDict.copy()
+        copyOfStatus = self.__statusDict.copy()
         self.statusLock.release()
         return copyOfStatus
+    
+    def SetStatus(self, newStatusDict):
+        self.statusLock.acquire()
+        self.__statusDict = newStatusDict
+        self.statusLock.release()
+
 
 # TODO: Maybe change this so it throws the error up to the method that called it instead of just returning a string
-def GetDataFromESP(ip, port, timeout):
+def ConnectToESP(ip, port, command, timeout):
     try:
         headers = {'Content-type': 'application/json'}
         esp = HTTPConnection(ip, port, timeout=timeout)
-        esp.request("GET", "/?clockmode=get", headers=headers)
+        esp.request("GET", f'/?{command}', headers=headers)
         response = esp.getresponse()
         jsonFromESP = response.read().decode()
         return jsonFromESP
@@ -129,6 +166,6 @@ if __name__ == '__main__':
     # the main thread has to keep running for the child thread to keep running
     while True:
         time.sleep(5)
-        print('escapey2k status')
+        # print('escapey2k status')
         server.PrintStatus()
-        # print(GetDataFromESP('10.0.0.94', 1234, 5))
+        # print(ConnectToESP('10.0.0.94', 1234, 5))
