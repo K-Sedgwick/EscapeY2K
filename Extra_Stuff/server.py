@@ -22,14 +22,12 @@ else that is happening and the number will be the track number on the SD card th
 
 '''
 
-statusDictInMain = {}
-statusLock = threading.Lock()
-        
-
-class Server(BaseHTTPRequestHandler):
+class Handler(BaseHTTPRequestHandler):
     # Empty dictionary that contains status of all WiFi components that have spoken to it
     # Basically, its going to store information about which puzzles have been solved (not which havent)
+    updateStatusDict = None
     statusDict = {}
+    statusLock = None
 
     def do_GET(self):
         return self.router()
@@ -37,7 +35,6 @@ class Server(BaseHTTPRequestHandler):
     def router(self):
 
         dictToReturn = self.processQueryComponents();
-            
         response_code = 200
 
         self.send_response(response_code)
@@ -51,25 +48,24 @@ class Server(BaseHTTPRequestHandler):
     def processQueryComponents(self):
         # First, check if status is in the path and return the status object if it is
         if self.path == '/status':
-            return self.statusDict
+            self.statusLock.acquire()
+            copyOfStatus = self.statusDict.copy()
+            self.statusLock.release()
+            return copyOfStatus
 
         # Else, process query commands
         query_components = {}
         query = urlparse(self.path).query
 
         # This is a little verbose, but essentially it just builds a dictionary out of the query string passed in
-        for qc in query.split("&"):
-            queryParam = qc.split("=")
-            query_components[queryParam[0]] = queryParam[1]
+        if len(query) > 0:
+            for qc in query.split("&"):
+                queryParam = qc.split("=")
+                query_components[queryParam[0]] = queryParam[1]
 
-        self.statusDict.update(query_components)
-
-        # Update the statusDictInMain so everyone can see whats going on, but try to it safely lol
-        global statusLock
-        statusLock.acquire()
-        global statusDictInMain
-        statusDictInMain = self.statusDict
-        statusLock.release()
+            self.statusLock.acquire()
+            self.statusDict.update(query_components)
+            self.statusLock.release()
 
         # Tell the client their command was received
         return {'command':'received'}
@@ -80,12 +76,30 @@ class Server(BaseHTTPRequestHandler):
         # TODO: Add some complicated logic so we can determine which hint should get sent back to the user
         return 0
 
+class EscapeY2KServer:
+    statusDict = {}
+    statusLock = threading.Lock()
 
-def startHTTPServer():
-    httpd = HTTPServer(('', 8001), Server)
-    serverThread = threading.Thread(target=httpd.serve_forever)
-    serverThread.daemon = True
-    serverThread.start()
+    def __init__(self):
+        Handler.statusLock = self.statusLock
+        self.statusDict = Handler.statusDict
+
+    def startHTTPServer(self):
+        httpd = HTTPServer(('', 8001), Handler)
+        serverThread = threading.Thread(target=httpd.serve_forever)
+        serverThread.daemon = True
+        serverThread.start()
+
+    def PrintStatus(self):
+        self.statusLock.acquire()
+        print(self.statusDict)
+        self.statusLock.release()
+
+    def GetStatus(self):
+        self.statusLock.acquire()
+        copyOfStatus = self.statusDict.copy()
+        self.statusLock.release()
+        return copyOfStatus
 
 # TODO: Maybe change this so it throws the error up to the method that called it instead of just returning a string
 def GetDataFromESP(ip, port, timeout):
@@ -105,17 +119,16 @@ def GetDataFromESP(ip, port, timeout):
         print(attributeErrorString)
         return attributeErrorString
 
-
 if __name__ == '__main__':
     # Start our HTTP Server
-    startHTTPServer()
+    server = EscapeY2KServer()
+    server.startHTTPServer()
 
     # Handle other stuff that has to get done
     # Even if there is nothing else dont remove this because
     # the main thread has to keep running for the child thread to keep running
     while True:
         time.sleep(5)
-        statusLock.acquire()
-        print('current status', statusDictInMain)
-        statusLock.release()
+        print('escapey2k status')
+        server.PrintStatus()
         # print(GetDataFromESP('10.0.0.94', 1234, 5))
