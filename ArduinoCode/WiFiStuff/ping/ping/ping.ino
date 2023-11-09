@@ -4,8 +4,8 @@
 #include <WiFiClient.h>
 
 // ---- WIFI SECTION ----
-const char *ssid = "Whitefire";//EscapeY2K
-const char *password = "R00tb33R";//caNY0u3scAp3?!
+const char *ssid = "EscapeY2K";//EscapeY2K
+const char *password = "caNY0u3scAp3?!";//caNY0u3scAp3?!
 WiFiServer server(1234);
 
 //ESP pins
