@@ -18,7 +18,7 @@ const vue = new Vue({
           loading: false,
         },
         lockbox: {
-          ipAddress: "192.168.1.211",
+          ipAddress: "192.168.1.127", //192.168.1.127 on EscapeY2K
           port: "1234",
           status: "Closed",
           loading: false,
@@ -41,6 +41,12 @@ const vue = new Vue({
           ipAddress: "10.0.0.225", //10.0.0.225, 192.168.1.225
           port: "1234",
           status: "LEDS OFF",
+          loading: false
+        },
+        pingModule: {
+          ipAddress: "10.0.0.94", // 10.0.0.94
+          port: "1234",
+          status: "pinging, I guess",
           loading: false
         }
       },
