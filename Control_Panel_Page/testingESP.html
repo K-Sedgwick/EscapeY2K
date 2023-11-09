@@ -36,6 +36,14 @@
         </div>
         <div class="m-3 text-center card">
             <div class="card-header">
+                <h3>ESP that just pings our Python server</h3>
+            </div>
+            <div class="mt-2 card-body">
+                <button class="btn btn-dark" @click="sendESPMessage('pingModule', 'clocktime', 'get')">Get Clocktime from Ping</button>
+            </div>
+        </div>
+        <div class="m-3 text-center card">
+            <div class="card-header">
                 <div class="position-absolute mt-2">
                     <input id="admin-mode-checkbox" type="checkbox" v-model="adminMode" :disabled="loading">
                     <label for="admin-mode-checkbox">Admin Mode</label>
@@ -78,10 +86,8 @@
                     </div>
                 </div>
                 <div class="mt-2">
-                    <button class="btn btn-dark" @click="sendLockboxMessage('midnight', 'on')"
-                        :disabled="espModules.lockbox.loading">Open Box</button>
-                    <button class="btn btn-dark" @click="sendLockboxMessage('midnight', 'off')"
-                        :disabled="espModules.lockbox.loading">Close Box</button>
+                    <button class="btn btn-dark" @click="sendLockboxMessage('latch', 'change')"
+                        :disabled="espModules.lockbox.loading">Change Lockbox Status</button>
                 </div>
             </div>
         </div>

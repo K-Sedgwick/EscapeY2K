@@ -1,55 +1,108 @@
-// Load Wi-Fi library
+// Load Wi-Fi library and other necessary libraries
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
 #include <WiFiClient.h>
+#include <Servo.h>
 
 // ---- WIFI SECTION ----
 const char *ssid = "EscapeY2K";//EscapeY2K
 const char *password = "caNY0u3scAp3?!";//caNY0u3scAp3?!
 WiFiServer server(1234);
 
-// ---- GENERAL SECTION ----
-unsigned long currentTime = millis();
-unsigned long previousTime = 0;
-const long TickDelayTime = 500;
-bool midnight = false;
-int buttonPin = 0;
-String status = "starting...";
+//ESP pins
+#define D0 16
+#define D1 5
+#define D2 4
+#define D3 0
+#define D4 2
+#define D5 14
+#define D6 12
+#define TXPIN 1
+#define RXPIN 3
 
-// ---- SETUP AND LOOP ----
+// constants won't change. They're used here to set pin numbers:
+const int buttonPin = D1;  // the number of the pushbutton pin
+Servo latchServo;         // create servo object to control a servo -- twelve servo objects can be created on most boards.
+const int relayPin = D2;
+const int servoPin = RX;
+
+int servoPos = 0;  // variable to store the servo position
+
+// variables will change:
+int buttonState = 0;  // variable for reading the pushbutton status
 
 void setup()
 {
-	// start serial connection
-	Serial.begin(115200);
-
-	connectToWifi();
-
-  //Setup pin for LED so we can test stuff
-  pinMode(LED_BUILTIN, OUTPUT); 
-  pinMode(buttonPin, OUTPUT);
-  digitalWrite(LED_BUILTIN, LOW); // Turn the LED off
-  status = "Closed";
+    Serial.begin(9600);
+    connectToWifi();
+    // put your setup code here, to run once:
+    // initialize the pushbutton pin as an input:
+    pinMode(buttonPin, INPUT);
+    pinMode(relayPin, OUTPUT);
+    latchServo.attach(servoPin);
 }
 
 void loop()
 {
-	WiFiClient rcvClient = server.available(); // Listen for incoming clients
+    WiFiClient rcvClient = server.available(); // Listen for incoming clients
 
-	if (rcvClient)
-	{
-		handleClientConnected(rcvClient);
-	}
+    if (rcvClient)
+    {
+      handleClientConnected(rcvClient);
+    }
+    // check if the pushbutton is pressed. If it is, the buttonState is HIGH:
+    //handleLatchLogic();
 
-  //Add in other functionality here if you so desire
-  //This will run once every TickTimeDelays
-  if ((millis() - previousTime) > TickDelayTime)
-  {
-    
-  }
 }
 
 // ---- HELPER METHODS ----
+void handleLatchLogic(){
+  int buttonPinRead = digitalRead(buttonPin);
+  Serial.println(buttonPinRead);
+  if (digitalRead(buttonPin))
+    {
+        buttonState = !buttonState;
+        delay(10);
+        if (buttonState == 1)
+        {
+            servoPos = 0;
+            digitalWrite(relayPin, HIGH);
+        }
+        else
+        {
+            servoPos = 90;
+        }
+        latchServo.write(servoPos);
+        delay(250);
+        digitalWrite(relayPin, LOW);
+    }
+}
+
+//This method will open the box if its closed and close the box if its open
+String changeBoxState(){
+  String state = "";
+
+  buttonState = !buttonState;
+  delay(10);
+  if (buttonState == 1)
+  {
+      servoPos = 00;
+      latchServo.write(servoPos);
+      delay(250);
+      digitalWrite(relayPin, HIGH);
+      state = "Open";
+  }
+  else
+  {
+      servoPos = 90;
+      latchServo.write(servoPos);
+      state = "Closed";
+  }
+  delay(10);
+  digitalWrite(relayPin, LOW);
+  return state;
+}
+
 void handleClientConnected(WiFiClient rcvClient)
 {
 	// SETUP VARIABLES
@@ -59,7 +112,7 @@ void handleClientConnected(WiFiClient rcvClient)
 	unsigned long clientConnectedTime = millis();
 	int previousClientConnectedTime = clientConnectedTime;
 
-	Serial.println("New Client."); // print a message out in the serial port
+	//Serial.println("New Client."); // print a message out in the serial port
 	while (rcvClient.connected() && clientConnectedTime - previousClientConnectedTime <= handleClientTimeout)
 	{ // loop while the client's connected
 		clientConnectedTime = millis();
@@ -74,33 +127,16 @@ void handleClientConnected(WiFiClient rcvClient)
 				// that's the end of the client HTTP request, so send a response:
 				if (currentLine.length() == 0)
 				{
-					String fullMessage = "{";
+					String fullMessage = "{\"message\":\"received\"";
 
-					if (header.indexOf("GET /?midnight=on") >= 0)
+				  if (header.indexOf("GET /?latch=change") >= 0)
 					{
-						Serial.println("MIDNIGHT: OPEN BOX");
-            midnight = true;
-            digitalWrite(LED_BUILTIN, LOW); // Turn the LED on
-            digitalWrite(buttonPin, HIGH);
-            delay(200);
-            digitalWrite(buttonPin, LOW);
-            status = "Open";
+            String state = changeBoxState();
+            fullMessage = fullMessage + ",\"latch\":\"" + state + "\"";
 					}
-					else if (header.indexOf("GET /?midnight=off") >= 0)
-					{
-						Serial.println("Clock is fast forwarding");
-            midnight = false;
-           digitalWrite(LED_BUILTIN, HIGH); // Turn the LED off
-           digitalWrite(buttonPin, HIGH);
-            delay(200);
-            digitalWrite(buttonPin, LOW);
-            status = "Closed";
-					}
-          else if(header.indexOf("GET /?status=get" >= 0)){
-            //We might need to add more metadata on to the response here someday, but for now we dont need to do anything extra here.
-          }
 
-          fullMessage = fullMessage + "\"box\":\"" + status + "\"}";
+          //This allows us to add any other properties we may want to add and then still close the response when were done
+          fullMessage = fullMessage + "}";
           String contentLengthString = "Content-Length: " + fullMessage.length() + 2;
 
 					rcvClient.println("HTTP/1.1 200 OK");
@@ -152,22 +188,21 @@ String sendMessageToESP(String command, String address)
 		// Your Domain name with URL path or IP address with path
 		http.begin(sendClient, serverPath.c_str());
 
-		//Change timeout so its not so long (1 seconds for now, maybe change later)
-    	http.setTimeout(1000);
-
+    //Change timeout so its not so long (5 seconds for now, maybe change later)
+    http.setTimeout(5000);
 		// Send HTTP GET request
 		int httpResponseCode = http.GET();
 
 		if (httpResponseCode > 0)
 		{
-			Serial.print("HTTP Response code: ");
+			Serial.println("HTTP Response code: ");
 			Serial.println(httpResponseCode);
 			response = http.getString();
 			Serial.println(response);
 		}
 		else
 		{
-			Serial.print("Error code: ");
+			Serial.println("Error code: ");
 			Serial.println(httpResponseCode);
 			response = "An error occured. Please try again. Error code: " + httpResponseCode;
 		}
@@ -186,7 +221,7 @@ String sendMessageToESP(String command, String address)
 void connectToWifi()
 {
 	// Connect to Wi-Fi network with SSID and password
-	Serial.print("Connecting to ");
+	Serial.println("Connecting to ");
 	Serial.println(ssid);
 	WiFi.begin(ssid, password);
 	while (WiFi.status() != WL_CONNECTED)
@@ -200,55 +235,4 @@ void connectToWifi()
 	Serial.println("IP address: ");
 	Serial.println(WiFi.localIP());
 	server.begin();
-}
-
-/// @brief This simplifies sending a message to a server.
-/// @param command What do you want to tell the server? Dont include the "/?" at the beginning, but if you're going to do a long query dont forget to add the extra "&" signs.
-/// @param address IP Address of the ESP module you want to communicate with. "IP:PORT"
-/// @return The string response that was retrieved from the server or an error message if an error occured.
-String sendMessageToESP(String command, String address)
-{
-	String response = "";
-
-	// Check WiFi connection status
-	if (WiFi.status() == WL_CONNECTED)
-	{
-		WiFiClient sendClient;
-		HTTPClient http;
-
-		String serverPath = "http://" + address + "/?" + command;
-
-		// Your Domain name with URL path or IP address with path
-		http.begin(sendClient, serverPath.c_str());
-
-    //Change timeout so its not so long (5 seconds for now, maybe change later)
-    http.setConnectTimeout(5000);
-    Serial.printf("Before http.GET() to %s \n", address);
-		// Send HTTP GET request
-		int httpResponseCode = http.GET();
-    Serial.printf("After http.GET() to %s \n", address);
-
-		if (httpResponseCode > 0)
-		{
-			Serial.print("HTTP Response code: ");
-			Serial.println(httpResponseCode);
-			response = http.getString();
-			Serial.println(response);
-		}
-		else
-		{
-			Serial.print("Error code: ");
-			Serial.println(httpResponseCode);
-			response = "An error occured. Please try again. Error code: " + httpResponseCode;
-		}
-		// Free resources
-		http.end();
-	}
-	else
-	{
-		Serial.println("WiFi Disconnected");
-		response = "This ESP has been disconnected from WiFi.";
-	}
-
-	return response;
 }

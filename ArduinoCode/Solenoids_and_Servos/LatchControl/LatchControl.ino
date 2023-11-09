@@ -2,6 +2,17 @@
 
 #include <Servo.h>
 
+//ESP pins
+#define D0 16
+#define D1 5
+#define D2 4
+#define D3 0
+#define D4 2
+#define D5 14
+#define D6 12
+#define TXPIN 1
+#define RXPIN 3
+
 // constants won't change. They're used here to set pin numbers:
 const int buttonPin = 2;  // the number of the pushbutton pin
 const int buttonPin2 = 3; // the number of the pushbutton pin
