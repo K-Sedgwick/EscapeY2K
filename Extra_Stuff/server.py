@@ -69,21 +69,28 @@ class ServerHandler(BaseHTTPRequestHandler):
 
             # Check for a clock mode
             clockmode = query_components.get("clockmode", None)
-            if clockmode == "fastForward" | clockmode == "reverse":
+            if clockmode == None:
+                # Since I cant do nothing I gotta do this, I guess
+                nothing = 0
+            elif clockmode == "fastForward" | clockmode == "reverse":
                 self.__pressAndRelease('r')
             elif clockmode == "tick":
                 self.__pressAndRelease('g')
 
             # Check if the monster is showing
             monster = query_components.get("monster", None)
-            if monster == "true":
-                self.__pressAndRelease('x')
+            if monster == None:
+                nothing = 0
+            elif monster == "true":
+                self.__pressAndRelease('m')
             elif monster == "false":
                 self.__pressAndRelease('g')
 
             # Check if midnight should be showing
             midnight = query_components.get("midnight", None)
-            if midnight == 'true':
+            if midnight == None:
+                nothing = 0
+            elif midnight == 'true':
                 self.__pressAndRelease('m')
 
             # HEY NAMI! Come here if you need to add more query string commands
