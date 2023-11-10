@@ -1,20 +1,24 @@
-import sys
+# Video Imports
 import vlc
 import keyboard
- 
+
+# Centeralize the directory where the videos are so its easy to change if we need to
+VIDEO_DIR = "C:/Users/EscapeY2K/Videos/EscapeY2K"
+SOUND_DIR = "C:/Users/EscapeY2K/Sounds/EscapeY2K"
+
 # Creating a vlc instance
 vlc_instance = vlc.Instance()
- 
+
 # Media
-dark = vlc.Media("C:/Users/EscapeY2K/Videos/EscapeY2K/dark.mp4")
+dark = vlc.Media(f'{VIDEO_DIR}/dark.mp4')
 
-timetravel = vlc.Media("C:/Users/EscapeY2K/Videos/EscapeY2K/timetravel.mp4")
-timetravel_sound = "C:/Users/EscapeY2K/Videos/EscapeY2K/timetravel.mp3"
+timetravel = vlc.Media(f'{VIDEO_DIR}/timetravel.mp4')
+timetravel_sound = f"{SOUND_DIR}/timetravel.mp3"
 
-game = vlc.Media("C:/Users/EscapeY2K/Videos/EscapeY2K/game.mp4")
-midnight = vlc.Media("C:/Users/EscapeY2K/Videos/EscapeY2K/midnight.mp4")
-monster = vlc.Media("C:/Users/EscapeY2K/Videos/EscapeY2K/monster.mp4")
-ending = vlc.Media("C:/Users/EscapeY2K/Videos/EscapeY2K/ending.mp4")
+game = vlc.Media(f"{VIDEO_DIR}/game.mp4")
+midnight = vlc.Media(f"{VIDEO_DIR}/midnight.mp4")
+monster = vlc.Media(f"{VIDEO_DIR}/monster.mp4")
+ending = vlc.Media(f"{VIDEO_DIR}/ending.mp4")
 
 # The order of the playlist is crucial
 # ALWAYS MAKE SURE THAT 'game' IS BEFORE 'midnight'
