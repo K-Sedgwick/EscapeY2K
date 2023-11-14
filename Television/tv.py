@@ -52,6 +52,7 @@ keyboard.add_hotkey('g', switch_video, args = (game, 'g', False))
 keyboard.add_hotkey('m', switch_video, args = (monster, 'm', True))
 keyboard.add_hotkey('f', switch_video, args = (midnight, 'f', False))
 keyboard.add_hotkey('e', switch_video, args = (ending, 'e', False))
+keyboard.add_hotkey('w', switch_video, args = (timetravel, 'w', True))
 
 keyboard.add_hotkey('0', lambda: media_player.set_position(0))
 keyboard.add_hotkey('1', lambda: media_player.set_position(0.1))

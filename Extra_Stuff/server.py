@@ -13,7 +13,6 @@ import time
 class ServerHandler(BaseHTTPRequestHandler):
     # Empty dictionary that contains status of all WiFi components that have spoken to it
     # Basically, its going to store information about which puzzles have been solved (not which havent)
-    updateStatusDict = None
     statusDict = {}
     statusLock = None # This will get set by external code, so dont worry about the fact its None here XD
     keyboardForVideoControl = Controller()
@@ -23,11 +22,15 @@ class ServerHandler(BaseHTTPRequestHandler):
 
     def router(self):
 
-        dictToReturn = self.processQueryComponents();
+        dictToReturn = self.processQueryComponents()
         response_code = 200
 
         self.send_response(response_code)
         self.send_header("Content-Type", "application/json")
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Access-Control-Allow-Methods', 'GET')
+        self.send_header('Cache-Control', 'no-store, no-cache, must-revalidate')
+
         self.end_headers()
 
         self.wfile.write(json.dumps(dictToReturn).encode('utf-8'))
@@ -50,7 +53,8 @@ class ServerHandler(BaseHTTPRequestHandler):
         elif self.path == '/hint':
             hintGiven = self.processHint()
             print(f'The hint given was hint {hintGiven}')
-            return ConnectToESP("192.168.1.211", 1234, f'play={hintGiven}', 5)
+            return {'hint', 'This is a really good hint. Uncomment out the line when you ready to actually go for hints.'}
+            #return ConnectToESP("192.168.1.211", 1234, f'play={hintGiven}', 5)
 
 
         # Else, process query commands
@@ -66,21 +70,36 @@ class ServerHandler(BaseHTTPRequestHandler):
             # Save the statusDict first! So that once we activate the key presses
             #  the other bits of code can read out the correct values from the statusDict
             self.updateStatusDict(query_components)
+            
+            # Check for a clock time
+            clockTime = query_components.get("clocktime", None)
+            if clockTime == None:
+                ...
+            else:
+                timeArray = clockTime.split(':')
+                try:
+                    # These are here for later, its easier just to press the same key as the hour for now
+                    hour = int(timeArray[0])
+                    min = int(timeArray[1])
+                    self.__pressAndRelease(timeArray[0])
+                except:
+                    print("There was a problem parsing the hour or minute of the clocktime. Failing gracefully.")
 
             # Check for a clock mode
             clockmode = query_components.get("clockmode", None)
             if clockmode == None:
-                # Since I cant do nothing I gotta do this, I guess
-                nothing = 0
-            elif clockmode == "fastForward" | clockmode == "reverse":
-                self.__pressAndRelease('r')
+                ...
+            elif clockmode == "fastForward":
+                self.__pressAndRelease('w')
+            elif clockmode == "reverse":
+                self.__pressAndRelease('w')
             elif clockmode == "tick":
                 self.__pressAndRelease('g')
 
             # Check if the monster is showing
             monster = query_components.get("monster", None)
             if monster == None:
-                nothing = 0
+                ...
             elif monster == "true":
                 self.__pressAndRelease('m')
             elif monster == "false":
@@ -89,9 +108,9 @@ class ServerHandler(BaseHTTPRequestHandler):
             # Check if midnight should be showing
             midnight = query_components.get("midnight", None)
             if midnight == None:
-                nothing = 0
+                ...
             elif midnight == 'true':
-                self.__pressAndRelease('m')
+                self.__pressAndRelease('f')
 
             # HEY NAMI! Come here if you need to add more query string commands
             #  that you would like the server to process (or if you need to change the keys that get pressed)
@@ -120,7 +139,7 @@ class EscapeY2KServer:
 
     def __init__(self):
         ServerHandler.statusLock = self.statusLock
-        self.statusDict = ServerHandler.statusDict
+        self.__statusDict = ServerHandler.statusDict
 
     def startHTTPServer(self):
         httpd = HTTPServer(('', 8001), ServerHandler)
@@ -174,5 +193,5 @@ if __name__ == '__main__':
     while True:
         time.sleep(5)
         # print('escapey2k status')
-        server.PrintStatus()
+        # server.PrintStatus()
         # print(ConnectToESP('10.0.0.94', 1234, 5))
