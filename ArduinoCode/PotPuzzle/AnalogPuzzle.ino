@@ -10,6 +10,7 @@ const int LED_2 = 9;
 const int LED_3 = 10;
 const int LED_4 = 11;
 const int LED_final = 12;
+const int complete_pin = 7;
 
 void setup() {
   // put your setup code here, to run once:
@@ -77,10 +78,12 @@ void loop() {
   if(out1 && out2 && out3)
   {
     digitalWrite(LED_final, HIGH);
+    digitalWrite(complete_pin, HIGH);
   }
   else
   {
     digitalWrite(LED_final, LOW);
+    digitalWrite(complete_pin, LOW);
   }
 
 }
