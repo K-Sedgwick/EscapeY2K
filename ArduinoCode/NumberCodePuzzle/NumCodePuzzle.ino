@@ -6,15 +6,15 @@
 // THESE PINS ARE MULTI-INPUT ON A BREAD BOARD
 // Because the arduino does not have enough binary pins to use, we need to have several ones and 
 // zeroes grouped together on a breadboard or circuit board to properly signal high or low.
-const int digits_1 = 6;
-const int digits_2 = 7;
-//const int digit_3 = 4;
+const int digits_1 = 5;
+const int digits_2 = 6;
+const int digit_3 = 7;
 //const int digit_4 = 5;
 //const int digit_5 = 2;
-//const int digit_6 = 3;
 const int xero_1 = 8;
 const int xero_2 = 9;
 const int xero_3 = 10;
+const int xero_4 = 11;
 const int out = 13;
 
 void setup() {

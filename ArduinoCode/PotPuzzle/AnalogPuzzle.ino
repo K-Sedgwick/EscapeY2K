@@ -1,89 +1,60 @@
+// This is a testing program for the microservo and solenoid latch system
+
+//#include <Servo.h> 
+
+// constants won't change. They're used here to set pin numbers:
+// THESE PINS ARE MULTI-INPUT ON A BREAD BOARD
+// Because the arduino does not have enough binary pins to use, we need to have several ones and 
+// zeroes grouped together on a breadboard or circuit board to properly signal high or low.
+const int digits_1 = 5;
+const int digits_2 = 6;
+const int digits_3 = 7;
+//const int digit_4 = 5;
+//const int digit_5 = 2;
+//const int xero_1 = 8;
+//const int xero_2 = 9;
+//const int xero_3 = 10;
+//const int xero_4 = 11;
+const int out = 13;
+
+int read0 = 0;
 int read1 = 0;
 int read2 = 0;
 int read3 = 0;
-int out1 = LOW;
-int out2 = LOW;
-int out3 = LOW;
-
-const int LED_initial = 8;
-const int LED_2 = 9;
-const int LED_3 = 10;
-const int LED_4 = 11;
-const int LED_final = 12;
-const int complete_pin = 7;
 
 void setup() {
   // put your setup code here, to run once:
-  Serial.begin(9600);
-  pinMode(LED_initial, OUTPUT);
-  pinMode(LED_2, OUTPUT);
-  pinMode(LED_3, OUTPUT);
-  pinMode(LED_4, OUTPUT);
-  pinMode(LED_final, OUTPUT);
+  // initialize the pushbutton pin as an input:
+  pinMode(digits_1, INPUT);
+  pinMode(digits_2, INPUT);
+  //pinMode(digit_3, INPUT);
+  //pinMode(digit_4, INPUT);
+  //pinMode(digit_5, INPUT);
+  //pinMode(digit_6, INPUT);
+  //pinMode(xero_1, INPUT);
+  //pinMode(xero_2, INPUT);
+  //pinMode(xero_3, INPUT);
+  pinMode(out, OUTPUT);
 
-  digitalWrite(LED_initial, HIGH);
-  digitalWrite(LED_2, out1);
-  digitalWrite(LED_3, out2);
-  digitalWrite(LED_4, out3);
-  digitalWrite(LED_final, LOW);
+  digitalWrite(out, LOW);
 }
 
 void loop() {
+  read0 = analogRead(A0);
+  read1 = analogRead(A1);
+  read2 = analogRead(A2);
+  read3 = analogRead(A3);
   // put your main code here, to run repeatedly:
-  read1 = analogRead(A0);
-  read2 = analogRead(A1);
-  read3 = analogRead(A2);
 
-  Serial.println(read1);
-  Serial.println(read2);
-  Serial.println(read3);
-  Serial.println("");
-  Serial.println(out1 && out2 && out3);
-  Serial.println("");
-
-  if(read1 > 400 && read1 < 500)
-  {
-    out1 = HIGH;
-  }
-  else
-  {
-    out1 = LOW;
-  }
-
-  digitalWrite(LED_2, out1);
-
-  if(read2 > 600 && read2 < 700)
-  {
-    out2= HIGH;
-  }
-  else
-  {
-    out2 = LOW;
-  }
-
-  digitalWrite(LED_3, out2);
-  delay(50);
-
-  if(read3 > 700 && read3 < 800)
-  {
-    out3= HIGH;
-  }
-  else
-  {
-    out3 = LOW;
-  }
-
-  digitalWrite(LED_4, out3);
-
-  if(out1 && out2 && out3)
-  {
-    digitalWrite(LED_final, HIGH);
-    digitalWrite(complete_pin, HIGH);
-  }
-  else
-  {
-    digitalWrite(LED_final, LOW);
-    digitalWrite(complete_pin, LOW);
-  }
-
+  // check if the pushbutton is pressed. If it is, the buttonState is HIGH:
+  //if (digitalRead(digit_1))
+  //{
+    delay(10);
+    if ((digitalRead(digits_1) == HIGH && digitalRead(digits_2) == HIGH && digitalRead(digits_3) == HIGH) && read0 < 900 && read1 < 900 && read2 < 900 && read3 < 900) {
+      digitalWrite(out, HIGH);
+    }
+    else {
+      digitalWrite(out, LOW);
+    }
+  //}
 }
