@@ -3,6 +3,17 @@
 #include <ESP8266HTTPClient.h>
 #include <WiFiClient.h>
 
+//ESP pins
+#define D0 16
+#define D1 5
+#define D2 4
+#define D3 0
+#define D4 2
+#define D5 14
+#define D6 12
+#define TXPIN 1
+#define RXPIN 3
+
 // Includes the Arduino Stepper Library
 #include <Stepper.h>
 
@@ -28,13 +39,14 @@ int lastStateA;
 String currentDir ="";
 
 // ---- WIFI SECTION ----
-const char *ssid = "EscapeY2K";//EscapeY2K
-const char *password = "caNY0u3scAp3?!";//caNY0u3scAp3?!
+const char *ssid = "Whitefire";//EscapeY2K
+const char *password = "R00tb33R";//caNY0u3scAp3?!
 WiFiServer server(1234);
 
 //IP addresses of the devices that need to know about what time it is
 const int numOfTimeDependentDevices = 1;
-String timeDependentIPs[numOfTimeDependentDevices] = {"192.168.1.211:1234"};
+String tvIP = "10.0.0.64:8001"; // 10.0.0.64 at Jakes house
+String timeDependentIPs[numOfTimeDependentDevices] = {tvIP};
 
 // ---- STEPPER SECTION ----
 // Defines the number of steps per rotation
@@ -190,6 +202,7 @@ void handleClientConnected(WiFiClient rcvClient)
 						directionFastForward = false;
 						directionReverse = true;
             status = "Reverse";
+            sendMessageToESP("clockmode=reverse", tvIP);
 					}
 					else if (header.indexOf("GET /?fastForward=on") >= 0)
 					{
@@ -198,6 +211,7 @@ void handleClientConnected(WiFiClient rcvClient)
 						directionReverse = false;
 						directionFastForward = true;
             status = "Fast Forward";
+            sendMessageToESP("clockmode=fastForward", tvIP);
 					}
 					else if (header.indexOf("GET /?normal=on") >= 0)
 					{
@@ -207,6 +221,7 @@ void handleClientConnected(WiFiClient rcvClient)
 						directionFastForward = false;
 						timeCurrentlyControlledByUser = false;
             status = "Normal";
+            sendMessageToESP("clockmode=tick", tvIP);
 					}
           else if (header.indexOf("GET /?reset=on") >= 0)
 					{
@@ -350,7 +365,7 @@ void handleRotaryLogic() {
 
 //This makes sending the time to every ESP that needs to be aware of it easier. This might need to be offloaded to a different ESP if it becomes too slow
 void InformAllDevicesMidnight(){
-  String midnightMessage  = midnight ? "midnight=on" : "midnight=off";
+  String midnightMessage  = midnight ? "midnight=true" : "midnight=false";
 
   for(int i = 0; i < numOfTimeDependentDevices; i++){
     sendMessageToESP(midnightMessage, timeDependentIPs[i]);
