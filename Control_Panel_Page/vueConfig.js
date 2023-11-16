@@ -2,7 +2,7 @@ const tapeSongOptions = [
   { title: "Kyle First Song", value: 1 },
   { title: "Kyle Second Song", value: 2 },
   { title: "Space - Jvke", value: 3 },
-  { title: "RICK ROLL", value: 4 }
+  { title: "RICK ROLL", value: 4 },
 ];
 
 const SECONDS_UNTIL_STATUS_REFRESH = 5;
@@ -15,7 +15,7 @@ const vue = new Vue({
       status: {
         selectedSong: 1,
         currentTime: 0,
-        clockmode: "Unknown"
+        clockmode: "Unknown",
       },
       //ESP Modules
       espModules: {
@@ -31,7 +31,8 @@ const vue = new Vue({
           status: "Closed",
           loading: false,
         },
-        testModule: { //This is essentially just a module for test
+        testModule: {
+          //This is essentially just a module for test
           ipAddress: "10.0.0.225",
           port: "1234",
           status: "Off",
@@ -47,20 +48,26 @@ const vue = new Vue({
           ipAddress: "10.0.0.225", //10.0.0.225, 192.168.1.225
           port: "1234",
           status: "LEDS OFF",
-          loading: false
+          loading: false,
         },
         pingModule: {
           ipAddress: "10.0.0.94", // 10.0.0.94
           port: "1234",
           status: "pinging, I guess",
-          loading: false
+          loading: false,
         },
         miniPC: {
           ipAddress: "10.0.0.64",
           port: "8001",
           status: "Off",
           loading: false,
-        }
+        },
+        irReceiver: {
+          ipAddress: "10.0.0.181",
+          port: "1234",
+          status: "Off",
+          loading: false,
+        },
       },
 
       //Tape Player extras
@@ -85,27 +92,26 @@ const vue = new Vue({
       const onOrOff = newMode ? "on" : "off";
       this.changeClockMode("manualOverride", onOrOff);
     },
-    statusInvervalRunning(newStatus){
+    statusInvervalRunning(newStatus) {
       //Yes, these if statements should be this way
-      if(newStatus){
-        if(!this.statusIntervalTimer){
+      if (newStatus) {
+        if (!this.statusIntervalTimer) {
           this.statusIntervalTimer = setInterval(this.getRoomStatus, 1000);
         }
-      }
-      else{
-        clearInterval(this.statusIntervalTimer)
+      } else {
+        clearInterval(this.statusIntervalTimer);
         this.statusIntervalTimer = null;
-        this.timeUntilStatusRefresh = SECONDS_UNTIL_STATUS_REFRESH
+        this.timeUntilStatusRefresh = SECONDS_UNTIL_STATUS_REFRESH;
       }
-    }
+    },
   },
 
   methods: {
-    getESPPathData(module, path){
+    getESPPathData(module, path) {
       const vm = this;
       const esp = this.espModules[module];
       esp.loading = true;
-      
+
       fetch(`http://${esp.ipAddress}:${esp.port}/${path}`)
         .then((resp) => resp.json())
         .then((apiObj) => {
@@ -119,7 +125,7 @@ const vue = new Vue({
           }
         });
     },
-    sendESPMessage(module, message, state){
+    sendESPMessage(module, message, state) {
       const vm = this;
       const esp = this.espModules[module];
 
@@ -136,9 +142,8 @@ const vue = new Vue({
           }
         });
     },
-    getRoomStatus(){
-      if(this.timeUntilStatusRefresh <= 0){
-
+    getRoomStatus() {
+      if (this.timeUntilStatusRefresh <= 0) {
         const vm = this;
         const esp = this.espModules.miniPC;
         this.statusLoading = true;
@@ -148,7 +153,7 @@ const vue = new Vue({
           vm.statusLoading = false;
           vm.timeUntilStatusRefresh = SECONDS_UNTIL_STATUS_REFRESH + 1;
         }, 2000);
-        
+
         // fetch(`http://${esp.ipAddress}:${esp.port}/status`)
         //   .then((resp) => resp.json())
         //   .then((apiObj) => {
@@ -162,14 +167,13 @@ const vue = new Vue({
         //     }
         //   })
         //   .finally(() => vm.timeUntilStatusRefresh = SECONDS_UNTIL_STATUS_REFRESH);
-      }
-      else if(this.timeUntilStatusRefresh > 0){
+      } else if (this.timeUntilStatusRefresh > 0) {
         this.timeUntilStatusRefresh--;
       }
     },
-    runTest(){
+    runTest() {
       const lockbox = this.espModules.lockbox;
       console.log("lockbox", lockbox);
     },
-  }
+  },
 });
