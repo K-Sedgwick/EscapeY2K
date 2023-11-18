@@ -22,7 +22,8 @@
         <div class="d-flex justify-content-end mt-3">
             <div style="position: relative;">
                 <div :class="{'dual-ring-load':true, 'd-none':!statusLoading}" style="left: -35%; top: -20%"></div>
-                <button class="btn btn-dark" @click="statusInvervalRunning = !statusInvervalRunning">Status Refresh in {{timeUntilStatusRefresh}}</button>    
+                <button class="btn btn-dark" @click="statusInvervalRunning = !statusInvervalRunning">Status Refresh in
+                    {{timeUntilStatusRefresh}}</button>
             </div>
         </div>
         <div class="row">
@@ -33,8 +34,10 @@
                     </div>
                     <div class="mt-2 card-body">
                         <div class="d-flex justify-content-around">
-                            <button class="btn btn-dark" @click="sendESPMessage('miniPC', 'monster', 'true')">Activate Monster</button>
-                            <button class="btn btn-dark" @click="sendESPMessage('miniPC', 'monster', 'false')">Deactivate Monster</button>
+                            <button class="btn btn-dark" @click="sendESPMessage('miniPC', 'monster', 'true')">Activate
+                                Monster</button>
+                            <button class="btn btn-dark"
+                                @click="sendESPMessage('miniPC', 'monster', 'false')">Deactivate Monster</button>
                         </div>
                     </div>
                 </div>
@@ -47,14 +50,19 @@
                             <select class="form-control" style="width:200px" v-model="status.selectedSong">
                                 <option v-for="song in tapeSongOptions" :value="song.value">{{song.title}}</option>
                             </select>
-                            <button class="btn btn-dark" @click="sendESPMessage('tapePlayer', 'play', status.selectedSong)">Play song {{status.selectedSong}}</button>
-                            <button class="btn btn-dark" @click="sendESPMessage('tapePlayer', 'vol', 'min')">Set Volume Min</button>
-                            <button class="btn btn-dark" @click="sendESPMessage('tapePlayer', 'song', 'pause')">Pause</button>
-                            <button class="btn btn-dark" @click="sendESPMessage('tapePlayer', 'song', 'play')">Play</button>
+                            <button class="btn btn-dark"
+                                @click="sendESPMessage('tapePlayer', 'play', status.selectedSong)">Play song
+                                {{status.selectedSong}}</button>
+                            <button class="btn btn-dark" @click="sendESPMessage('tapePlayer', 'vol', 'min')">Set Volume
+                                Min</button>
+                            <button class="btn btn-dark"
+                                @click="sendESPMessage('tapePlayer', 'song', 'pause')">Pause</button>
+                            <button class="btn btn-dark"
+                                @click="sendESPMessage('tapePlayer', 'song', 'play')">Play</button>
                         </div>
                     </div>
                 </div>
-                
+
             </div>
             <div class="col">
                 <div class="m-3 text-center card">
@@ -80,11 +88,14 @@
                                 :disabled="espModules.clock.loading">Pause Clock</button>
                             <button class="btn btn-dark" @click="sendESPMessage('clock', 'reset', 'on')"
                                 :disabled="espModules.clock.loading">Reset Clock</button>
-                            <button class="btn btn-dark" @click="sendESPMessage('clock', 'normal', 'on'); sendESPMessage('miniPC', 'clockmode', 'tick');"
+                            <button class="btn btn-dark"
+                                @click="sendESPMessage('clock', 'normal', 'on'); sendESPMessage('miniPC', 'clockmode', 'tick');"
                                 :disabled="espModules.clock.loading">Tick Normally</button>
-                            <button class="btn btn-dark" @click="sendESPMessage('clock', 'reverse', 'on'); sendESPMessage('miniPC', 'clockmode', 'reverse');"
+                            <button class="btn btn-dark"
+                                @click="sendESPMessage('clock', 'reverse', 'on'); sendESPMessage('miniPC', 'clockmode', 'reverse');"
                                 :disabled="espModules.clock.loading">Reverse</button>
-                            <button class="btn btn-dark" @click="sendESPMessage('clock', 'fastForward', 'on'); sendESPMessage('miniPC', 'clockmode', 'fastForward');"
+                            <button class="btn btn-dark"
+                                @click="sendESPMessage('clock', 'fastForward', 'on'); sendESPMessage('miniPC', 'clockmode', 'fastForward');"
                                 :disabled="espModules.clock.loading">Fast Forward</button>
                         </div>
                     </div>
@@ -124,6 +135,23 @@
                                 :disabled="espModules.dialPuzzle.loading">Enable LEDS</button>
                             <button class="btn btn-dark" @click="sendESPMessage('dialPuzzle', 'leds', 'off')"
                                 :disabled="espModules.dialPuzzle.loading">Disable LEDS</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="m-3 text-center card">
+                    <div class="card-header">
+                        <h3>IR Receiver</h3>
+                        <div :class="{'dual-ring-load':true, 'd-none':!espModules.irReceiver.loading}"></div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <h4>Previously pressed: {{espModules.irReceiver.status}}</h4>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <button class="btn btn-dark" @click="sendESPMessage('irReceiver', 'previous', 'get')"
+                                :disabled="espModules.lockbox.loading">Get IR Previously Pressed</button>
                         </div>
                     </div>
                 </div>
