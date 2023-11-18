@@ -202,7 +202,6 @@ void handleClientConnected(WiFiClient rcvClient)
 						directionFastForward = false;
 						directionReverse = true;
             status = "Reverse";
-            sendMessageToESP("clockmode=reverse", tvIP);
 					}
 					else if (header.indexOf("GET /?fastForward=on") >= 0)
 					{
@@ -211,7 +210,6 @@ void handleClientConnected(WiFiClient rcvClient)
 						directionReverse = false;
 						directionFastForward = true;
             status = "Fast Forward";
-            sendMessageToESP("clockmode=fastForward", tvIP);
 					}
 					else if (header.indexOf("GET /?normal=on") >= 0)
 					{
@@ -221,7 +219,6 @@ void handleClientConnected(WiFiClient rcvClient)
 						directionFastForward = false;
 						timeCurrentlyControlledByUser = false;
             status = "Normal";
-            sendMessageToESP("clockmode=tick", tvIP);
 					}
           else if (header.indexOf("GET /?reset=on") >= 0)
 					{
@@ -344,7 +341,7 @@ void handleRotaryLogic() {
 	if (currentStateA != lastStateA){
 
     //Code that takes care of updating counter and direction
-		if (digitalRead(B) != currentStateA) {
+		if (digitalRead(B) == currentStateA) {
 			counter ++;
 			currentDir ="CCW";
 		} else {
@@ -360,7 +357,7 @@ void handleRotaryLogic() {
 	lastStateA = currentStateA;
 
 	// Put in a slight delay to help debounce the reading
-  delay(5);
+  delay(1);
 }
 
 //This makes sending the time to every ESP that needs to be aware of it easier. This might need to be offloaded to a different ESP if it becomes too slow
