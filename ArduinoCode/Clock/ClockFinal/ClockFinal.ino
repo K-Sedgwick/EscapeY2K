@@ -44,13 +44,18 @@ const char *password = "R00tb33R";//caNY0u3scAp3?!
 WiFiServer server(1234);
 
 //IP addresses of the devices that need to know about what time it is
-const int numOfTimeDependentDevices = 1;
+const int numOfMignightDependentDevices = 1;
 String tvIP = "10.0.0.64:8001"; // 10.0.0.64 at Jakes house
-String timeDependentIPs[numOfTimeDependentDevices] = {tvIP};
+String midnightDependentIPs[numOfMignightDependentDevices] = {tvIP};
+
+// ---- ROTARY ENCODER SECTION ----
+const int countInOneRotation = 10;
+const int midnightCount = 200;
 
 // ---- STEPPER SECTION ----
 // Defines the number of steps per rotation
 const int stepsPerRevolution = 2038;
+// How far to go in one "tick" of the clock
 const int tickSteps = 100;
 const int stepperSpeed = 10;
 const int reverseSteps = -10;
@@ -59,8 +64,9 @@ unsigned long ticksCompleted = 0;
 Stepper clockStepper = Stepper(stepsPerRevolution, 3, 4, 5, 2); // Pins entered in sequence IN1-IN3-IN2-IN4 for proper step sequence
 
 // ---- SLOT INTERRUPTOR SECTION ----
-const int InterruptorAtOne = 2;
-const int InterruptorAtTwelve = 0;
+const int Interruptor = D3;
+bool startingPosition = false;
+bool midnight = false;
 bool timeCurrentlyControlledByUser = false;
 bool directionReverse = false;
 bool directionFastForward = false;
@@ -70,7 +76,7 @@ const int LedPin = 13;
 unsigned long currentTime = millis();
 unsigned long previousTime = 0;
 const long TickDelayTime = 500;
-bool midnight = false;
+// This is whether we have told all of the devices about midnight that need to know so we don't just keep screaming it into the void
 bool informed = false;
 bool pause = false;
 bool manualOverride = false; //If the room admin has to do stuff allow them extra control while in this mode
@@ -87,8 +93,7 @@ void setup()
 	connectToWifi();
 
 	// configure pin 2 and 3 as an input and enable the internal pull-up resistor
-	pinMode(InterruptorAtOne, INPUT_PULLUP);
-	pinMode(InterruptorAtTwelve, INPUT_PULLUP);
+	pinMode(Interruptor, INPUT_PULLUP);
 
   //Setup pins for stepper
 	pinMode(2, OUTPUT);
@@ -310,26 +315,19 @@ void handleClientConnected(WiFiClient rcvClient)
 void processInterruptorSwitches()
 {
 	// read the interruptor values into variables
-	//int InterruptorValAtOne = digitalRead(InterruptorAtOne);
-	int InterruptorValAtTwelve = digitalRead(InterruptorAtTwelve);
+	int interruptorVal = digitalRead(Interruptor);
 
 	// Keep in mind the pull-up means the pushbutton's logic is inverted. It goes
 	// HIGH when it's open, and LOW when it's pressed. Turn on pin 13 when the
 	// button's pressed, and off when it's not:
-	if (HIGH == LOW) //switch to InterruptorValAtOne when were ready to turn on
+	if (interruptorVal == LOW)
 	{
-		// print out the value of the pushbutton
-		Serial.println("It's 1 o'clock!");
 		timeCurrentlyControlledByUser = false;
-		ticksCompleted = 0;
+    startingPosition = true;
 	}
-	else if (!midnight && InterruptorValAtTwelve == LOW)
-	{
-		// print out the value of the pushbutton
-		Serial.println("It's 12 o'clock!");
-		timeCurrentlyControlledByUser = false;
-		midnight = true;
-	}
+  else{
+    startingPosition = false;
+  }
 }
 
 void handleRotaryLogic() {
@@ -356,7 +354,14 @@ void handleRotaryLogic() {
   // Remember last A state
 	lastStateA = currentStateA;
 
-	// Put in a slight delay to help debounce the reading
+  if(startingPosition == true){
+    counter = 0;
+  }
+  else if(count == midnightCount){
+    midnight = true;
+  }
+
+	// Put in a slight delay to help debounce the reading (maybe remove)
   delay(1);
 }
 
@@ -365,7 +370,7 @@ void InformAllDevicesMidnight(){
   String midnightMessage  = midnight ? "midnight=true" : "midnight=false";
 
   for(int i = 0; i < numOfTimeDependentDevices; i++){
-    sendMessageToESP(midnightMessage, timeDependentIPs[i]);
+    sendMessageToESP(midnightMessage, midnightDependentIPs[i]);
   }
 }
 
