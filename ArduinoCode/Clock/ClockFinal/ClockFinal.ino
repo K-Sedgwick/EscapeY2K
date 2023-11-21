@@ -3,17 +3,6 @@
 #include <ESP8266HTTPClient.h>
 #include <WiFiClient.h>
 
-//ESP pins
-#define D0 16
-#define D1 5
-#define D2 4
-#define D3 0
-#define D4 2
-#define D5 14
-#define D6 12
-#define TXPIN 1
-#define RXPIN 3
-
 // Includes the Arduino Stepper Library
 #include <Stepper.h>
 
@@ -25,6 +14,8 @@
 #define D4 2
 #define D5 14
 #define D6 12
+#define D7 13
+#define D8 15
 #define TXPIN 1
 #define RXPIN 3
 
@@ -39,14 +30,14 @@ int lastStateA;
 String currentDir ="";
 
 // ---- WIFI SECTION ----
-const char *ssid = "Whitefire";//EscapeY2K
-const char *password = "R00tb33R";//caNY0u3scAp3?!
+const char *ssid = "EscapeY2K";//EscapeY2K
+const char *password = "caNY0u3scAp3?!";//caNY0u3scAp3?!
 WiFiServer server(1234);
 
 //IP addresses of the devices that need to know about what time it is
-const int numOfMignightDependentDevices = 1;
+const int numOfMidnightDependentDevices = 1;
 String tvIP = "10.0.0.64:8001"; // 10.0.0.64 at Jakes house
-String midnightDependentIPs[numOfMignightDependentDevices] = {tvIP};
+String midnightDependentIPs[numOfMidnightDependentDevices] = {tvIP};
 
 // ---- ROTARY ENCODER SECTION ----
 const int countInOneRotation = 10;
@@ -65,6 +56,7 @@ Stepper clockStepper = Stepper(stepsPerRevolution, 3, 4, 5, 2); // Pins entered 
 
 // ---- SLOT INTERRUPTOR SECTION ----
 const int Interruptor = D3;
+const int Interruptor2 = D7;
 bool startingPosition = false;
 bool midnight = false;
 bool timeCurrentlyControlledByUser = false;
@@ -72,7 +64,6 @@ bool directionReverse = false;
 bool directionFastForward = false;
 
 // ---- GENERAL SECTION ----
-const int LedPin = 13;
 unsigned long currentTime = millis();
 unsigned long previousTime = 0;
 const long TickDelayTime = 500;
@@ -94,6 +85,7 @@ void setup()
 
 	// configure pin 2 and 3 as an input and enable the internal pull-up resistor
 	pinMode(Interruptor, INPUT_PULLUP);
+  pinMode(Interruptor2, INPUT_PULLUP);
 
   //Setup pins for stepper
 	pinMode(2, OUTPUT);
@@ -316,15 +308,29 @@ void processInterruptorSwitches()
 {
 	// read the interruptor values into variables
 	int interruptorVal = digitalRead(Interruptor);
+  int interruptor2Val = digitalRead(Interruptor2);
 
 	// Keep in mind the pull-up means the pushbutton's logic is inverted. It goes
 	// HIGH when it's open, and LOW when it's pressed. Turn on pin 13 when the
 	// button's pressed, and off when it's not:
+  if(interruptorVal == LOW && midnight == false){
+    Serial.println("We just got to mignight");
+  }
+
+  if(interruptor2Val == LOW && startingPosition == false){
+    Serial.println("We just got to the starting position");
+  }
+
+  // Interruptor at midnight is on D3 (Interruptor(1))
 	if (interruptorVal == LOW)
 	{
 		timeCurrentlyControlledByUser = false;
-    startingPosition = true;
+    midnight = true;
 	}
+  else if(interruptor2Val == LOW){
+    timeCurrentlyControlledByUser = false;
+    startingPosition = true;
+  }
   else{
     startingPosition = false;
   }
@@ -357,19 +363,19 @@ void handleRotaryLogic() {
   if(startingPosition == true){
     counter = 0;
   }
-  else if(count == midnightCount){
+  else if(counter == midnightCount){
     midnight = true;
   }
 
 	// Put in a slight delay to help debounce the reading (maybe remove)
-  delay(1);
+  delay(2);
 }
 
 //This makes sending the time to every ESP that needs to be aware of it easier. This might need to be offloaded to a different ESP if it becomes too slow
 void InformAllDevicesMidnight(){
   String midnightMessage  = midnight ? "midnight=true" : "midnight=false";
 
-  for(int i = 0; i < numOfTimeDependentDevices; i++){
+  for(int i = 0; i < numOfMidnightDependentDevices; i++){
     sendMessageToESP(midnightMessage, midnightDependentIPs[i]);
   }
 }

@@ -6,11 +6,12 @@
 #include <WiFiClient.h>
 
 // ---- WIFI SECTION ----
-const char *ssid = "Whitefire";//EscapeY2K
-const char *password = "R00tb33R";//caNY0u3scAp3?!
+const char *ssid = "EscapeY2K";	   // EscapeY2K
+const char *password = "caNY0u3scAp3?!"; // caNY0u3scAp3?!
 WiFiServer server(1234);
+String tvIp = "";
 
-//ESP pins
+// ESP pins
 #define D0 16
 #define D1 5
 #define D2 4
@@ -21,74 +22,88 @@ WiFiServer server(1234);
 #define TXPIN 1
 #define RXPIN 3
 
-//IR Stuff
+// IR Stuff
 #define IR_RECEIVE_PIN D1
 String previousCmd = "Unknown";
 
-void setup() {
-  Serial.begin(9600);
+void setup()
+{
+	Serial.begin(9600);
 
-  connectToWifi();
+	connectToWifi();
 
-  IrReceiver.begin(IR_RECEIVE_PIN);
+	IrReceiver.begin(IR_RECEIVE_PIN);
+
+  // pinMode(LED_BUILTIN, OUTPUT);
+
+	// digitalWrite(LED_BUILTIN, LOW);  // turn the LED on (HIGH is the voltage level)
+	// delay(500);
+	// digitalWrite(LED_BUILTIN, HIGH);
 }
-void loop() {
-  WiFiClient rcvClient = server.available(); // Listen for incoming clients
+void loop()
+{
+	WiFiClient rcvClient = server.available(); // Listen for incoming clients
 
 	if (rcvClient)
 	{
 		handleClientConnected(rcvClient);
 	}
 
-  handleIRLogic();
+	handleIRLogic();
 
-  //Add in other functionality here if you so desire
-  //This will run once every TickTimeDelays
-  // if ((millis() - previousTime) > TickDelayTime)
-  // {
-  //   //DONT REMOVE THIS LINE! Its super important
-  //   previousTime = millis();
-    
-  // }
+	// Add in other functionality here if you so desire
+	// This will run once every TickTimeDelays
+	//  if ((millis() - previousTime) > TickDelayTime)
+	//  {
+	//    //DONT REMOVE THIS LINE! Its super important
+	//    previousTime = millis();
+
+	// }
 }
 
 // ---- HELPER METHODS ----
-void handleIRLogic(){
-  if (IrReceiver.decode()) {
-    IrReceiver.resume();
-    int cmd = IrReceiver.decodedIRData.command;
-    if(cmd == 71 && previousCmd != "Play"){
-      previousCmd = "Play";
-      Serial.println(previousCmd);
-    }
-    else if(cmd == 69 && previousCmd != "Reverse"){
-      previousCmd = "Reverse";
-      Serial.println(previousCmd);
-    }
-    else if(cmd == 72 && previousCmd != "Fast forward"){
-      previousCmd = "Fast forward";
-      Serial.println(previousCmd);
-    }
-  }
+void handleIRLogic()
+{
+	if (IrReceiver.decode())
+	{
+		IrReceiver.resume();
+		int cmd = IrReceiver.decodedIRData.command;
+		if (cmd == 21 && previousCmd != "Play")
+		{
+			previousCmd = "Play";
+			Serial.println(previousCmd);
+		}
+		else if (cmd == 25 && previousCmd != "Reverse")
+		{
+			previousCmd = "Reverse";
+			Serial.println(previousCmd);
+		}
+
+		else if (cmd == 19 && previousCmd != "Fast forward")
+		{
+			previousCmd = "Fast forward";
+			Serial.println(previousCmd);
+		}
+	}
 }
 
 void handleClientConnected(WiFiClient rcvClient)
 {
 	// SETUP VARIABLES
-  String header = "";
+	String header = "";
 	String currentLine = ""; // make a String to hold incoming data from the client
 	int handleClientTimeout = 2000;
 	unsigned long clientConnectedTime = millis();
 	int previousClientConnectedTime = clientConnectedTime;
 
-	//Serial.println("New Client."); // print a message out in the serial port
+	// Serial.println("New Client."); // print a message out in the serial port
 	while (rcvClient.connected() && clientConnectedTime - previousClientConnectedTime <= handleClientTimeout)
 	{ // loop while the client's connected
 		clientConnectedTime = millis();
 		if (rcvClient.available())
 		{							   // if there's bytes to read from the client,
 			char c = rcvClient.read(); // read a byte, then
-			//Serial.write(c);		   // print it out the serial monitor
+			// Serial.write(c);		   // print it out the serial monitor
 			header += c;
 			if (c == '\n')
 			{ // if the byte is a newline character
@@ -98,14 +113,14 @@ void handleClientConnected(WiFiClient rcvClient)
 				{
 					String fullMessage = "{\"message\":\"received\"";
 
-				  if (header.indexOf("GET /?previous=get") >= 0)
+					if (header.indexOf("GET /?previous=get") >= 0)
 					{
-            fullMessage = fullMessage + ",\"previous\":\"" + previousCmd + "\"";
+						fullMessage = fullMessage + ",\"previous\":\"" + previousCmd + "\"";
 					}
 
-          //This allows us to add any other properties we may want to add and then still close the response when were done
-          fullMessage = fullMessage + "}";
-          String contentLengthString = "Content-Length: " + fullMessage.length() + 2;
+					// This allows us to add any other properties we may want to add and then still close the response when were done
+					fullMessage = fullMessage + "}";
+					String contentLengthString = "Content-Length: " + fullMessage.length() + 2;
 
 					rcvClient.println("HTTP/1.1 200 OK");
 					rcvClient.println("Content-type: application/json");
@@ -156,8 +171,8 @@ String sendMessageToESP(String command, String address)
 		// Your Domain name with URL path or IP address with path
 		http.begin(sendClient, serverPath.c_str());
 
-    //Change timeout so its not so long (5 seconds for now, maybe change later)
-    http.setTimeout(5000);
+		// Change timeout so its not so long (5 seconds for now, maybe change later)
+		http.setTimeout(5000);
 		// Send HTTP GET request
 		int httpResponseCode = http.GET();
 
