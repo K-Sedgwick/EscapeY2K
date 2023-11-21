@@ -100,6 +100,8 @@ class ServerHandler(BaseHTTPRequestHandler):
             monster = query_components.get("monster", None)
             if monster == None:
                 ...
+            elif monster == "seek":
+                self.__pressAndRelease('s')
             elif monster == "true":
                 self.__pressAndRelease('m')
             elif monster == "false":

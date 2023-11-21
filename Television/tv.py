@@ -17,12 +17,13 @@ timetravel_sound = f"{SOUND_DIR}/timetravel.mp3"
 
 game = vlc.Media(f"{VIDEO_DIR}/game.mp4")
 midnight = vlc.Media(f"{VIDEO_DIR}/midnight.mp4")
+seek = vlc.Media(f"{VIDEO_DIR}/seek.mp4")
 monster = vlc.Media(f"{VIDEO_DIR}/monster.mp4")
 ending = vlc.Media(f"{VIDEO_DIR}/ending.mp4")
 
 # The order of the playlist is crucial
 # ALWAYS MAKE SURE THAT 'game' IS BEFORE 'midnight'
-playlist = vlc.MediaList([game, midnight, dark, timetravel, monster, ending])
+playlist = vlc.MediaList([game, midnight, dark, timetravel, seek, monster, ending])
     
 # Creating a media list player
 list_player = vlc.MediaListPlayer(vlc_instance)
@@ -51,6 +52,7 @@ keyboard.add_hotkey('d', switch_video, args = (dark, 'd', True))
 keyboard.add_hotkey('g', switch_video, args = (game, 'g', False))
 keyboard.add_hotkey('m', switch_video, args = (monster, 'm', True))
 keyboard.add_hotkey('f', switch_video, args = (midnight, 'f', False))
+keyboard.add_hotkey('s', switch_video, args = (seek, 's', False))
 keyboard.add_hotkey('e', switch_video, args = (ending, 'e', False))
 keyboard.add_hotkey('w', switch_video, args = (timetravel, 'w', True))
 
@@ -69,3 +71,5 @@ while (not keyboard.is_pressed('esc')):
     # The midnight video needs to loop further into the video
     if (media_player.get_media().get_mrl() == midnight.get_mrl()):
         if (media_player.get_position() > 0.98): media_player.set_position(0.1)
+    elif (media_player.get_media().get_mrl() == seek.get_mrl()):
+        if (media_player.get_position() > 0.5): switch_video(game, 'g', False)
