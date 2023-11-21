@@ -16,6 +16,7 @@ class ServerHandler(BaseHTTPRequestHandler):
     statusDict = {}
     statusLock = None # This will get set by external code, so dont worry about the fact its None here XD
     keyboardForVideoControl = Controller()
+    clock = {"Ip":"192.168.1.50", "port":1234}
 
     def do_GET(self):
         return self.router()
@@ -91,10 +92,13 @@ class ServerHandler(BaseHTTPRequestHandler):
                 ...
             elif clockmode == "fastForward":
                 self.__pressAndRelease('w')
+                ConnectToESP(self.clock["Ip"], self.clock["port"], "fastForward=on", 5000)
             elif clockmode == "reverse":
                 self.__pressAndRelease('w')
+                ConnectToESP(self.clock["Ip"], self.clock["port"], "reverse=on", 5000)
             elif clockmode == "tick":
                 self.__pressAndRelease('g')
+                ConnectToESP(self.clock["Ip"], self.clock["port"], "normal=on", 5000)
 
             # Check if the monster is showing
             monster = query_components.get("monster", None)
@@ -114,7 +118,7 @@ class ServerHandler(BaseHTTPRequestHandler):
             elif midnight == 'true':
                 self.__pressAndRelease('f')
 
-            # HEY NAMI! Come here if you need to add more query string commands
+            # HEY NAMI! (Hi Jake :D) Come here if you need to add more query string commands
             #  that you would like the server to process (or if you need to change the keys that get pressed)
 
 
