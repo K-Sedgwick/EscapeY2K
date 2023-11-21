@@ -2,13 +2,21 @@ const tapeSongOptions = [
   { title: "Kyle First Song", value: 1 },
   { title: "Kyle Second Song", value: 2 },
   { title: "Space - Jvke", value: 3 },
-  { title: "RICK ROLL", value: 4 }
+  { title: "RICK ROLL", value: 4 },
 ];
+
+const SECONDS_UNTIL_STATUS_REFRESH = 5;
 
 const vue = new Vue({
   el: "#vue-root",
   data() {
     return {
+      // This is the status of the room, tracked by the Mini PC
+      status: {
+        selectedSong: 1,
+        currentTime: 0,
+        clockmode: "Unknown",
+      },
       //ESP Modules
       espModules: {
         clock: {
@@ -23,14 +31,13 @@ const vue = new Vue({
           status: "Closed",
           loading: false,
         },
-        modules: [
-          { //This is essentially just a module for test
-            ipAddress: "10.0.0.225",
-            port: "1234",
-            status: "Off",
-            loading: false,
-          }
-        ],
+        testModule: {
+          //This is essentially just a module for test
+          ipAddress: "10.0.0.225",
+          port: "1234",
+          status: "Off",
+          loading: false,
+        },
         tapePlayer: {
           ipAddress: "10.0.0.197", //10.0.0.197 at Jakes house, 192.168.1.211 on the escapey2k wifi
           port: "1234",
@@ -41,26 +48,42 @@ const vue = new Vue({
           ipAddress: "10.0.0.225", //10.0.0.225, 192.168.1.225
           port: "1234",
           status: "LEDS OFF",
-          loading: false
+          loading: false,
         },
         pingModule: {
           ipAddress: "10.0.0.94", // 10.0.0.94
           port: "1234",
           status: "pinging, I guess",
-          loading: false
-        }
+          loading: false,
+        },
+        miniPC: {
+          ipAddress: "10.0.0.64",
+          port: "8001",
+          status: "Off",
+          loading: false,
+        },
+        irReceiver: {
+          ipAddress: "10.0.0.181",
+          port: "1234",
+          status: "Off",
+          loading: false,
+        },
       },
 
       //Tape Player extras
       tapeSongOptions: tapeSongOptions,
-      selectedSong: 1,
 
-      //Clock Stuff
-      currentTime: 0,
+      //This is just in relation to the clock
       adminMode: false,
 
       //General Stuff
       loading: false,
+
+      //Status Stuff
+      statusLoading: false,
+      timeUntilStatusRefresh: SECONDS_UNTIL_STATUS_REFRESH,
+      statusInvervalRunning: false,
+      statusIntervalTimer: null,
     };
   },
 
@@ -69,17 +92,42 @@ const vue = new Vue({
       const onOrOff = newMode ? "on" : "off";
       this.changeClockMode("manualOverride", onOrOff);
     },
+    statusInvervalRunning(newStatus) {
+      //Yes, these if statements should be this way
+      if (newStatus) {
+        if (!this.statusIntervalTimer) {
+          this.statusIntervalTimer = setInterval(this.getRoomStatus, 1000);
+        }
+      } else {
+        clearInterval(this.statusIntervalTimer);
+        this.statusIntervalTimer = null;
+        this.timeUntilStatusRefresh = SECONDS_UNTIL_STATUS_REFRESH;
+      }
+    },
   },
 
   methods: {
-    sendESPMessage(module, message, state){
-      console.log('sending message to: ', module);
+    getESPPathData(module, path) {
       const vm = this;
       const esp = this.espModules[module];
-      console.log(esp);
-      // if(!state){
-      //   state = this.selectedSong;
-      // }
+      esp.loading = true;
+
+      fetch(`http://${esp.ipAddress}:${esp.port}/${path}`)
+        .then((resp) => resp.json())
+        .then((apiObj) => {
+          if (apiObj) {
+            if (apiObj.error) {
+              console.log("An unexpected error occured.");
+            }
+
+            console.log(`Response from ${module}`, apiObj);
+            esp.loading = false;
+          }
+        });
+    },
+    sendESPMessage(module, message, state) {
+      const vm = this;
+      const esp = this.espModules[module];
 
       fetch(`http://${esp.ipAddress}:${esp.port}?${message}=${state}`)
         .then((resp) => resp.json())
@@ -94,80 +142,38 @@ const vue = new Vue({
           }
         });
     },
-    sendLockboxMessage(message, state) {
-      const vm = this;
-      this.loading = true;
+    getRoomStatus() {
+      if (this.timeUntilStatusRefresh <= 0) {
+        const vm = this;
+        const esp = this.espModules.miniPC;
+        this.statusLoading = true;
+
+        //SIMULATE API CALL
+        setTimeout(() => {
+          vm.statusLoading = false;
+          vm.timeUntilStatusRefresh = SECONDS_UNTIL_STATUS_REFRESH + 1;
+        }, 2000);
+
+        // fetch(`http://${esp.ipAddress}:${esp.port}/status`)
+        //   .then((resp) => resp.json())
+        //   .then((apiObj) => {
+        //     if (apiObj) {
+        //       if (apiObj.error) {
+        //         console.log("An unexpected error occured.");
+        //       }
+
+        //       vm.status = apiObj.data;
+        //       vm.statusLoading = false;
+        //     }
+        //   })
+        //   .finally(() => vm.timeUntilStatusRefresh = SECONDS_UNTIL_STATUS_REFRESH);
+      } else if (this.timeUntilStatusRefresh > 0) {
+        this.timeUntilStatusRefresh--;
+      }
+    },
+    runTest() {
       const lockbox = this.espModules.lockbox;
-
-      fetch(`http://${lockbox.ipAddress}:${lockbox.port}?${message}=${state}`)
-        .then((resp) => resp.json())
-        .then((apiObj) => {
-          if (apiObj) {
-            if (apiObj.error) {
-              console.log("An unexpected error occured.");
-            }
-
-            console.log("Response from lockbox", apiObj);
-            vm.loading = false;
-          }
-        });
-    },
-    sendModuleMessage(moduleNum, message, state){
-      console.log(moduleNum, message, state);
-      const vm = this;
-      this.loading = true;
-      const module = this.espModules.modules[moduleNum];
-      module.loading = true;
-
-      fetch(`http://${module.ipAddress}:${module.port}?${message}=${state}`)
-        .then((resp) => resp.json())
-        .then((apiObj) => {
-          if (apiObj) {
-            if (apiObj.error) {
-              console.log("An unexpected error occured.");
-            }
-
-            console.log("Response from lockbox", apiObj);
-            vm.loading = false;
-            module.loading = false;
-          }
-        });
-    },
-    checkClockStatus(){
-      const vm = this;
-      this.loading = true;
-      const clock = this.espModules.clock;
-
-      fetch(`http://${clock.ipAddress}:${clock.port}?${mode}=${onOrOff}`)
-        .then((resp) => resp.json())
-        .then((apiObj) => {
-          if (apiObj) {
-            if (apiObj.error) {
-              console.log("An unexpected error occured.");
-            }
-
-            vm.clockOperation = apiObj.mode ?? "Undefined";
-            vm.loading = false;
-          }
-        });
-    },
-    changeClockMode(mode, onOrOff) {
-      const vm = this;
-      this.loading = true;
-      const clock = this.espModules.clock;
-
-      fetch(`http://${clock.ipAddress}:${clock.port}?${mode}=${onOrOff}`)
-        .then((resp) => resp.json())
-        .then((apiObj) => {
-          if (apiObj) {
-            if (apiObj.error) {
-              console.log("An unexpected error occured.");
-            }
-
-            vm.clockOperation = apiObj.mode ?? "Undefined";
-            vm.loading = false;
-          }
-        });
+      console.log("lockbox", lockbox);
     },
   },
 });

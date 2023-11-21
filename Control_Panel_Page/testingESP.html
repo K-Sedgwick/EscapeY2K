@@ -18,95 +18,142 @@
 </head>
 
 <body class="bg-dark">
-    <div id="vue-root" class="container bg-dark">
-        <div class="m-3 text-center card">
-            <div class="card-header">
-                <h3>Tape Player</h3>
-            </div>
-            <div class="mt-2 card-body">
-                <div class="d-flex justify-content-around">
-                    <select class="form-control" style="width:200px" v-model="selectedSong">
-                        <option v-for="song in tapeSongOptions" :value="song.value">{{song.title}}</option>
-                    </select>
-                    <button class="btn btn-dark" @click="sendESPMessage('tapePlayer', 'play', selectedSong)">Play song {{selectedSong}}</button>                    <button class="btn btn-dark" @click="sendESPMessage('tapePlayer', 'vol', 'min')">Set Volume Min</button>
-                    <button class="btn btn-dark" @click="sendESPMessage('tapePlayer', 'song', 'pause')">Pause</button>
-                    <button class="btn btn-dark" @click="sendESPMessage('tapePlayer', 'song', 'play')">Play</button>
-                </div>
+    <div id="vue-root" class="bg-dark p-3">
+        <div class="d-flex justify-content-end mt-3">
+            <div style="position: relative;">
+                <div :class="{'dual-ring-load':true, 'd-none':!statusLoading}" style="left: -35%; top: -20%"></div>
+                <button class="btn btn-dark" @click="statusInvervalRunning = !statusInvervalRunning">Status Refresh in
+                    {{timeUntilStatusRefresh}}</button>
             </div>
         </div>
-        <div class="m-3 text-center card">
-            <div class="card-header">
-                <h3>ESP that just pings our Python server</h3>
-            </div>
-            <div class="mt-2 card-body">
-                <button class="btn btn-dark" @click="sendESPMessage('pingModule', 'clocktime', 'get')">Get Clocktime from Ping</button>
-            </div>
-        </div>
-        <div class="m-3 text-center card">
-            <div class="card-header">
-                <div class="position-absolute mt-2">
-                    <input id="admin-mode-checkbox" type="checkbox" v-model="adminMode" :disabled="loading">
-                    <label for="admin-mode-checkbox">Admin Mode</label>
-                </div>
-                <h3>Clock Stuff</h3>
-                <div :class="{'dual-ring-load':true, 'd-none':!espModules.clock.loading}"></div>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col">
-                        <h4>Current Time: {{currentTime}}</h4>
+        <div class="row">
+            <div class="col">
+                <div class="m-3 text-center card">
+                    <div class="card-header">
+                        <h3>TV's</h3>
                     </div>
-                    <div class="col">
-                        <h4>Clock Status: {{espModules.clock.status}}</h4>
+                    <div class="mt-2 card-body">
+                        <div class="d-flex justify-content-around">
+                            <button class="btn btn-dark" @click="sendESPMessage('miniPC', 'monster', 'true')">Activate
+                                Monster</button>
+                            <button class="btn btn-dark"
+                                @click="sendESPMessage('miniPC', 'monster', 'false')">Deactivate Monster</button>
+                        </div>
                     </div>
                 </div>
-                <div class="mt-2">
-                    <button class="btn btn-dark" @click="changeClockMode('pause', 'on')"
-                        :disabled="espModules.clock.loading">Pause Clock</button>
-                    <button class="btn btn-dark" @click="changeClockMode('reset', 'on')"
-                        :disabled="espModules.clock.loading">Reset Clock</button>
-                    <button class="btn btn-dark" @click="changeClockMode('normal', 'on')"
-                        :disabled="espModules.clock.loading">Tick Normally</button>
-                    <button class="btn btn-dark" @click="changeClockMode('reverse', 'on')"
-                        :disabled="espModules.clock.loading">Reverse</button>
-                    <button class="btn btn-dark" @click="changeClockMode('fastForward', 'on')"
-                        :disabled="espModules.clock.loading">Fast Forward</button>
-                </div>
-            </div>
-        </div>
-        <div class="m-3 text-center card">
-            <div class="card-header">
-                <h3>Lockbox</h3>
-                <div :class="{'dual-ring-load':true, 'd-none':!espModules.lockbox.loading}"></div>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col">
-                        <h4>Box status: {{espModules.lockbox.status}}</h4>
+                <div class="m-3 text-center card">
+                    <div class="card-header">
+                        <h3>Tape Player</h3>
+                    </div>
+                    <div class="mt-2 card-body">
+                        <div class="d-flex justify-content-around">
+                            <select class="form-control" style="width:200px" v-model="status.selectedSong">
+                                <option v-for="song in tapeSongOptions" :value="song.value">{{song.title}}</option>
+                            </select>
+                            <button class="btn btn-dark"
+                                @click="sendESPMessage('tapePlayer', 'play', status.selectedSong)">Play song
+                                {{status.selectedSong}}</button>
+                            <button class="btn btn-dark" @click="sendESPMessage('tapePlayer', 'vol', 'min')">Set Volume
+                                Min</button>
+                            <button class="btn btn-dark"
+                                @click="sendESPMessage('tapePlayer', 'song', 'pause')">Pause</button>
+                            <button class="btn btn-dark"
+                                @click="sendESPMessage('tapePlayer', 'song', 'play')">Play</button>
+                        </div>
                     </div>
                 </div>
-                <div class="mt-2">
-                    <button class="btn btn-dark" @click="sendLockboxMessage('latch', 'change')"
-                        :disabled="espModules.lockbox.loading">Change Lockbox Status</button>
-                </div>
+
             </div>
-        </div>
-        <div class="m-3 text-center card">
-            <div class="card-header">
-                <h3>Dial Puzzle</h3>
-                <div :class="{'dual-ring-load':true, 'd-none':!espModules.dialPuzzle.loading}"></div>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col">
-                        <h4>Dial status: {{espModules.dialPuzzle.status}}</h4>
+            <div class="col">
+                <div class="m-3 text-center card">
+                    <div class="card-header">
+                        <div class="position-absolute mt-2">
+                            <input id="admin-mode-checkbox" type="checkbox" v-model="adminMode" :disabled="loading">
+                            <label for="admin-mode-checkbox">Admin Mode</label>
+                        </div>
+                        <h3>Clock Stuff</h3>
+                        <div :class="{'dual-ring-load':true, 'd-none':!espModules.clock.loading}"></div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <h4>Current Time: {{status.currentTime}}</h4>
+                            </div>
+                            <div class="col">
+                                <h4>Clock Status: {{status.clockmode}}</h4>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <button class="btn btn-dark" @click="sendESPMessage('clock', 'pause', 'on')"
+                                :disabled="espModules.clock.loading">Pause Clock</button>
+                            <button class="btn btn-dark" @click="sendESPMessage('clock', 'reset', 'on')"
+                                :disabled="espModules.clock.loading">Reset Clock</button>
+                            <button class="btn btn-dark"
+                                @click="sendESPMessage('clock', 'normal', 'on'); sendESPMessage('miniPC', 'clockmode', 'tick');"
+                                :disabled="espModules.clock.loading">Tick Normally</button>
+                            <button class="btn btn-dark"
+                                @click="sendESPMessage('clock', 'reverse', 'on'); sendESPMessage('miniPC', 'clockmode', 'reverse');"
+                                :disabled="espModules.clock.loading">Reverse</button>
+                            <button class="btn btn-dark"
+                                @click="sendESPMessage('clock', 'fastForward', 'on'); sendESPMessage('miniPC', 'clockmode', 'fastForward');"
+                                :disabled="espModules.clock.loading">Fast Forward</button>
+                        </div>
                     </div>
                 </div>
-                <div class="mt-2">
-                    <button class="btn btn-dark" @click="sendESPMessage('dialPuzzle', 'leds', 'on')"
-                        :disabled="espModules.dialPuzzle.loading">Enable LEDS</button>
-                    <button class="btn btn-dark" @click="sendESPMessage('dialPuzzle', 'leds', 'off')"
-                        :disabled="espModules.dialPuzzle.loading">Disable LEDS</button>
+            </div>
+            <div class="col">
+                <div class="m-3 text-center card">
+                    <div class="card-header">
+                        <h3>Lockbox</h3>
+                        <div :class="{'dual-ring-load':true, 'd-none':!espModules.lockbox.loading}"></div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <h4>Box status: {{espModules.lockbox.status}}</h4>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <button class="btn btn-dark" @click="sendESPMessage('lockbox', 'latch', 'change')"
+                                :disabled="espModules.lockbox.loading">Change Lockbox Status</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="m-3 text-center card">
+                    <div class="card-header">
+                        <h3>Dial Puzzle</h3>
+                        <div :class="{'dual-ring-load':true, 'd-none':!espModules.dialPuzzle.loading}"></div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <h4>Dial status: {{espModules.dialPuzzle.status}}</h4>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <button class="btn btn-dark" @click="sendESPMessage('dialPuzzle', 'leds', 'on')"
+                                :disabled="espModules.dialPuzzle.loading">Enable LEDS</button>
+                            <button class="btn btn-dark" @click="sendESPMessage('dialPuzzle', 'leds', 'off')"
+                                :disabled="espModules.dialPuzzle.loading">Disable LEDS</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="m-3 text-center card">
+                    <div class="card-header">
+                        <h3>IR Receiver</h3>
+                        <div :class="{'dual-ring-load':true, 'd-none':!espModules.irReceiver.loading}"></div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <h4>Previously pressed: {{espModules.irReceiver.status}}</h4>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <button class="btn btn-dark" @click="sendESPMessage('irReceiver', 'previous', 'get')"
+                                :disabled="espModules.lockbox.loading">Get IR Previously Pressed</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
