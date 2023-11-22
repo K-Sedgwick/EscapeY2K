@@ -3,6 +3,8 @@
 #include <ESP8266HTTPClient.h>
 #include <WiFiClient.h>
 
+//9 rotary encoder counts is one loop
+
 // Includes the Arduino Stepper Library
 #include <Stepper.h>
 
@@ -24,7 +26,7 @@
 #define B D6
 
 //Encoder parameters
-int counter = 0;
+int rotaryCounter = 0;
 int currentStateA;
 int lastStateA;
 String currentDir ="";
@@ -51,7 +53,6 @@ const int tickSteps = 100;
 const int stepperSpeed = 10;
 const int reverseSteps = -10;
 const int fastForwardSteps = 10;
-unsigned long ticksCompleted = 0;
 Stepper clockStepper = Stepper(stepsPerRevolution, 3, 4, 5, 2); // Pins entered in sequence IN1-IN3-IN2-IN4 for proper step sequence
 
 // ---- SLOT INTERRUPTOR SECTION ----
@@ -70,6 +71,7 @@ const long TickDelayTime = 500;
 // This is whether we have told all of the devices about midnight that need to know so we don't just keep screaming it into the void
 bool informed = false;
 bool pause = false;
+bool reset = false;
 bool manualOverride = false; //If the room admin has to do stuff allow them extra control while in this mode
 String status = "starting...";
 
@@ -141,19 +143,20 @@ void loop()
     {
       //Serial.print("Tick");
       clockStepper.step(tickSteps);
-      ticksCompleted += tickSteps;
       previousTime = millis();
+    }
+    else if (reset)
+    {
+      clockStepper.step(reverseSteps); // TODO: Figure out what direction is positive and what is negative
     }
     // If they selected reverse, tell the stepper to reverse until they ask to be done
     else if (directionReverse)
     {
       clockStepper.step(reverseSteps); // TODO: Figure out what direction is positive and what is negative
-      ticksCompleted += reverseSteps;
     }
     else if (directionFastForward)
     {
       clockStepper.step(10);
-      ticksCompleted += fastForwardSteps;
     }
   }
   else{
@@ -188,8 +191,8 @@ void handleClientConnected(WiFiClient rcvClient)
 				// that's the end of the client HTTP request, so send a response:
 				if (currentLine.length() == 0)
 				{
-					String messageStart = "{\"ticksCompleted\":\"";
-					String messageData = messageStart + ticksCompleted;
+					String messageStart = "{\"rotaryCounter\":\"";
+					String messageData = messageStart + rotaryCounter;
 					String fullMessage = messageData + "\"";
 
 					if (header.indexOf("GET /?reverse=on") >= 0)
@@ -223,9 +226,9 @@ void handleClientConnected(WiFiClient rcvClient)
 						// Reset the variables that control clock function
 						directionReverse = false;
 						directionFastForward = false;
-						timeCurrentlyControlledByUser = false;
-            ticksCompleted = 0;
-            status = "Normal";
+						timeCurrentlyControlledByUser = true;
+            reset = true;
+            status = "Resetting";
 					}
           else if (header.indexOf("GET /?manualOverride=on") >= 0)
 					{
@@ -330,6 +333,7 @@ void processInterruptorSwitches()
   else if(interruptor2Val == LOW){
     timeCurrentlyControlledByUser = false;
     startingPosition = true;
+    reset = false;
   }
   else{
     startingPosition = false;
@@ -344,28 +348,28 @@ void handleRotaryLogic() {
 	// React to only 1 state change to avoid double count
 	if (currentStateA != lastStateA){
 
-    //Code that takes care of updating counter and direction
+    //Code that takes care of updating rotaryCounter and direction
 		if (digitalRead(B) == currentStateA) {
-			counter ++;
+			rotaryCounter ++;
 			currentDir ="CCW";
 		} else {
 			// Encoder is rotating CW so increment
-			counter --;
+			rotaryCounter --;
 			currentDir ="CW";
 		}
     //Serial.print("Direction: " + currentDir + "Count: ");
-    Serial.println(counter);
+    Serial.println(rotaryCounter);
 	}
 
   // Remember last A state
 	lastStateA = currentStateA;
 
   if(startingPosition == true){
-    counter = 0;
+    rotaryCounter = 0;
   }
-  else if(counter == midnightCount){
-    midnight = true;
-  }
+  // else if(rotaryCounter == midnightCount){
+  //   midnight = true;
+  // }
 
 	// Put in a slight delay to help debounce the reading (maybe remove)
   delay(2);
