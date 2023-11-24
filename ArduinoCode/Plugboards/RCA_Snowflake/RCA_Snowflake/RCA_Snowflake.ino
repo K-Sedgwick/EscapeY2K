@@ -17,55 +17,275 @@
 #define RXPIN 3
 
 // ---- WIFI SECTION ----
-const char *ssid = "EscapeY2K";//EscapeY2K
-const char *password = "caNY0u3scAp3?!";//caNY0u3scAp3?!
+const char *ssid = "Whitefire";//EscapeY2K
+const char *password = "R00tb33R";//caNY0u3scAp3?!
 WiFiServer server(1234);
 
-//THIS TV IP MIGHT BE WRONG
+//IP Addresses we have to know for solving stuff
 String tvIP = "192.168.1.211:8001"; // 10.0.0.64 at Jakes house
+String plugOneIP = "10.0.0.94:1234";
 
 // ---- GENERAL SECTION ----
 unsigned long currentTime = millis();
 unsigned long previousTime = 0;
-const long TickDelayTime = 500;
+const long TickDelayTime = 2000;
 
 // ---- Puzzle Stuff ----
-bool solved = false;
 String status = "Unsolved";
+bool solved1 = false;
+bool solved2 = false;
+bool solved3 = false;
+
+//Plugboard pin declaration FOR PUZZLE 1
+const int plug1Pin = D1;
+const int plug2Pin = D2;
+const int plug3Pin = D3;
+
+//LED pin declaration PUZZLE 1
+const int plug1LED = D5;
+const int plug2LED = D6;
+const int plug3LED = D7;
+
+// ---- PLUGBOARD STATES SECTION ----
+int plug1 = 0;
+int plug2 = 0;
+int plug3 = 0;
 
 void setup() {
   // start serial connection
 	Serial.begin(9600);
 
-	//connectToWifi();
-
-  // Set encoder pins as inputs
-	pinMode(D5,INPUT_PULLUP);
-	pinMode(D6,INPUT_PULLUP);
+	connectToWifi();
+  // initialize the LED pin as an output:
+  pinMode(plug1LED, OUTPUT);
+  pinMode(plug2LED, OUTPUT);
+  pinMode(plug3LED, OUTPUT);
+  // initialize the pushbutton pin as an input:
+  pinMode(plug1Pin, INPUT_PULLUP);
+  pinMode(plug2Pin, INPUT_PULLUP);
+  pinMode(plug3Pin, INPUT_PULLUP);
 }
 
 // the loop function runs over and over again forever
 void loop() {
-  // WiFiClient rcvClient = server.available(); // Listen for incoming clients
+  WiFiClient rcvClient = server.available(); // Listen for incoming clients
 
-	// if (rcvClient)
-	// {
-	// 	handleClientConnected(rcvClient);
-	// }
+	if (rcvClient)
+	{
+		handleClientConnected(rcvClient);
+	}
 
   // read the interruptor values into variables
-	int slot1 = digitalRead(D5);
-  int slot2 = digitalRead(D6);
-
-  if(solved == false && digitalRead(D5) == HIGH && digitalRead(D6) == HIGH){
-    solved = true;
-    Serial.println("Both RCA's are plugged in!");
+	
+  //Wait until the first puzzle has been solved to execute this code!
+  if(solved1 == true && solved2 == false && solved3 == false){
+    patternLogic();
   }
 
-  // if (!timeCurrentlyControlledByUser && (millis() - previousTime) > TickDelayTime)
-  // {
-  //   //TODO: Decide if we need to include this
-  // }
+  //This is just for ticking
+  if ((millis() - previousTime) > TickDelayTime)
+  {
+    previousTime = millis();
+
+    //Check for solved stuff
+    if(solved3 == true){
+      //TODO: Send a message to the other ESP so its puzzle can be solved
+      allOn();
+      delay(200);
+      resetLEDS();
+      delay(200); 
+    }
+  }
+}
+
+// ---- HELPER METHODS ----
+
+void patternLogic(){
+  // FIRST PLUG CHECK
+  plug1 = digitalRead(plug1Pin);
+  if(plug1 == HIGH){
+    digitalWrite(plug1LED, LOW);
+  }
+  else{
+    digitalWrite(plug1LED, HIGH);
+  }
+
+  // SECOND PLUG CHECK
+  plug2 = digitalRead(plug2Pin);
+  if(plug2 == HIGH){
+    digitalWrite(plug2LED, LOW);
+  }
+  else{
+    digitalWrite(plug2LED, HIGH);
+  }
+
+  // THIRD PLUG CHECK
+  plug3 = digitalRead(plug3Pin);
+  if(plug3 == HIGH){
+    digitalWrite(plug3LED, LOW);
+  }
+  else{
+    digitalWrite(plug3LED, HIGH);
+  }
+
+  if(plug1 == LOW && plug2 == LOW && plug3 == LOW){
+    if(solved2 == false){
+      status = "Solved";
+      sendMessageToESP("secondSolved=true", plugOneIP);
+      flashLEDSFirstPattern();
+    }
+    solved2 = true;
+  }
+}
+
+void flashLEDSFirstPattern(){
+  int delayTime = 200;
+  resetLEDS();
+  passTheLight(delayTime);
+  delay(delayTime);
+  allOn();
+  delay(delayTime);
+  resetLEDS();
+  delay(delayTime);
+  allOn();
+  delay(delayTime);
+}
+
+void flashLEDSSecondPattern(){
+  int delayTime = 100;
+  resetLEDS();
+  loadToFull(delayTime);
+  delay(delayTime);
+}
+
+// ---- LED PATTERN HELPERS ----
+void resetLEDS(){
+  if(!solved1){
+    digitalWrite(plug1LED, LOW);
+    digitalWrite(plug2LED, LOW);
+    digitalWrite(plug3LED, LOW);
+  }
+}
+
+void allOn(){
+  digitalWrite(plug1LED, HIGH);
+  digitalWrite(plug2LED, HIGH);
+  digitalWrite(plug3LED, HIGH);
+}
+
+void loadToFull(int delayTime){
+  digitalWrite(plug1LED, HIGH);
+  delay(delayTime);
+  digitalWrite(plug2LED, HIGH);
+  delay(delayTime);
+  digitalWrite(plug3LED, HIGH);
+  delay(delayTime);
+}
+
+void passTheLight(int delayTime){
+  digitalWrite(plug1LED, HIGH);
+  delay(delayTime);
+  digitalWrite(plug1LED, LOW);
+  digitalWrite(plug2LED, HIGH);
+  delay(delayTime);
+  digitalWrite(plug2LED, LOW);
+  digitalWrite(plug3LED, HIGH);
+  delay(delayTime);
+  digitalWrite(plug3LED, LOW);
+}
+
+// ---- WIFI HELPERS ----
+void handleClientConnected(WiFiClient rcvClient)
+{
+  //ONLY FOR PATTERN SO ITS AT THE SAME TIME
+  bool firstSolved = false;
+
+	// SETUP VARIABLES
+  String header = "";
+	String currentLine = ""; // make a String to hold incoming data from the client
+	int handleClientTimeout = 2000;
+	unsigned long clientConnectedTime = millis();
+	int previousClientConnectedTime = clientConnectedTime;
+
+	Serial.println("New Client."); // print a message out in the serial port
+	while (rcvClient.connected() && clientConnectedTime - previousClientConnectedTime <= handleClientTimeout)
+	{ // loop while the client's connected
+		clientConnectedTime = millis();
+		if (rcvClient.available())
+		{							   // if there's bytes to read from the client,
+			char c = rcvClient.read(); // read a byte, then
+			//Serial.write(c);		   // print it out the serial monitor
+			header += c;
+			if (c == '\n')
+			{ // if the byte is a newline character
+				// if the current line is blank, you got two newline characters in a row.
+				// that's the end of the client HTTP request, so send a response:
+				if (currentLine.length() == 0)
+				{
+					if (header.indexOf("GET /?firstSolved=true") >= 0)
+					{
+						//TODO: Add a cool pattern so both flash at the same time
+            Serial.println("Got first solved message!");
+            solved1 = true;
+            firstSolved = true;
+					}
+          else if (header.indexOf("GET /?firstSolved=false") >= 0)
+					{
+						//TODO: Add a cool pattern so both flash at the same time
+            solved1 = false;
+					}
+          else if (header.indexOf("GET /?finalSolved=true") >= 0)
+					{
+						//TODO: Add a cool pattern so both flash at the same time
+            solved3 = true;
+					}
+          else if (header.indexOf("GET /?finalSolved=false") >= 0)
+					{
+						//TODO: Add a cool pattern so both flash at the same time
+            solved3 = false;
+					}
+          else if (header.indexOf("GET /?reset=reset") >= 0)
+					{
+            solved1 = false;
+            solved2 = false;
+            solved3 = false;
+					}
+
+          String fullMessage = "{\"status\":\"" + status + "\"}";
+          String contentLengthString = "Content-Length: " + fullMessage.length() + 2;
+
+					rcvClient.println("HTTP/1.1 200 OK");
+					rcvClient.println("Content-type: application/json");
+					rcvClient.println(contentLengthString);
+					rcvClient.println("Access-Control-Allow-Origin: *");
+					rcvClient.println();
+
+					// The HTTP response ends with another blank line
+					rcvClient.println(fullMessage); // CONTENT LENGTH DYNAMIC BASED ON HOW LONG THIS IS (IN CHARACTERS) + 1
+					// Break out of the while loop
+					break;
+				}
+				else
+				{ // if you got a newline, then clear currentLine
+					currentLine = "";
+				}
+			}
+			else if (c != '\r')
+			{					  // if you got anything else but a carriage return character,
+				currentLine += c; // add it to the end of the currentLine
+			}
+		}
+	}
+	// Clear the header variable
+	header = "";
+	// Close the connection
+	rcvClient.stop();
+	Serial.println("Client disconnected.");
+	Serial.println("");
+
+  if(firstSolved == true){
+    flashLEDSFirstPattern();
+  }
 }
 
 /// @brief This simplifies sending a message to a server.
@@ -117,69 +337,6 @@ String sendMessageToESP(String command, String address)
 	return response;
 }
 
-// ---- HELPER METHODS ----
-void handleClientConnected(WiFiClient rcvClient)
-{
-	// SETUP VARIABLES
-  String header = "";
-	String currentLine = ""; // make a String to hold incoming data from the client
-	int handleClientTimeout = 2000;
-	unsigned long clientConnectedTime = millis();
-	int previousClientConnectedTime = clientConnectedTime;
-
-	Serial.println("New Client."); // print a message out in the serial port
-	while (rcvClient.connected() && clientConnectedTime - previousClientConnectedTime <= handleClientTimeout)
-	{ // loop while the client's connected
-		clientConnectedTime = millis();
-		if (rcvClient.available())
-		{							   // if there's bytes to read from the client,
-			char c = rcvClient.read(); // read a byte, then
-			//Serial.write(c);		   // print it out the serial monitor
-			header += c;
-			if (c == '\n')
-			{ // if the byte is a newline character
-				// if the current line is blank, you got two newline characters in a row.
-				// that's the end of the client HTTP request, so send a response:
-				if (currentLine.length() == 0)
-				{
-					if (header.indexOf("GET /?command=action") >= 0)
-					{
-						//TODO: Decide if we have to do anything
-					}
-
-          String fullMessage = "{\"status\":\"" + status + "\"}";
-          String contentLengthString = "Content-Length: " + fullMessage.length() + 2;
-
-					rcvClient.println("HTTP/1.1 200 OK");
-					rcvClient.println("Content-type: application/json");
-					rcvClient.println(contentLengthString);
-					rcvClient.println("Access-Control-Allow-Origin: *");
-					rcvClient.println();
-
-					// The HTTP response ends with another blank line
-					rcvClient.println(fullMessage); // CONTENT LENGTH DYNAMIC BASED ON HOW LONG THIS IS (IN CHARACTERS) + 1
-					// Break out of the while loop
-					break;
-				}
-				else
-				{ // if you got a newline, then clear currentLine
-					currentLine = "";
-				}
-			}
-			else if (c != '\r')
-			{					  // if you got anything else but a carriage return character,
-				currentLine += c; // add it to the end of the currentLine
-			}
-		}
-	}
-	// Clear the header variable
-	header = "";
-	// Close the connection
-	rcvClient.stop();
-	Serial.println("Client disconnected.");
-	Serial.println("");
-}
-
 void connectToWifi()
 {
 	// Connect to Wi-Fi network with SSID and password
@@ -196,5 +353,7 @@ void connectToWifi()
 	Serial.println("WiFi connected.");
 	Serial.println("IP address: ");
 	Serial.println(WiFi.localIP());
+  Serial.println("MAC Address: ");
+  //Serial.println(WiFi.macAddress());
 	server.begin();
 }
