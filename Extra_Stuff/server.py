@@ -12,13 +12,6 @@ import time
 
 
 class ServerHandler(BaseHTTPRequestHandler):
-    # Empty dictionary that contains status of all WiFi components that have spoken to it
-    # Basically, its going to store information about which puzzles have been solved (not which havent)
-    statusDict = {}
-    statusLock = None # This will get set by external code, so dont worry about the fact its None here XD
-    keyboardForVideoControl = Controller()
-    clock = {"ip":"192.168.1.50", "port":1234}
-
     # These are for helping us keep track of which puzzles are going to be used in that playthrough of the room
     numOfPuzzlesToUse = 3
     selectedPuzzles = [1, 2, 3] # THIS IS JUST A PLACEHOLDER
@@ -36,6 +29,12 @@ class ServerHandler(BaseHTTPRequestHandler):
         {"puzzleName":"potentiometer", "ip":"FILL IN", "port":1234},
         {"puzzleName":"cant remember lol", "ip":"FILL IN", "port":1234}
     ]
+    # Empty dictionary that contains status of all WiFi components that have spoken to it
+    # Basically, its going to store information about which puzzles have been solved (not which havent)
+    statusDict = {"puzzlesToSolve":selectedPuzzles}
+    statusLock = None # This will get set by external code, so dont worry about the fact its None here XD
+    keyboardForVideoControl = Controller()
+    clock = {"ip":"192.168.1.50", "port":1234}
 
     def do_GET(self):
         return self.router()
@@ -75,6 +74,9 @@ class ServerHandler(BaseHTTPRequestHandler):
             print(f'The hint given was hint {hintGiven}')
             return {'hint', hintGiven}
             #return ConnectToESP("192.168.1.211", 1234, f'play={hintGiven}', 5)
+        elif self.path == '/shuffle':
+            self.resetAndShuffle()
+            return {'shuffleAndReset':'success'}
 
 
         # Else, process query commands
@@ -193,11 +195,15 @@ class ServerHandler(BaseHTTPRequestHandler):
         self.selectedPuzzles.clear()
         self.selectedPuzzles = random.sample(range(0, len(self.puzzles)), self.numOfPuzzlesToUse)
 
+        print(self.selectedPuzzles)
         # TODO: Then tell all of the espModules to reset
 
         # And reset the statusDict, so its as if we just started from zero
         self.clearStatusDict()
-        self.updateStatusDict()
+        listOfNames = []
+        for val in self.selectedPuzzles:
+            listOfNames.append(self.puzzles[val]["name"])
+        self.updateStatusDict({"puzzlesToSolve":listOfNames})
 
         # Also, make sure to tell the TVs to go back to black (FORGET THE HERSE CUZ I NEVER DIE)
         self.__pressAndRelease('d') # d for dark
@@ -229,10 +235,12 @@ class ServerHandler(BaseHTTPRequestHandler):
         self.statusLock.release()
 
     def findIndexInList(self, lst, key, value):
-        for i, dic in enumerate(lst):
-            if dic[key] == value:
+        for i, dict in enumerate(lst):
+            if dict[key] == value:
                 return i
         return -1
+            
+
 
 class EscapeY2KServer:
     __statusDict = {}
