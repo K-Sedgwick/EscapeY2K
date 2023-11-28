@@ -22,7 +22,7 @@ const char *password = "R00tb33R";//caNY0u3scAp3?!
 WiFiServer server(1234);
 
 String tvIP = "192.168.1.211:8001"; // 10.0.0.64 at Jakes house
-String plugTwoIP = "10.0.0.174:1234";
+String snowflakeIP = "10.0.0.174:1234";
 
 // ---- GENERAL SECTION ----
 unsigned long currentTime = millis();
@@ -81,25 +81,25 @@ void loop() {
   if(solved1 == false){
     patternLogic();
   }
-  else if(solved1 == true && solved2 == true){
+  else if(solved1 == true && solved2 == true && solved3 == false){
     checkFourthPlug();
+  }
+  else if(solved3 == true){
+    allOn();
+    delay(500);
+    resetLEDS();
+    delay(500);
   }
   
 
   //This is just for ticking
-  if ((millis() - previousTime) > TickDelayTime)
-  {
-    previousTime = millis();
+  // if ((millis() - previousTime) > TickDelayTime)
+  // {
+  //   previousTime = millis();
 
-    //Check for solved stuff
-    if(solved3 == true){
-      //TODO: Send a message to the other ESP so its puzzle can be solved
-      allOn();
-      delay(200);
-      resetLEDS();
-      delay(200);
-    }
-  }
+  //   //Check for solved stuff
+    
+  // }
 }
 
 // ---- HELPER METHODS ----
@@ -135,7 +135,7 @@ void patternLogic(){
   if(plug1 == LOW && plug2 == LOW && plug3 == LOW){
     if(solved1 == false){
       status = "Solved";
-      sendMessageToESP("firstSolved=true", plugTwoIP);
+      sendMessageToESP("firstSolved=true", snowflakeIP);
       flashLEDSFirstPattern();
     }
     solved1 = true;
@@ -147,7 +147,7 @@ void checkFourthPlug(){
   if(plug4 == LOW){
     if(solved3 == false){
       Serial.println("Send message to two that final is solved");
-      sendMessageToESP("finalSolved=true", plugTwoIP);
+      sendMessageToESP("finalSolved=true", snowflakeIP);
     }
     solved3 = true;
   }
@@ -156,6 +156,7 @@ void checkFourthPlug(){
 void flashLEDSFirstPattern(){
   int delayTime = 200;
   resetLEDS();
+  delay(delayTime);
   passTheLight(delayTime);
   delay(delayTime);
   allOn();
@@ -234,28 +235,30 @@ void handleClientConnected(WiFiClient rcvClient)
 				// that's the end of the client HTTP request, so send a response:
 				if (currentLine.length() == 0)
 				{
-					if (header.indexOf("GET /?secondSolved=true") >= 0)
+          if (header.indexOf("GET /?firstSolved=true") >= 0)
 					{
-            flashLEDSSecondPattern();
+            flashLEDSFirstPattern();
+            solved1 = true;
+					}
+					else if (header.indexOf("GET /?secondSolved=true") >= 0)
+					{
             Serial.println("Got second solved message!");
             solved2 = true;
+            secondSolved = true;
 					}
-          else if (header.indexOf("GET /?secondSolved=false") >= 0)
+          else if (header.indexOf("GET /?finalSolved=true") >= 0)
 					{
-            solved2 = false;
+            solved3 = true;
 					}
           else if (header.indexOf("GET /?reset=reset") >= 0)
 					{
             solved1 = false;
             solved2 = false;
             solved3 = false;
-					}
-          if (header.indexOf("GET /?finalSolved=true") >= 0)
-					{
-            solved3 = true;
+            resetLEDS();
 					}
 
-          String fullMessage = "{\"status\":\"" + status + "\",\"solved1\":\"" + solved1 + "\",\"solved2\":\"" + solved2 + "\",\"solved3\":\"" + solved3 + "\"}";
+          String fullMessage = "{\"status\":\"" + status + "\"}";
           String contentLengthString = "Content-Length: " + fullMessage.length() + 2;
 
 					rcvClient.println("HTTP/1.1 200 OK");

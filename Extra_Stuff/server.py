@@ -186,7 +186,8 @@ class ServerHandler(BaseHTTPRequestHandler):
                 print("We dont care if that puzzle was solved or not :P")
     
     def processHint(self):
-        self.statusDict
+        # Compare the status solved and the status puzzlesToSolve to see which ones are missing, then somehow decide which one to give a hint for?
+        # Compare indexes of the names of the solved puzzles to find which one is next and get the hint from there
         return 0
     
     # Once we call this method, this resets the room and changes the puzzles that need to be solved in order for the room to be completable

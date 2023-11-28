@@ -23,7 +23,7 @@ WiFiServer server(1234);
 
 //IP Addresses we have to know for solving stuff
 String tvIP = "192.168.1.211:8001"; // 10.0.0.64 at Jakes house
-String plugOneIP = "10.0.0.94:1234";
+String circleIP = "10.0.0.94:1234";
 
 // ---- GENERAL SECTION ----
 unsigned long currentTime = millis();
@@ -81,21 +81,20 @@ void loop() {
   if(solved1 == true && solved2 == false && solved3 == false){
     patternLogic();
   }
+  else if(solved3 == true){
+    allOn();
+    delay(200);
+    resetLEDS();
+    delay(200); 
+  }
 
   //This is just for ticking
-  if ((millis() - previousTime) > TickDelayTime)
-  {
-    previousTime = millis();
+  // if ((millis() - previousTime) > TickDelayTime)
+  // {
+  //   previousTime = millis();
 
-    //Check for solved stuff
-    if(solved3 == true){
-      //TODO: Send a message to the other ESP so its puzzle can be solved
-      allOn();
-      delay(200);
-      resetLEDS();
-      delay(200); 
-    }
-  }
+  //   //Check for solved stuff
+  // }
 }
 
 // ---- HELPER METHODS ----
@@ -131,7 +130,7 @@ void patternLogic(){
   if(plug1 == LOW && plug2 == LOW && plug3 == LOW){
     if(solved2 == false){
       status = "Solved";
-      sendMessageToESP("secondSolved=true", plugOneIP);
+      sendMessageToESP("secondSolved=true", circleIP);
       flashLEDSFirstPattern();
     }
     solved2 = true;
@@ -229,26 +228,21 @@ void handleClientConnected(WiFiClient rcvClient)
             solved1 = true;
             firstSolved = true;
 					}
-          else if (header.indexOf("GET /?firstSolved=false") >= 0)
+          else if (header.indexOf("GET /?secondSolved=true") >= 0)
 					{
-						//TODO: Add a cool pattern so both flash at the same time
-            solved1 = false;
+            solved2 = true;
 					}
           else if (header.indexOf("GET /?finalSolved=true") >= 0)
 					{
 						//TODO: Add a cool pattern so both flash at the same time
             solved3 = true;
 					}
-          else if (header.indexOf("GET /?finalSolved=false") >= 0)
-					{
-						//TODO: Add a cool pattern so both flash at the same time
-            solved3 = false;
-					}
           else if (header.indexOf("GET /?reset=reset") >= 0)
 					{
             solved1 = false;
             solved2 = false;
             solved3 = false;
+            resetLEDS();
 					}
 
           String fullMessage = "{\"status\":\"" + status + "\"}";
@@ -353,7 +347,5 @@ void connectToWifi()
 	Serial.println("WiFi connected.");
 	Serial.println("IP address: ");
 	Serial.println(WiFi.localIP());
-  Serial.println("MAC Address: ");
-  //Serial.println(WiFi.macAddress());
 	server.begin();
 }
