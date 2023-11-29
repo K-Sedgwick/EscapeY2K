@@ -9,8 +9,8 @@
 #define D4 2
 
 // ---- WIFI SECTION ----
-const char *ssid = "EscapeY2K";//EscapeY2K
-const char *password = "caNY0u3scAp3?!";//caNY0u3scAp3?!
+const char *ssid = "Whitefire";//EscapeY2K
+const char *password = "R00tb33R";//caNY0u3scAp3?!
 WiFiServer server(1234);
 
 // ---- GENERAL SECTION ----
@@ -117,14 +117,29 @@ void handleClientConnected(WiFiClient rcvClient)
 				if (currentLine.length() == 0)
 				{
 					String fullMessage = "{\"message\":\"received\"";
-
 					if (header.indexOf("GET /?play=") >= 0)
 					{
 						//TODO: Break up the string, parse the val sent as an int, then send that value over serial
 
-            String asciiSongNumVal = String(header[header.indexOf("GET /?play=")+11]);
-            int8_t selectedSong = lowByte(asciiSongNumVal.toInt());
-						int8_t play_selected_song[] = {0x7e, 0x04, 0x41, 0x00, selectedSong, 0xef}; // 7E 04 41 04 01 EF
+            String intToParse = "";
+            int parsedInt = -1;
+            //We start at 11 because the "GET /?play=" is 11 characters
+            int index = 11;
+            //To get the whole number we have to loop dynamically
+            while(true){
+              //Get the value that could be an int
+              String asciiSongNumVal = String(header[header.indexOf("GET /?play=")+index]);
+              //Try to parse it
+              parsedInt = lowByte(asciiSongNumVal.toInt());
+              //If its a 0 (which means it couldn't parse) then break out of the loop
+              if(parsedInt == 0){
+                break;
+              }
+              index++;
+              intToParse.concat(parsedInt);
+            }
+            int8_t selectedSong = lowByte(intToParse.toInt());
+						int8_t play_selected_song[] = {0x7e, 0x04, 0x42, 0x01, selectedSong, 0xef}; // 7E 04 41 04 01 EF
 						send_command_to_MP3_player(play_selected_song, 6);
             fullMessage = fullMessage + ",\"playing\":\"" + selectedSong + "\",\"status\":\"Playing\"";
 					}
