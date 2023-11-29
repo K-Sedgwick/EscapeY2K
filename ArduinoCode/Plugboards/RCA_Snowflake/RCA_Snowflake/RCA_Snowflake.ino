@@ -1,3 +1,4 @@
+//MY IP IS http://192.168.1.59:1234
 // Load Wi-Fi library
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
@@ -17,13 +18,13 @@
 #define RXPIN 3
 
 // ---- WIFI SECTION ----
-const char *ssid = "Whitefire";//EscapeY2K
-const char *password = "R00tb33R";//caNY0u3scAp3?!
+const char *ssid = "EscapeY2K";//EscapeY2K
+const char *password = "caNY0u3scAp3?!";//caNY0u3scAp3?!
 WiFiServer server(1234);
 
 //IP Addresses we have to know for solving stuff
 String tvIP = "192.168.1.211:8001"; // 10.0.0.64 at Jakes house
-String circleIP = "10.0.0.94:1234";
+String circleIP = "192.168.1.202:1234"; //10.0.0.94 at jakes house
 
 // ---- GENERAL SECTION ----
 unsigned long currentTime = millis();
@@ -242,6 +243,7 @@ void handleClientConnected(WiFiClient rcvClient)
             solved1 = false;
             solved2 = false;
             solved3 = false;
+            status = "Unsolved";
             resetLEDS();
 					}
 
