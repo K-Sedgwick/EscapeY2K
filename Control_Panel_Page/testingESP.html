@@ -47,18 +47,17 @@
                     </div>
                     <div class="mt-2 card-body">
                         <div class="d-flex justify-content-around">
-                            <select class="form-control" style="width:200px" v-model="status.selectedSong">
-                                <option v-for="song in tapeSongOptions" :value="song.value">{{song.title}}</option>
-                            </select>
+                            <input class="form-control" type="number" v-model="status.selectedSong">
                             <button class="btn btn-dark"
-                                @click="sendESPMessage('tapePlayer', 'play', status.selectedSong)">Play song
-                                {{status.selectedSong}}</button>
-                            <button class="btn btn-dark" @click="sendESPMessage('tapePlayer', 'vol', 'min')">Set Volume
+                                @click="sendESPMessage('tapePlayer', 'play', status.selectedSong)">Play song</button>
+                            <button class="btn btn-dark" @click="sendESPMessage('tapePlayer', 'vol', 'min')">Set Vol
                                 Min</button>
                             <button class="btn btn-dark"
                                 @click="sendESPMessage('tapePlayer', 'song', 'pause')">Pause</button>
                             <button class="btn btn-dark"
                                 @click="sendESPMessage('tapePlayer', 'song', 'play')">Play</button>
+                            <button class="btn btn-dark"
+                                @click="sendESPMessage('tapePlayer', 'vol', 'up')">Vol Up</button>
                         </div>
                     </div>
                 </div>
