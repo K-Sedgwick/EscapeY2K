@@ -20,7 +20,7 @@ const vue = new Vue({
       //ESP Modules
       espModules: {
         clock: {
-          ipAddress: "10.0.0.121", //10.0.0.121 at Jakes house, 192.168.1.50 on EscapeY2K
+          ipAddress: "192.168.1.50", //10.0.0.121 at Jakes house, 192.168.1.50 on EscapeY2K
           port: "1234",
           status: "Starting",
           loading: false,
@@ -57,7 +57,7 @@ const vue = new Vue({
           loading: false,
         },
         miniPC: {
-          ipAddress: "10.0.0.64",
+          ipAddress: "10.0.0.64", // 192.168.1.211
           port: "8001",
           status: "Off",
           loading: false,

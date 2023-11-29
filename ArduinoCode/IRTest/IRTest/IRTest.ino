@@ -9,7 +9,8 @@
 const char *ssid = "EscapeY2K";	   // EscapeY2K
 const char *password = "caNY0u3scAp3?!"; // caNY0u3scAp3?!
 WiFiServer server(1234);
-String tvIp = "";
+String tvIp = "192.168.1.211:8001";
+String clockIp = "192.168.1.50:1234";
 
 // ESP pins
 #define D0 16
@@ -72,17 +73,19 @@ void handleIRLogic()
 		{
 			previousCmd = "Play";
 			Serial.println(previousCmd);
+      sendMessageToESP("clockmode=tick", tvIp);
 		}
 		else if (cmd == 25 && previousCmd != "Reverse")
 		{
 			previousCmd = "Reverse";
 			Serial.println(previousCmd);
+      sendMessageToESP("clockmode=reverse", tvIp);
 		}
-
 		else if (cmd == 19 && previousCmd != "Fast forward")
 		{
 			previousCmd = "Fast forward";
 			Serial.println(previousCmd);
+      sendMessageToESP("clockmode=fastForward", tvIp);
 		}
 	}
 }

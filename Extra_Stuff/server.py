@@ -4,6 +4,7 @@ from pynput.keyboard import Key, Controller
 from http.client import HTTPConnection
 from urllib.parse import urlparse
 import json
+import random
 
 # Threading stuff
 import threading
@@ -11,12 +12,29 @@ import time
 
 
 class ServerHandler(BaseHTTPRequestHandler):
+    # These are for helping us keep track of which puzzles are going to be used in that playthrough of the room
+    numOfPuzzlesToUse = 3
+    selectedPuzzles = [1, 2, 3] # THIS IS JUST A PLACEHOLDER
+    puzzles = [
+        {"name":"dial", "ip":"FILL IN", "port":1234, "hintNum":0},
+        {"name":"bust", "ip":"FILL IN", "port":1234, "hintNum":1},
+        {"name":"plugboard", "ip":"FILL IN", "port":1234, "hintNum":2},
+        {"name":"potentiometer", "ip":"FILL IN", "port":1234, "hintNum":3},
+        {"name":"cant remember lol", "ip":"FILL IN", "port":1234, "hintNum":4}
+    ]
+    lockBoxes = [
+        {"puzzleName":"dial", "ip":"FILL IN", "port":1234},
+        {"puzzleName":"bust", "ip":"FILL IN", "port":1234},
+        {"puzzleName":"plugboard", "ip":"FILL IN", "port":1234},
+        {"puzzleName":"potentiometer", "ip":"FILL IN", "port":1234},
+        {"puzzleName":"cant remember lol", "ip":"FILL IN", "port":1234}
+    ]
     # Empty dictionary that contains status of all WiFi components that have spoken to it
     # Basically, its going to store information about which puzzles have been solved (not which havent)
-    statusDict = {}
+    statusDict = {"puzzlesToSolve":selectedPuzzles}
     statusLock = None # This will get set by external code, so dont worry about the fact its None here XD
     keyboardForVideoControl = Controller()
-    clock = {"Ip":"192.168.1.50", "port":1234}
+    clock = {"ip":"192.168.1.50", "port":1234}
 
     def do_GET(self):
         return self.router()
@@ -54,8 +72,11 @@ class ServerHandler(BaseHTTPRequestHandler):
         elif self.path == '/hint':
             hintGiven = self.processHint()
             print(f'The hint given was hint {hintGiven}')
-            return {'hint', 'This is a really good hint. Uncomment out the line when you ready to actually go for hints.'}
+            return {'hint', hintGiven}
             #return ConnectToESP("192.168.1.211", 1234, f'play={hintGiven}', 5)
+        elif self.path == '/shuffle':
+            self.resetAndShuffle()
+            return {'shuffleAndReset':'success'}
 
 
         # Else, process query commands
@@ -66,7 +87,17 @@ class ServerHandler(BaseHTTPRequestHandler):
         if len(query) > 0:
             for qc in query.split("&"):
                 queryParam = qc.split("=")
-                query_components[queryParam[0]] = queryParam[1]
+                # If the query key is "solved" add the solved puzzle names to a list with the key "solved"
+                if queryParam[0] == 'solved':
+                    # If that key already exists just append the value to the list of others
+                    solvedInQueryComp = query_components.get("solved", None)
+                    if(solvedInQueryComp != None):
+                        query_components[queryParam[0]].append(queryParam[1])
+                    else:
+                        query_components[queryParam[0]] = [queryParam[1]]
+                else:
+                    query_components[queryParam[0]] = queryParam[1]
+
 
             # Save the statusDict first! So that once we activate the key presses
             #  the other bits of code can read out the correct values from the statusDict
@@ -92,13 +123,13 @@ class ServerHandler(BaseHTTPRequestHandler):
                 ...
             elif clockmode == "fastForward":
                 self.__pressAndRelease('w')
-                ConnectToESP(self.clock["Ip"], self.clock["port"], "fastForward=on", 5000)
+                ConnectToESP(self.clock["ip"], self.clock["port"], "fastForward=on", 5000)
             elif clockmode == "reverse":
                 self.__pressAndRelease('w')
-                ConnectToESP(self.clock["Ip"], self.clock["port"], "reverse=on", 5000)
+                ConnectToESP(self.clock["ip"], self.clock["port"], "reverse=on", 5000)
             elif clockmode == "tick":
                 self.__pressAndRelease('g')
-                ConnectToESP(self.clock["Ip"], self.clock["port"], "normal=on", 5000)
+                ConnectToESP(self.clock["ip"], self.clock["port"], "normal=on", 5000)
 
             # Check if the monster is showing
             monster = query_components.get("monster", None)
@@ -118,6 +149,12 @@ class ServerHandler(BaseHTTPRequestHandler):
             elif midnight == 'true':
                 self.__pressAndRelease('f')
 
+            solvedPuzzle = query_components.get("solved", None)
+            if solvedPuzzle == None:
+                ...
+            else:
+                self.processNextStep(solvedPuzzle)
+
             # HEY NAMI! (Hi Jake :D) Come here if you need to add more query string commands
             #  that you would like the server to process (or if you need to change the keys that get pressed)
 
@@ -125,19 +162,86 @@ class ServerHandler(BaseHTTPRequestHandler):
         # Tell the client their command was received
         return {'command':'received'}
 
+    # This method is in charge of processing the puzzle that was just solved, which box it should open
+    #   (essentially what solving that puzzle does for the player), and which hint should be given to the players
+    def processNextStep(self, solvedPuzzle):
+        # Although solvedPuzzle is an array it should NEVER pass in more than one puzzle at a time!
+        # indexOfPuzzle is the index of the puzzle object in the puzzles list
+        indexOfPuzzle = self.findIndexInList(self.puzzles, "name", solvedPuzzle[0])
+        print(indexOfPuzzle)
+        # This checks whether the puzzle exists in the puzzles list
+        if(indexOfPuzzle != -1):
+            try:
+                indexInSelectedList = self.selectedPuzzles.index(indexOfPuzzle)
+            except ValueError:
+                indexInSelectedList = -1
+
+            # Is the puzzle even in the list of puzzles that the player has to solve?
+            # If its not it effectively doesnt matter, so dont do anything
+            if(indexInSelectedList != -1):
+                lockboxIndex = self.findIndexInList(self.lockBoxes, "puzzleName", self.puzzles[indexOfPuzzle]["name"])
+                print(f'Lockbox dict: {self.lockBoxes[lockboxIndex]}')
+            else:
+                # TODO: Send a message to the tape player so itll congratulate them for solving the puzzle, but also let them know that we didnt need that one solved
+                print("We dont care if that puzzle was solved or not :P")
+    
+    def processHint(self):
+        # Compare the status solved and the status puzzlesToSolve to see which ones are missing, then somehow decide which one to give a hint for?
+        # Compare indexes of the names of the solved puzzles to find which one is next and get the hint from there
+        return 0
+    
+    # Once we call this method, this resets the room and changes the puzzles that need to be solved in order for the room to be completable
+    def resetAndShuffle(self):
+        # Reset the list of currently selected puzzles
+        self.selectedPuzzles.clear()
+        self.selectedPuzzles = random.sample(range(0, len(self.puzzles)), self.numOfPuzzlesToUse)
+
+        print(self.selectedPuzzles)
+        # TODO: Then tell all of the espModules to reset
+
+        # And reset the statusDict, so its as if we just started from zero
+        self.clearStatusDict()
+        listOfNames = []
+        for val in self.selectedPuzzles:
+            listOfNames.append(self.puzzles[val]["name"])
+        self.updateStatusDict({"puzzlesToSolve":listOfNames})
+
+        # Also, make sure to tell the TVs to go back to black (FORGET THE HERSE CUZ I NEVER DIE)
+        self.__pressAndRelease('d') # d for dark
+
+    # HELPER FUNCTIONS
     # This is just a helper function so I dont have to type press and release over and over XD
     def __pressAndRelease(self, key):
         self.keyboardForVideoControl.press(key)
         self.keyboardForVideoControl.release(key)
+    
+    def clearStatusDict(self):
+        self.statusLock.acquire()
+        self.statusDict.clear()
+        self.statusLock.release()
 
     def updateStatusDict(self, newStatusDict):
         self.statusLock.acquire()
-        self.statusDict.update(newStatusDict)
+        # Since the "solved" puzzles are stored in a list we have to perform some extra checks to make sure that updates correctly
+        # If solved doesnt exist in the statusDict just update normally
+        if(self.statusDict.get("solved", None) == None):
+            self.statusDict.update(newStatusDict)
+        else:
+            # If it does, save it so we can append it after the update action
+            oldSolvedList = self.statusDict.get("solved", None)
+            self.statusDict.update(newStatusDict)
+            # Add each of the puzzles previously in the list back to the list (and make sure theyre not duplicates)
+            for solvedPuzzle in oldSolvedList:
+                self.statusDict["solved"].append(solvedPuzzle) if solvedPuzzle not in self.statusDict["solved"] else self.statusDict["solved"]
         self.statusLock.release()
 
-    def processHint():
-        # TODO: Add some complicated logic so we can determine which hint should get sent back to the user
-        return 0
+    def findIndexInList(self, lst, key, value):
+        for i, dict in enumerate(lst):
+            if dict[key] == value:
+                return i
+        return -1
+            
+
 
 class EscapeY2KServer:
     __statusDict = {}
