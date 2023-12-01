@@ -1,7 +1,13 @@
+# Server Imports
+from server import InitiateServer
+
 # Video Imports
 import threading
 import vlc
 import keyboard
+
+# Other rando imports
+from multiprocessing import Process, Queue, Pipe
 
 # Centeralize the directory where the videos are so its easy to change if we need to
 VIDEO_DIR = "C:/Users/EscapeY2K/Videos/EscapeY2K"
@@ -64,6 +70,9 @@ def switch_video(video, hotkey, videoRepeats):
     while keyboard.is_pressed(hotkey): pass
     play_video(video)
     if (not videoRepeats): list(map(lambda list_player: list_player.set_playback_mode(vlc.PlaybackMode().default), list_players))
+
+def set_video_player_position(videoPositionPercent):
+    list(map(lambda list_player: list_player.get_media_player().set_position(videoPositionPercent), list_players))
     
 def update_timer():
     global game_timer
@@ -99,6 +108,11 @@ def deplete_timer(hotkey):
     timer_update = DEPLETION_UPDATE
     while keyboard.is_pressed(hotkey): pass
     timer_update = SECOND_UPDATE
+
+# SERVER STUFF
+parent_conn, child_conn = Pipe()
+serverProcess = Process(target=InitiateServer, args=(child_conn,))
+serverProcess.start()
 
 keyboard.add_hotkey('d', switch_video, args = (dark, 'd', True))
 keyboard.add_hotkey('g', switch_video, args = (game, 'g', False))
