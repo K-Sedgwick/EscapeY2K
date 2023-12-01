@@ -1,4 +1,4 @@
-//MY IP IS 192.168.1.202:1234
+//MY IP = 10.0.0.110:1234
 // Load Wi-Fi library
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
@@ -17,59 +17,38 @@
 #define TXPIN 1
 #define RXPIN 3
 
+const int sendCorrect = D1;
+const int sendWrong = D2;
+
+// State section
+int correct = 0;
+int wrong = 0;
+bool sentCorrect = false;
+bool sentWrong = false;
+
 // ---- WIFI SECTION ----
-const char *ssid = "EscapeY2K";//EscapeY2K
-const char *password = "caNY0u3scAp3?!";//caNY0u3scAp3?!
+const char *ssid = "Whitefire";//EscapeY2K
+const char *password = "R00tb33R";//caNY0u3scAp3?!
 WiFiServer server(1234);
 
-String tvIP = "192.168.1.211:8001"; // 10.0.0.64 at Jakes house
-String snowflakeIP = "192.168.1.59:1234"; //10.0.0.174:1234 at jakes house
+String tvIP = "192.168.1.211:8001"; // 10.0.0.64:8001 at Jakes house, 192.168.1.211:8001 on Y2K
 
 // ---- GENERAL SECTION ----
 unsigned long currentTime = millis();
 unsigned long previousTime = 0;
 const long TickDelayTime = 200;
 
-// ---- Puzzle Stuff ----
-String status = "Unsolved";
-bool solved1 = false;
-bool solved2 = false;
-bool solved3 = false;
-
-//Plugboard pin declaration FOR PUZZLE 1
-const int plug1Pin = D1;
-const int plug2Pin = D2;
-const int plug3Pin = D3;
-const int plug4Pin = D4;
-
-//LED pin declaration PUZZLE 1
-const int plug1LED = D5;
-const int plug2LED = D6;
-const int plug3LED = D7;
-
-// ---- PLUGBOARD STATES SECTION ----
-int plug1 = 0;
-int plug2 = 0;
-int plug3 = 0;
-int plug4 = 0;
-
 void setup() {
   // start serial connection
 	Serial.begin(9600);
 
-	connectToWifi();
-  // initialize the LED pin as an output:
-  pinMode(plug1LED, OUTPUT);
-  pinMode(plug2LED, OUTPUT);
-  pinMode(plug3LED, OUTPUT);
+  connectToWifi();
+
   // initialize the pushbutton pin as an input:
-  pinMode(plug1Pin, INPUT_PULLUP);
-  pinMode(plug2Pin, INPUT_PULLUP);
-  pinMode(plug3Pin, INPUT_PULLUP);
-  pinMode(plug4Pin, INPUT_PULLUP);
+  pinMode(sendCorrect, INPUT_PULLUP);
+  pinMode(sendWrong, INPUT_PULLUP);
 }
 
-// the loop function runs over and over again forever
 void loop() {
   WiFiClient rcvClient = server.available(); // Listen for incoming clients
 
@@ -78,22 +57,9 @@ void loop() {
 		handleClientConnected(rcvClient);
 	}
 
-  // read the interruptor values into variables
-  if(solved1 == false){
-    patternLogic();
-  }
-  else if(solved1 == true && solved2 == true && solved3 == false){
-    checkFourthPlug();
-  }
-  else if(solved3 == true){
-    allOn();
-    delay(500);
-    resetLEDS();
-    delay(500);
-  }
-  
+  //Constantly check the pins
+  checkPins();
 
-  //This is just for ticking
   // if ((millis() - previousTime) > TickDelayTime)
   // {
   //   previousTime = millis();
@@ -103,117 +69,31 @@ void loop() {
   // }
 }
 
-// ---- HELPER METHODS ----
-
-void patternLogic(){
+void checkPins(){
   // FIRST PLUG CHECK
-  plug1 = digitalRead(plug1Pin);
-  if(plug1 == HIGH){
-    digitalWrite(plug1LED, LOW);
+  correct = digitalRead(sendCorrect);
+  if(correct == LOW && sentCorrect == false){
+    sentCorrect = true;
+    sendMessageToESP("keypad=correct", tvIP);
   }
-  else{
-    digitalWrite(plug1LED, HIGH);
+  else if(correct == HIGH){
+    sentCorrect = false;
   }
 
   // SECOND PLUG CHECK
-  plug2 = digitalRead(plug2Pin);
-  if(plug2 == HIGH){
-    digitalWrite(plug2LED, LOW);
+  wrong = digitalRead(sendWrong);
+  if(wrong == LOW && sentWrong == false){
+    sentWrong = true;
+    sendMessageToESP("keypad=wrong", tvIP);
   }
-  else{
-    digitalWrite(plug2LED, HIGH);
+  else if(wrong == HIGH){
+    sentWrong = false;
   }
-
-  // THIRD PLUG CHECK
-  plug3 = digitalRead(plug3Pin);
-  if(plug3 == HIGH){
-    digitalWrite(plug3LED, LOW);
-  }
-  else{
-    digitalWrite(plug3LED, HIGH);
-  }
-
-  if(plug1 == LOW && plug2 == LOW && plug3 == LOW){
-    if(solved1 == false){
-      status = "Solved";
-      sendMessageToESP("firstSolved=true", snowflakeIP);
-      flashLEDSFirstPattern();
-    }
-    solved1 = true;
-  }
-}
-
-void checkFourthPlug(){
-  plug4 = digitalRead(plug4Pin);
-  if(plug4 == LOW){
-    if(solved3 == false){
-      Serial.println("Send message to two that final is solved");
-      sendMessageToESP("finalSolved=true", snowflakeIP);
-    }
-    solved3 = true;
-  }
-}
-
-void flashLEDSFirstPattern(){
-  int delayTime = 200;
-  resetLEDS();
-  delay(delayTime);
-  passTheLight(delayTime);
-  delay(delayTime);
-  allOn();
-  delay(delayTime);
-  resetLEDS();
-  delay(delayTime);
-  allOn();
-  delay(delayTime);
-}
-
-void flashLEDSSecondPattern(){
-  flashLEDSFirstPattern();
-}
-
-// ---- LED PATTERN HELPERS ----
-void resetLEDS(){
-  if(!solved1){
-    digitalWrite(plug1LED, LOW);
-    digitalWrite(plug2LED, LOW);
-    digitalWrite(plug3LED, LOW);
-  }
-}
-
-void allOn(){
-  digitalWrite(plug1LED, HIGH);
-  digitalWrite(plug2LED, HIGH);
-  digitalWrite(plug3LED, HIGH);
-}
-
-void loadToFull(int delayTime){
-  digitalWrite(plug1LED, HIGH);
-  delay(delayTime);
-  digitalWrite(plug2LED, HIGH);
-  delay(delayTime);
-  digitalWrite(plug3LED, HIGH);
-  delay(delayTime);
-}
-
-void passTheLight(int delayTime){
-  digitalWrite(plug1LED, HIGH);
-  delay(delayTime);
-  digitalWrite(plug1LED, LOW);
-  digitalWrite(plug2LED, HIGH);
-  delay(delayTime);
-  digitalWrite(plug2LED, LOW);
-  digitalWrite(plug3LED, HIGH);
-  delay(delayTime);
-  digitalWrite(plug3LED, LOW);
 }
 
 // ---- WIFI HELPERS ----
 void handleClientConnected(WiFiClient rcvClient)
 {
-  //ONLY FOR PATTERN SO ITS AT THE SAME TIME
-  bool secondSolved = false;
-
 	// SETUP VARIABLES
   String header = "";
 	String currentLine = ""; // make a String to hold incoming data from the client
@@ -236,31 +116,12 @@ void handleClientConnected(WiFiClient rcvClient)
 				// that's the end of the client HTTP request, so send a response:
 				if (currentLine.length() == 0)
 				{
-          if (header.indexOf("GET /?firstSolved=true") >= 0)
+          if (header.indexOf("GET /?reset=reset") >= 0)
 					{
-            flashLEDSFirstPattern();
-            solved1 = true;
-					}
-					else if (header.indexOf("GET /?secondSolved=true") >= 0)
-					{
-            Serial.println("Got second solved message!");
-            solved2 = true;
-            secondSolved = true;
-					}
-          else if (header.indexOf("GET /?finalSolved=true") >= 0)
-					{
-            solved3 = true;
-					}
-          else if (header.indexOf("GET /?reset=reset") >= 0)
-					{
-            solved1 = false;
-            solved2 = false;
-            solved3 = false;
-            status = "Unsolved";
-            resetLEDS();
+            //TODO: Do I even have to reset anything here?
 					}
 
-          String fullMessage = "{\"status\":\"" + status + "\"}";
+          String fullMessage = "{\"message\":\"received\"}";
           String contentLengthString = "Content-Length: " + fullMessage.length() + 2;
 
 					rcvClient.println("HTTP/1.1 200 OK");
@@ -291,10 +152,6 @@ void handleClientConnected(WiFiClient rcvClient)
 	rcvClient.stop();
 	Serial.println("Client disconnected.");
 	Serial.println("");
-
-  if(secondSolved == true){
-    flashLEDSFirstPattern();
-  }
 }
 
 /// @brief This simplifies sending a message to a server.
@@ -362,5 +219,6 @@ void connectToWifi()
 	Serial.println("WiFi connected.");
 	Serial.println("IP address: ");
 	Serial.println(WiFi.localIP());
+  //Serial.println(WiFi.macAddress());
 	server.begin();
 }

@@ -10,6 +10,9 @@ import random
 import threading
 import time
 
+# Rando connection stuff
+from multiprocessing import Process, Pipe
+
 
 class ServerHandler(BaseHTTPRequestHandler):
     # These are for helping us keep track of which puzzles are going to be used in that playthrough of the room
@@ -23,16 +26,17 @@ class ServerHandler(BaseHTTPRequestHandler):
         {"name":"cant remember lol", "ip":"FILL IN", "port":1234, "hintNum":4}
     ]
     lockBoxes = [
-        {"puzzleName":"dial", "ip":"FILL IN", "port":1234},
-        {"puzzleName":"bust", "ip":"FILL IN", "port":1234},
-        {"puzzleName":"plugboard", "ip":"FILL IN", "port":1234},
-        {"puzzleName":"potentiometer", "ip":"FILL IN", "port":1234},
-        {"puzzleName":"cant remember lol", "ip":"FILL IN", "port":1234}
+        {"puzzleName":"TBD", "ip":"192.168.1.127", "port":1234},
+        {"puzzleName":"TBD", "ip":"192.168.1.242", "port":1234},
+        {"puzzleName":"TBD", "ip":"192.168.1.143", "port":1234},
+        {"puzzleName":"TBD", "ip":"192.168.1.54", "port":1234},
+        {"puzzleName":"TBD", "ip":"192.168.1.150", "port":1234}
     ]
     # Empty dictionary that contains status of all WiFi components that have spoken to it
     # Basically, its going to store information about which puzzles have been solved (not which havent)
     statusDict = {"puzzlesToSolve":selectedPuzzles}
     statusLock = None # This will get set by external code, so dont worry about the fact its None here XD
+    child_conn = None # This will also get set by external code, so we can use it without worry
     keyboardForVideoControl = Controller()
     clock = {"ip":"192.168.1.50", "port":1234}
 
@@ -103,19 +107,20 @@ class ServerHandler(BaseHTTPRequestHandler):
             #  the other bits of code can read out the correct values from the statusDict
             self.updateStatusDict(query_components)
             
-            # Check for a clock time
-            clockTime = query_components.get("clocktime", None)
-            if clockTime == None:
-                ...
-            else:
-                timeArray = clockTime.split(':')
-                try:
-                    # These are here for later, its easier just to press the same key as the hour for now
-                    hour = int(timeArray[0])
-                    min = int(timeArray[1])
-                    self.__pressAndRelease(timeArray[0])
-                except:
-                    print("There was a problem parsing the hour or minute of the clocktime. Failing gracefully.")
+            # Checking for the "clocktime" command has been deprecated until TBD
+            # # Check for a clock time
+            # clockTime = query_components.get("clocktime", None)
+            # if clockTime == None:
+            #     ...
+            # else:
+            #     timeArray = clockTime.split(':')
+            #     try:
+            #         # These are here for later, its easier just to press the same key as the hour for now
+            #         hour = int(timeArray[0])
+            #         min = int(timeArray[1])
+            #         self.__pressAndRelease(timeArray[0])
+            #     except:
+            #         print("There was a problem parsing the hour or minute of the clocktime. Failing gracefully.")
 
             # Check for a clock mode
             clockmode = query_components.get("clockmode", None)
@@ -129,7 +134,28 @@ class ServerHandler(BaseHTTPRequestHandler):
                 ConnectToESP(self.clock["ip"], self.clock["port"], "reverse=on", 5000)
             elif clockmode == "tick":
                 self.__pressAndRelease('g')
-                ConnectToESP(self.clock["ip"], self.clock["port"], "normal=on", 5000)
+                initializeRoom = False
+                if(initializeRoom):
+                    ... # TODO: ADD STUFF HERE
+                else:
+                    responseFromESP = ConnectToESP(self.clock["ip"], self.clock["port"], "normal=on", 5000)
+                    try:
+                        responseDict = json.loads(responseFromESP)
+                        # OPTION 1
+                        timeRange = int(responseDict["rotaryCounter"])//10
+                        self.__pressAndRelease(f"{timeRange}")
+
+                        # OPTION 2
+                        # First, get the values that the time it going to be set to
+                        rotaryCounter = int(responseDict["rotaryCounter"])
+                        videoPositionPercent = (rotaryCounter*2)/180
+                        # Update that value so the server can read it
+                        self.updateStatusDict({"videoPositionPercent":videoPositionPercent})
+                        # Then tell the TV to update the position using that value
+
+                    except ValueError as e:
+                        # If parsing the response doesnt work just dont change the time "shrug"
+                        ...
 
             # Check if the monster is showing
             monster = query_components.get("monster", None)
@@ -142,6 +168,16 @@ class ServerHandler(BaseHTTPRequestHandler):
             elif monster == "false":
                 self.__pressAndRelease('g')
 
+            # Check if the monster is showing
+            keypad = query_components.get("keypad", None)
+            if keypad == None:
+                ...
+            elif keypad == "increment":
+                self.__pressAndRelease('+')
+            # Decrement works a bit different, it makes the timer go down faster when '-' is pressed down and held.
+            elif keypad == "decrement":
+                self.__pressAndRelease('m')
+
             # Check if midnight should be showing
             midnight = query_components.get("midnight", None)
             if midnight == None:
@@ -149,11 +185,19 @@ class ServerHandler(BaseHTTPRequestHandler):
             elif midnight == 'true':
                 self.__pressAndRelease('f')
 
+            # When a puzzle is solved, receive this command
             solvedPuzzle = query_components.get("solved", None)
             if solvedPuzzle == None:
                 ...
             else:
                 self.processNextStep(solvedPuzzle)
+
+            # When telling the room to reset, execute the code here
+            reset = query_components.get("reset", None)
+            if midnight == None:
+                ...
+            elif midnight == 'reset':
+                self.__pressAndRelease('}')
 
             # HEY NAMI! (Hi Jake :D) Come here if you need to add more query string commands
             #  that you would like the server to process (or if you need to change the keys that get pressed)
@@ -245,10 +289,13 @@ class ServerHandler(BaseHTTPRequestHandler):
 
 class EscapeY2KServer:
     __statusDict = {}
+    child_conn = None
     statusLock = threading.Lock()
 
-    def __init__(self):
+    def __init__(self, child_conn):
         ServerHandler.statusLock = self.statusLock
+        self.child_conn = child_conn
+        ServerHandler.child_conn = child_conn
         self.__statusDict = ServerHandler.statusDict
 
     def startHTTPServer(self):
@@ -292,9 +339,9 @@ def ConnectToESP(ip, port, command, timeout):
         print(attributeErrorString)
         return attributeErrorString
 
-if __name__ == '__main__':
+def InitiateServer(child_conn):
     # Start our HTTP Server
-    server = EscapeY2KServer()
+    server = EscapeY2KServer(child_conn)
     server.startHTTPServer()
 
     # Handle other stuff that has to get done

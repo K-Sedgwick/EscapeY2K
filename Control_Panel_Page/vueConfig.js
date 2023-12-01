@@ -1,10 +1,3 @@
-const tapeSongOptions = [
-  { title: "Kyle First Song", value: 1 },
-  { title: "Kyle Second Song", value: 2 },
-  { title: "Space - Jvke", value: 3 },
-  { title: "RICK ROLL", value: 4 },
-];
-
 const SECONDS_UNTIL_STATUS_REFRESH = 5;
 
 const vue = new Vue({
@@ -69,9 +62,6 @@ const vue = new Vue({
           loading: false,
         },
       },
-
-      //Tape Player extras
-      tapeSongOptions: tapeSongOptions,
 
       //This is just in relation to the clock
       adminMode: false,
