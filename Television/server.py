@@ -37,6 +37,7 @@ class ServerHandler(BaseHTTPRequestHandler):
     statusDict = {"puzzlesToSolve":selectedPuzzles}
     statusLock = None # This will get set by external code, so dont worry about the fact its None here XD
     child_conn = None # This will also get set by external code, so we can use it without worry
+    initializeRoom = True
     keyboardForVideoControl = Controller()
     clock = {"ip":"192.168.1.50", "port":1234}
 
@@ -133,24 +134,21 @@ class ServerHandler(BaseHTTPRequestHandler):
                 self.__pressAndRelease('w')
                 ConnectToESP(self.clock["ip"], self.clock["port"], "reverse=on", 5000)
             elif clockmode == "tick":
-                self.__pressAndRelease('g')
-                initializeRoom = False
-                if(initializeRoom):
-                    ... # TODO: ADD STUFF HERE
-                else:
-                    responseFromESP = ConnectToESP(self.clock["ip"], self.clock["port"], "normal=on", 5000)
-                    try:
-                        responseDict = json.loads(responseFromESP)
-                        # First, get the values that the time it going to be set to
-                        rotaryCounter = int(responseDict["rotaryCounter"])
-                        # Update that value so the server can read it
-                        self.updateStatusDict({"rotaryCounter":rotaryCounter})
-                        # Then tell the TV to update the position using that value
-                        self.child_conn.send(rotaryCounter)
+                responseFromESP = ConnectToESP(self.clock["ip"], self.clock["port"], "normal=on", 5000)                
+                try:
+                    responseDict = json.loads(responseFromESP)
+                    # First, get the values that the time it going to be set to
+                    rotaryCounter = int(responseDict["rotaryCounter"])
+                    print(rotaryCounter)
+                    # Update that value so the server can read it
+                    self.updateStatusDict({"rotaryCounter":rotaryCounter})
+                    # Then tell the TV to update the position using that value
+                    self.child_conn.send(rotaryCounter)
+                    self.__pressAndRelease('u')
 
-                    except ValueError as e:
-                        # If parsing the response doesnt work just dont change the time "shrug"
-                        ...
+                except ValueError as e:
+                    # If parsing the response doesnt work just dont change the time "shrug"
+                    ...
 
             # Check if the monster is showing
             monster = query_components.get("monster", None)
@@ -168,10 +166,7 @@ class ServerHandler(BaseHTTPRequestHandler):
             if keypad == None:
                 ...
             elif keypad == "increment":
-                self.__pressAndRelease('+')
-            # Decrement works a bit different, it makes the timer go down faster when '-' is pressed down and held.
-            elif keypad == "decrement":
-                self.__pressAndRelease('m')
+                self.__pressAndRelease('a')
 
             # Check if midnight should be showing
             midnight = query_components.get("midnight", None)
@@ -187,12 +182,24 @@ class ServerHandler(BaseHTTPRequestHandler):
             else:
                 self.processNextStep(solvedPuzzle)
 
+            initialize = query_components.get("initialize", None)
+            if initialize == None:
+                ...
+            elif initialize == 'true':
+                print("initializing...")
+                    
+                self.initializeRoom = False
+                self.__pressAndRelease('g')
+                self.__pressAndRelease('[')
+
             # When telling the room to reset, execute the code here
             reset = query_components.get("reset", None)
             if reset == None:
                 ...
             elif reset == 'reset':
-                self.__pressAndRelease('}')
+                self.initializeRoom = True
+                self.__pressAndRelease('d')
+                self.__pressAndRelease(']')
 
             # HEY NAMI! (Hi Jake :D) Come here if you need to add more query string commands
             #  that you would like the server to process (or if you need to change the keys that get pressed)
@@ -254,6 +261,7 @@ class ServerHandler(BaseHTTPRequestHandler):
     # This is just a helper function so I dont have to type press and release over and over XD
     def __pressAndRelease(self, key):
         self.keyboardForVideoControl.press(key)
+        time.sleep(0.05)
         self.keyboardForVideoControl.release(key)
     
     def clearStatusDict(self):
@@ -320,7 +328,7 @@ class EscapeY2KServer:
 
 # TODO: Maybe change this so it throws the error up to the method that called it instead of just returning a string
 def ConnectToESP(ip, port, command, timeout):
-    return {"test":True}
+    # return {"test":True}
     try:
         headers = {'Content-type': 'application/json'}
         esp = HTTPConnection(ip, port, timeout=timeout)

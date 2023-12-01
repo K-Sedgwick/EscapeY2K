@@ -51,10 +51,12 @@ def set_loop(player, shouldLoop):
         player.set_playback_mode(vlc.PlaybackMode().default)
     
 def set_video_game_time(parent_conn):
-    isGamePlaying = (list_players[0].get_media_player().get_mrl()) == game.get_mrl()
-    if(isGamePlaying):
+    if (parent_conn.poll()):
         rotaryCounter = parent_conn.recv()
-        list(map(lambda list_player: list_player.get_media_player().set_time(rotaryCounter*2000), list_players))
+        desiredTime = rotaryCounter*2
+        game.add_option(f"start-time={desiredTime}")
+        play_video(game)
+        game.add_option("start-time=0")
     
 def update_timer():
     global game_timer
@@ -66,6 +68,7 @@ def update_timer():
         threading.Timer(timer_update, update_timer).start()
     
 def start_timer():
+    print("hello")
     stop_timer() # Stop a timer if it is currently running
     global game_timer
     global timer_update
@@ -141,9 +144,9 @@ if __name__ == '__main__':
     keyboard.add_hotkey('8', lambda: list(map(lambda list_player: list_player.get_media_player().set_position(0.8), list_players)))
     keyboard.add_hotkey('9', lambda: list(map(lambda list_player: list_player.get_media_player().set_position(0.9), list_players)))
 
-    keyboard.add_hotkey('{', start_timer)
-    keyboard.add_hotkey('}', stop_timer)
-    keyboard.add_hotkey('+', add_minute)
+    keyboard.add_hotkey('[', lambda: start_timer())
+    keyboard.add_hotkey(']', lambda: stop_timer())
+    keyboard.add_hotkey('a', lambda: add_minute())
 
     starting_thread_count = threading.active_count()
 
