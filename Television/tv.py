@@ -50,8 +50,11 @@ def set_loop(player, shouldLoop):
     else:
         player.set_playback_mode(vlc.PlaybackMode().default)
     
-def set_video_player_position(videoPositionPercent):
-    list(map(lambda list_player: list_player.get_media_player().set_position(videoPositionPercent), list_players))
+def set_video_game_time(parent_conn):
+    isGamePlaying = (list_players[0].get_media_player().get_mrl()) == game.get_mrl()
+    if(isGamePlaying):
+        rotaryCounter = parent_conn.recv()
+        list(map(lambda list_player: list_player.get_media_player().set_time(rotaryCounter*2000), list_players))
     
 def update_timer():
     global game_timer
@@ -126,6 +129,7 @@ if __name__ == '__main__':
     keyboard.add_hotkey('e', lambda: play_video(ending))
     keyboard.add_hotkey('w', lambda: play_video(timetravel))
 
+    keyboard.add_hotkey('u', lambda: set_video_game_time(parent_conn))
     keyboard.add_hotkey('0', lambda: list(map(lambda list_player: list_player.get_media_player().set_position(0), list_players)))
     keyboard.add_hotkey('1', lambda: list(map(lambda list_player: list_player.get_media_player().set_position(0.1), list_players)))
     keyboard.add_hotkey('2', lambda: list(map(lambda list_player: list_player.get_media_player().set_position(0.2), list_players)))

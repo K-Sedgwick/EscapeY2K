@@ -143,11 +143,10 @@ class ServerHandler(BaseHTTPRequestHandler):
                         responseDict = json.loads(responseFromESP)
                         # First, get the values that the time it going to be set to
                         rotaryCounter = int(responseDict["rotaryCounter"])
-                        videoPositionPercent = (rotaryCounter*2)/180
                         # Update that value so the server can read it
-                        self.updateStatusDict({"videoPositionPercent":videoPositionPercent})
+                        self.updateStatusDict({"rotaryCounter":rotaryCounter})
                         # Then tell the TV to update the position using that value
-                        self.child_conn.send(videoPositionPercent)
+                        self.child_conn.send(rotaryCounter)
 
                     except ValueError as e:
                         # If parsing the response doesnt work just dont change the time "shrug"
