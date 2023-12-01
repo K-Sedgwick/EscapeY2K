@@ -26,11 +26,11 @@ class ServerHandler(BaseHTTPRequestHandler):
         {"name":"cant remember lol", "ip":"FILL IN", "port":1234, "hintNum":4}
     ]
     lockBoxes = [
-        {"puzzleName":"TBD", "ip":"192.168.1.127", "port":1234},
-        {"puzzleName":"TBD", "ip":"192.168.1.242", "port":1234},
-        {"puzzleName":"TBD", "ip":"192.168.1.143", "port":1234},
-        {"puzzleName":"TBD", "ip":"192.168.1.54", "port":1234},
-        {"puzzleName":"TBD", "ip":"192.168.1.150", "port":1234}
+        {"puzzleName":"dial", "ip":"192.168.1.127", "port":1234}, # 1
+        {"puzzleName":"bust", "ip":"192.168.1.242", "port":1234}, # 2
+        {"puzzleName":"plugboard", "ip":"192.168.1.143", "port":1234}, # 3
+        {"puzzleName":"potentiometer", "ip":"192.168.1.54", "port":1234}, # 4
+        {"puzzleName":"cant remember lol", "ip":"192.168.1.150", "port":1234} # 5
     ]
     # Empty dictionary that contains status of all WiFi components that have spoken to it
     # Basically, its going to store information about which puzzles have been solved (not which havent)
@@ -141,17 +141,13 @@ class ServerHandler(BaseHTTPRequestHandler):
                     responseFromESP = ConnectToESP(self.clock["ip"], self.clock["port"], "normal=on", 5000)
                     try:
                         responseDict = json.loads(responseFromESP)
-                        # OPTION 1
-                        timeRange = int(responseDict["rotaryCounter"])//10
-                        self.__pressAndRelease(f"{timeRange}")
-
-                        # OPTION 2
                         # First, get the values that the time it going to be set to
                         rotaryCounter = int(responseDict["rotaryCounter"])
                         videoPositionPercent = (rotaryCounter*2)/180
                         # Update that value so the server can read it
                         self.updateStatusDict({"videoPositionPercent":videoPositionPercent})
                         # Then tell the TV to update the position using that value
+                        self.child_conn.send(videoPositionPercent)
 
                     except ValueError as e:
                         # If parsing the response doesnt work just dont change the time "shrug"
@@ -194,9 +190,9 @@ class ServerHandler(BaseHTTPRequestHandler):
 
             # When telling the room to reset, execute the code here
             reset = query_components.get("reset", None)
-            if midnight == None:
+            if reset == None:
                 ...
-            elif midnight == 'reset':
+            elif reset == 'reset':
                 self.__pressAndRelease('}')
 
             # HEY NAMI! (Hi Jake :D) Come here if you need to add more query string commands
@@ -224,6 +220,8 @@ class ServerHandler(BaseHTTPRequestHandler):
             # If its not it effectively doesnt matter, so dont do anything
             if(indexInSelectedList != -1):
                 lockboxIndex = self.findIndexInList(self.lockBoxes, "puzzleName", self.puzzles[indexOfPuzzle]["name"])
+                boxToOpen = self.lockBoxes[lockboxIndex]
+                ConnectToESP(boxToOpen["ip"], boxToOpen["port"], "latch=change", 5000)
                 print(f'Lockbox dict: {self.lockBoxes[lockboxIndex]}')
             else:
                 # TODO: Send a message to the tape player so itll congratulate them for solving the puzzle, but also let them know that we didnt need that one solved

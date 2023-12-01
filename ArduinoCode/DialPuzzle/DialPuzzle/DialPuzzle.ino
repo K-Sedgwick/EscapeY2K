@@ -7,6 +7,8 @@
 const char *ssid = "EscapeY2K";//EscapeY2K
 const char *password = "caNY0u3scAp3?!";//caNY0u3scAp3?!
 WiFiServer server(1234);
+String tvIP = "192.168.1.211:8001"; // 10.0.0.64 at Jakes house
+
 
 //ESP pins
 #define D0 16
@@ -140,7 +142,7 @@ void handleDialPuzzleLogic() {
           digitalWrite(D3, HIGH);
         }
         //Let a box know that the puzzle has been solved
-        sendMessageToESP("play=3", "10.0.0.197:1234");
+        sendMessageToESP("solved=dial", tvIP);
       }
 		} else {
 			// Encoder is rotating CW so increment
