@@ -38,7 +38,7 @@ WiFiServer server(1234);
 
 //IP addresses of the devices that need to know about what time it is
 const int numOfMidnightDependentDevices = 1;
-String tvIP = "10.0.0.64:8001"; // 10.0.0.64 at Jakes house
+String tvIP = "192.168.1.211:8001"; // 10.0.0.64 at Jakes house, 192.168.1.211:8001 on escapeY2K
 String midnightDependentIPs[numOfMidnightDependentDevices] = {tvIP};
 
 // ---- ROTARY ENCODER SECTION ----
