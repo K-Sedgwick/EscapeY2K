@@ -323,6 +323,7 @@ class EscapeY2KServer:
 
 # TODO: Maybe change this so it throws the error up to the method that called it instead of just returning a string
 def ConnectToESP(ip, port, command, timeout):
+    return {"test":True}
     try:
         headers = {'Content-type': 'application/json'}
         esp = HTTPConnection(ip, port, timeout=timeout)
@@ -339,7 +340,7 @@ def ConnectToESP(ip, port, command, timeout):
         print(attributeErrorString)
         return attributeErrorString
 
-def InitiateServer(child_conn):
+def InitiateServer(child_conn = None):
     # Start our HTTP Server
     server = EscapeY2KServer(child_conn)
     server.startHTTPServer()
@@ -352,3 +353,6 @@ def InitiateServer(child_conn):
         # print('escapey2k status')
         # server.PrintStatus()
         # print(ConnectToESP('10.0.0.94', 1234, 5))
+
+if __name__ == '__main__':
+    InitiateServer()
