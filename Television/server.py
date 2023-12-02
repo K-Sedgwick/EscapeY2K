@@ -27,7 +27,7 @@ class ServerHandler(BaseHTTPRequestHandler):
     ]
     lockBoxes = [
         {"puzzleName":"dial", "ip":"192.168.1.127", "port":1234}, # 1
-        {"puzzleName":"bust", "ip":"192.168.1.242", "port":1234}, # 2
+        {"puzzleName":"bust", "ip":"192.168.1.242", "port":1234}, # PCB-2   192.168.1.242 on EscapeY2K and 10.0.0.155 at Jakes house
         {"puzzleName":"plugboard", "ip":"192.168.1.143", "port":1234}, # 3
         {"puzzleName":"potentiometer", "ip":"192.168.1.54", "port":1234}, # 4
         {"puzzleName":"rando", "ip":"192.168.1.150", "port":1234} # 5
@@ -348,16 +348,15 @@ class EscapeY2KServer:
 
 
 def ConnectToESP(ip, port, command, timeout = 5000):
-    return {"test":"test"}
-    print("connectToESP")
+    # print("connectToESP")
     try:
         headers = {'Content-type': 'application/json'}
         esp = HTTPConnection(ip, port, timeout=timeout)
         esp.request("GET", f'/{command}', headers=headers)
         response = esp.getresponse()
         jsonFromESP = response.read().decode()
-        print("connection done")
-        print(jsonFromESP)
+        # print("connection done")
+        # print(jsonFromESP)
         return jsonFromESP
     except TimeoutError:
         timeoutString = "Connection Timeout"
