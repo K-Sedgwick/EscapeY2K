@@ -17,20 +17,20 @@ from multiprocessing import Process, Pipe
 class ServerHandler(BaseHTTPRequestHandler):
     # These are for helping us keep track of which puzzles are going to be used in that playthrough of the room
     numOfPuzzlesToUse = 3
-    selectedPuzzles = [1, 2, 3] # THIS IS JUST A PLACEHOLDER
+    selectedPuzzles = ["bust", "plugboard", "dial"] # THIS IS JUST A PLACEHOLDER, but the numbers correspond to the index of the puzzle in the "puzzles" array
     puzzles = [
         {"name":"dial", "ip":"FILL IN", "port":1234, "hintNum":0},
         {"name":"bust", "ip":"FILL IN", "port":1234, "hintNum":1},
         {"name":"plugboard", "ip":"FILL IN", "port":1234, "hintNum":2},
         {"name":"potentiometer", "ip":"FILL IN", "port":1234, "hintNum":3},
-        {"name":"cant remember lol", "ip":"FILL IN", "port":1234, "hintNum":4}
+        {"name":"rando", "ip":"FILL IN", "port":1234, "hintNum":4}
     ]
     lockBoxes = [
         {"puzzleName":"dial", "ip":"192.168.1.127", "port":1234}, # 1
         {"puzzleName":"bust", "ip":"192.168.1.242", "port":1234}, # 2
         {"puzzleName":"plugboard", "ip":"192.168.1.143", "port":1234}, # 3
         {"puzzleName":"potentiometer", "ip":"192.168.1.54", "port":1234}, # 4
-        {"puzzleName":"cant remember lol", "ip":"192.168.1.150", "port":1234} # 5
+        {"puzzleName":"rando", "ip":"192.168.1.150", "port":1234} # 5
     ]
     # Empty dictionary that contains status of all WiFi components that have spoken to it
     # Basically, its going to store information about which puzzles have been solved (not which havent)
@@ -40,6 +40,7 @@ class ServerHandler(BaseHTTPRequestHandler):
     initializeRoom = True
     keyboardForVideoControl = Controller()
     clock = {"ip":"192.168.1.50", "port":1234}
+    finalPuzzleBox = {"ip":"TBD", "port":1234}
 
     def do_GET(self):
         return self.router()
@@ -77,11 +78,13 @@ class ServerHandler(BaseHTTPRequestHandler):
         elif self.path == '/hint':
             hintGiven = self.processHint()
             print(f'The hint given was hint {hintGiven}')
-            return {'hint', hintGiven}
-            #return ConnectToESP("192.168.1.211", 1234, f'play={hintGiven}', 5)
-        elif self.path == '/shuffle':
+            return {'hint', 'Unfortunately, hits have not been implemented...'}
+            # This cant be async because we need the response (I think...)
+            #return ConnectToESP("192.168.1.211", 1234, f'?play={hintGiven}', 5)
+        elif self.path == '/resetAndShuffle':
             self.resetAndShuffle()
-            return {'shuffleAndReset':'success'}
+            statusToReturn = self.GetCopyOfStatusDict()
+            return {'resetAndShuffle':'success', 'statusDict':statusToReturn}
 
 
         # Else, process query commands
@@ -129,12 +132,13 @@ class ServerHandler(BaseHTTPRequestHandler):
                 ...
             elif clockmode == "fastForward":
                 self.__pressAndRelease('w')
-                ConnectToESP(self.clock["ip"], self.clock["port"], "fastForward=on", 5000)
+                ConnectToESPAsync(self.clock["ip"], self.clock["port"], "?fastForward=on", 5000)
             elif clockmode == "reverse":
                 self.__pressAndRelease('w')
-                ConnectToESP(self.clock["ip"], self.clock["port"], "reverse=on", 5000)
+                ConnectToESPAsync(self.clock["ip"], self.clock["port"], "?reverse=on", 5000)
             elif clockmode == "tick":
-                responseFromESP = ConnectToESP(self.clock["ip"], self.clock["port"], "normal=on", 5000)                
+                # This "ConnectToESP" cant be async because we need the response from it
+                responseFromESP = ConnectToESP(self.clock["ip"], self.clock["port"], "?normal=on", 5000)                
                 try:
                     responseDict = json.loads(responseFromESP)
                     # First, get the values that the time it going to be set to
@@ -214,24 +218,36 @@ class ServerHandler(BaseHTTPRequestHandler):
         # Although solvedPuzzle is an array it should NEVER pass in more than one puzzle at a time!
         # indexOfPuzzle is the index of the puzzle object in the puzzles list
         indexOfPuzzle = self.findIndexInList(self.puzzles, "name", solvedPuzzle[0])
-        print(indexOfPuzzle)
+        print(f"solvedPuzzleName: {solvedPuzzle[0]}")
+        print(f"self.selectedPuzzles: {self.selectedPuzzles}")
         # This checks whether the puzzle exists in the puzzles list
         if(indexOfPuzzle != -1):
             try:
-                indexInSelectedList = self.selectedPuzzles.index(indexOfPuzzle)
+                indexInSelectedList = self.selectedPuzzles.index(solvedPuzzle[0])
             except ValueError:
                 indexInSelectedList = -1
 
             # Is the puzzle even in the list of puzzles that the player has to solve?
             # If its not it effectively doesnt matter, so dont do anything
-            if(indexInSelectedList != -1):
-                lockboxIndex = self.findIndexInList(self.lockBoxes, "puzzleName", self.puzzles[indexOfPuzzle]["name"])
-                boxToOpen = self.lockBoxes[lockboxIndex]
-                ConnectToESP(boxToOpen["ip"], boxToOpen["port"], "latch=change", 5000)
-                print(f'Lockbox dict: {self.lockBoxes[lockboxIndex]}')
-            else:
-                # TODO: Send a message to the tape player so itll congratulate them for solving the puzzle, but also let them know that we didnt need that one solved
+            print(f"indexInSelectedList: {indexInSelectedList}")
+            if(indexInSelectedList == -1):
                 print("We dont care if that puzzle was solved or not :P")
+                # TODO: Send a message to the tape player so itll congratulate them for solving the puzzle, but also let them know that we didnt need that one solved
+            # Then, check to see if the index of the puzzle that was just solved 
+            # is the last puzzle in the list. If it is, open the last box
+            elif(indexInSelectedList == len(self.selectedPuzzles)-1):
+                print("LAST ONE")
+                ConnectToESP(self.finalPuzzleBox["ip"], self.finalPuzzleBox["port"], "?latch=change", 5000)
+            else:
+                # We dont need a try catch around this because we know the puzzle is meant to be solved
+                print(f"indexInSelectedList good puzzle: {indexInSelectedList}")
+                indexOfNextPuzzle = indexInSelectedList+1
+                print(f"indexOfNextPuzzle: {indexOfNextPuzzle}")
+                lockboxIndex = self.findIndexInList(self.lockBoxes, "puzzleName", self.selectedPuzzles[indexOfNextPuzzle])
+                print(f'lockboxIndex: {lockboxIndex}')
+                boxToOpen = self.lockBoxes[lockboxIndex]
+                ConnectToESP(boxToOpen["ip"], boxToOpen["port"], "?latch=change", 5000)
+                print(f'Lockbox dict: {self.lockBoxes[lockboxIndex]}')
     
     def processHint(self):
         # Compare the status solved and the status puzzlesToSolve to see which ones are missing, then somehow decide which one to give a hint for?
@@ -242,17 +258,16 @@ class ServerHandler(BaseHTTPRequestHandler):
     def resetAndShuffle(self):
         # Reset the list of currently selected puzzles
         self.selectedPuzzles.clear()
-        self.selectedPuzzles = random.sample(range(0, len(self.puzzles)), self.numOfPuzzlesToUse)
+        puzzleIndexes = random.sample(range(0, len(self.puzzles)), self.numOfPuzzlesToUse)
+        for val in puzzleIndexes:
+            self.selectedPuzzles.append(self.puzzles[val]["name"])
 
         print(self.selectedPuzzles)
         # TODO: Then tell all of the espModules to reset
 
         # And reset the statusDict, so its as if we just started from zero
         self.clearStatusDict()
-        listOfNames = []
-        for val in self.selectedPuzzles:
-            listOfNames.append(self.puzzles[val]["name"])
-        self.updateStatusDict({"puzzlesToSolve":listOfNames})
+        self.updateStatusDict({"puzzlesToSolve":self.selectedPuzzles})
 
         # Also, make sure to tell the TVs to go back to black (FORGET THE HERSE CUZ I NEVER DIE)
         self.__pressAndRelease('d') # d for dark
@@ -268,6 +283,12 @@ class ServerHandler(BaseHTTPRequestHandler):
         self.statusLock.acquire()
         self.statusDict.clear()
         self.statusLock.release()
+
+    def GetCopyOfStatusDict(self):
+        self.statusLock.acquire()
+        copyOfStatus = self.statusDict.copy()
+        self.statusLock.release()
+        return copyOfStatus
 
     def updateStatusDict(self, newStatusDict):
         self.statusLock.acquire()
@@ -326,15 +347,17 @@ class EscapeY2KServer:
         self.statusLock.release()
 
 
-# TODO: Maybe change this so it throws the error up to the method that called it instead of just returning a string
-def ConnectToESP(ip, port, command, timeout):
-    # return {"test":True}
+def ConnectToESP(ip, port, command, timeout = 5000):
+    return {"test":"test"}
+    print("connectToESP")
     try:
         headers = {'Content-type': 'application/json'}
         esp = HTTPConnection(ip, port, timeout=timeout)
-        esp.request("GET", f'/?{command}', headers=headers)
+        esp.request("GET", f'/{command}', headers=headers)
         response = esp.getresponse()
         jsonFromESP = response.read().decode()
+        print("connection done")
+        print(jsonFromESP)
         return jsonFromESP
     except TimeoutError:
         timeoutString = "Connection Timeout"
@@ -344,6 +367,11 @@ def ConnectToESP(ip, port, command, timeout):
         attributeErrorString = "AttributeError? Not sure what went wrong tbh"
         print(attributeErrorString)
         return attributeErrorString
+
+def ConnectToESPAsync(ip, port, command, timeout = 5000):
+    espThread = threading.Thread(target=ConnectToESP, args=(ip, port, command, timeout))
+    espThread.start()
+    
 
 def InitiateServer(child_conn = None):
     # Start our HTTP Server
@@ -357,7 +385,8 @@ def InitiateServer(child_conn = None):
         time.sleep(5)
         # print('escapey2k status')
         # server.PrintStatus()
-        # print(ConnectToESP('10.0.0.94', 1234, 5))
+        #print("Every 5 seconds this should go")
+        #ConnectToESPAsync('localhost', 8001, "status")
 
 if __name__ == '__main__':
     InitiateServer()
