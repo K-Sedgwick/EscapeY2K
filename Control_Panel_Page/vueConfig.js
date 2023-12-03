@@ -69,7 +69,7 @@ const vue = new Vue({
           loading: false,
         },
         miniPC: {
-          ipAddress: "localhost", // 192.168.1.211
+          ipAddress: "192.168.1.211", // 192.168.1.211
           port: "8001",
           status: "Off",
           loading: false,
