@@ -137,7 +137,7 @@ const vue = new Vue({
               console.log("An unexpected error occured.");
             }
 
-            console.log(`Response from ${module}`, apiObj);
+            // console.log(`Response from ${module}`, apiObj);
             esp.loading = false;
           }
         });
@@ -154,7 +154,7 @@ const vue = new Vue({
               console.log("An unexpected error occured.");
             }
 
-            console.log(`Response from ${module}`, apiObj);
+            // console.log(`Response from ${module}`, apiObj);
             vm.loading = false;
           }
         });
@@ -163,7 +163,7 @@ const vue = new Vue({
       this.sendESPMessage("tapePlayer", `?play=${this.status.selectedSong}`)
     },
     sendLockboxMessage(lockbox, message) {
-      console.log(lockbox, message)
+      // console.log(lockbox, message)
       lockbox.loading = true;
 
       fetch(`http://${lockbox.ip}?${message}`)
@@ -174,13 +174,11 @@ const vue = new Vue({
               console.log("An unexpected error occured.");
             }
             else{
-              console.log(`Response from ${module}`, apiObj);
-              lockbox = apiObj.status ?? "Unknown"
+              // console.log(`Response from ${module}`, apiObj);
+              lockbox.status = apiObj.status ?? "Unknown"
             }
-
-            lockbox.loading = false;
           }
-        });
+        }).finally(_ => lockbox.loading = false);
     },
     getRoomStatus() {
       if (this.timeUntilStatusRefresh <= 0) {
@@ -204,10 +202,9 @@ const vue = new Vue({
                 console.log("An unexpected error occured.");
               }
 
-              console.log("apiObj status", apiObj.solved)
+              // console.log("apiObj status", apiObj.solved)
               vm.puzzlesToBeSolved = apiObj.puzzlesToSolve
               vm.solvedPuzzles = apiObj.solved ?? []
-              console.log(vm.solvedPuzzles)
               vm.statusLoading = false;
             }
           })
@@ -236,7 +233,7 @@ const vue = new Vue({
             console.log("An unexpected error occured.");
           }
 
-          console.log('apiObj reset', apiObj)
+          // console.log('apiObj reset', apiObj)
           
           vm.puzzlesToBeSolved = apiObj.puzzlesToSolve
           vm.resetting = false;
@@ -248,20 +245,16 @@ const vue = new Vue({
 
       $(this.$refs.resetRoomModal).modal('hide')
     },
-    runTest() {
-      const lockbox = this.espModules.lockbox;
-      console.log("lockbox", lockbox);
-    },
     buildLockboxArrayForUser(a, b){
       this.lockboxesToShow = []
       this.puzzlesToBeSolved.forEach((el, index) => {
-        console.log(el)
+        // console.log(el)
         const lockbox = this.lockboxes.find(element => element.puzzleName == el)
         // lockbox.orderNum = index
         this.lockboxesToShow.push(lockbox)
       })
       // this.lockboxesToShow.sort((a, b) => a.orderNum > b.orderNum)
-      console.log(this.lockboxesToShow)
+      // console.log(this.lockboxesToShow)
     },
     capitalizeFirstLetter(string) {
       return string.charAt(0).toUpperCase() + string.slice(1);
