@@ -83,8 +83,7 @@ class ServerHandler(BaseHTTPRequestHandler):
             #return ConnectToESP("192.168.1.211", 1234, f'?play={hintGiven}', 5)
         elif self.path == '/resetAndShuffle':
             self.resetAndShuffle()
-            statusToReturn = self.GetCopyOfStatusDict()
-            return {'resetAndShuffle':'success', 'statusDict':statusToReturn}
+            return {'resetAndShuffle':'success', "puzzlesToSolve":self.selectedPuzzles}
 
 
         # Else, process query commands
@@ -111,21 +110,6 @@ class ServerHandler(BaseHTTPRequestHandler):
             #  the other bits of code can read out the correct values from the statusDict
             self.updateStatusDict(query_components)
             
-            # Checking for the "clocktime" command has been deprecated until TBD
-            # # Check for a clock time
-            # clockTime = query_components.get("clocktime", None)
-            # if clockTime == None:
-            #     ...
-            # else:
-            #     timeArray = clockTime.split(':')
-            #     try:
-            #         # These are here for later, its easier just to press the same key as the hour for now
-            #         hour = int(timeArray[0])
-            #         min = int(timeArray[1])
-            #         self.__pressAndRelease(timeArray[0])
-            #     except:
-            #         print("There was a problem parsing the hour or minute of the clocktime. Failing gracefully.")
-
             # Check for a clock mode
             clockmode = query_components.get("clockmode", None)
             if clockmode == None:
@@ -237,7 +221,7 @@ class ServerHandler(BaseHTTPRequestHandler):
             # is the last puzzle in the list. If it is, open the last box
             elif(indexInSelectedList == len(self.selectedPuzzles)-1):
                 print("LAST ONE")
-                ConnectToESP(self.finalPuzzleBox["ip"], self.finalPuzzleBox["port"], "?latch=change", 5000)
+                ConnectToESPAsync(self.finalPuzzleBox["ip"], self.finalPuzzleBox["port"], "?latch=change", 5000)
             else:
                 # We dont need a try catch around this because we know the puzzle is meant to be solved
                 print(f"indexInSelectedList good puzzle: {indexInSelectedList}")
@@ -246,7 +230,7 @@ class ServerHandler(BaseHTTPRequestHandler):
                 lockboxIndex = self.findIndexInList(self.lockBoxes, "puzzleName", self.selectedPuzzles[indexOfNextPuzzle])
                 print(f'lockboxIndex: {lockboxIndex}')
                 boxToOpen = self.lockBoxes[lockboxIndex]
-                ConnectToESP(boxToOpen["ip"], boxToOpen["port"], "?latch=change", 5000)
+                ConnectToESPAsync(boxToOpen["ip"], boxToOpen["port"], "?latch=change", 5000)
                 print(f'Lockbox dict: {self.lockBoxes[lockboxIndex]}')
     
     def processHint(self):

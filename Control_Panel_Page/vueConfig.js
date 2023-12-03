@@ -1,4 +1,42 @@
 const SECONDS_UNTIL_STATUS_REFRESH = 5;
+const SOUND_EFFECTS = {
+  Scream : 1,
+  Footsteps : 2,
+  "Monster Footsteps":3,
+  "Scary Whispering":4
+}
+const LOCKBOXES = [
+  { // PCB-1
+    puzzleName:"dial",
+    ip:"192.168.1.127:1234",
+    status: "Unknown",
+    loading: false
+  },
+  { // PCB-2   192.168.1.242 on EscapeY2K and 10.0.0.155 at Jakes house
+    puzzleName:"bust",
+    ip:"192.168.1.242:1234",
+    status: "Unknown",
+    loading: false
+  }, 
+  { // PCB-3
+    puzzleName:"rando",
+    ip:"192.168.1.150:1234",
+    status: "Unknown",
+    loading: false
+  }, 
+  { // PCB-4
+    puzzleName:"plugboard",
+    ip:"192.168.1.143:1234",
+    status: "Unknown",
+    loading: false
+  }, 
+  { // PCB-5
+    puzzleName:"potentiometer",
+    ip:"192.168.1.54:1234",
+    status: "Unknown",
+    loading: false
+  }
+]
 
 const vue = new Vue({
   el: "#vue-root",
@@ -18,19 +56,6 @@ const vue = new Vue({
           status: "Starting",
           loading: false,
         },
-        lockbox: {
-          ipAddress: "192.168.1.127", //192.168.1.127 on EscapeY2K
-          port: "1234",
-          status: "Closed",
-          loading: false,
-        },
-        testModule: {
-          //This is essentially just a module for test
-          ipAddress: "10.0.0.225",
-          port: "1234",
-          status: "Off",
-          loading: false,
-        },
         tapePlayer: {
           ipAddress: "10.0.0.197", //10.0.0.197 at Jakes house, 192.168.1.211 on the escapey2k wifi
           port: "1234",
@@ -43,14 +68,8 @@ const vue = new Vue({
           status: "LEDS OFF",
           loading: false,
         },
-        pingModule: {
-          ipAddress: "10.0.0.94", // 10.0.0.94
-          port: "1234",
-          status: "pinging, I guess",
-          loading: false,
-        },
         miniPC: {
-          ipAddress: "10.0.0.64", // 192.168.1.211
+          ipAddress: "localhost", // 192.168.1.211
           port: "8001",
           status: "Off",
           loading: false,
@@ -68,11 +87,19 @@ const vue = new Vue({
 
       //General Stuff
       loading: false,
+      resetting: false,
+      lockboxes:LOCKBOXES,
+      lockboxesToShow: [],
+      puzzlesToBeSolved: [],
+      solvedPuzzles: [],
+
+      //Sound effect stuff
+      soundEffects: SOUND_EFFECTS,
 
       //Status Stuff
       statusLoading: false,
       timeUntilStatusRefresh: SECONDS_UNTIL_STATUS_REFRESH,
-      statusInvervalRunning: false,
+      statusIntervalRunning: false,
       statusIntervalTimer: null,
     };
   },
@@ -82,7 +109,7 @@ const vue = new Vue({
       const onOrOff = newMode ? "on" : "off";
       this.changeClockMode("manualOverride", onOrOff);
     },
-    statusInvervalRunning(newStatus) {
+    statusIntervalRunning(newStatus) {
       //Yes, these if statements should be this way
       if (newStatus) {
         if (!this.statusIntervalTimer) {
@@ -115,11 +142,11 @@ const vue = new Vue({
           }
         });
     },
-    sendESPMessage(module, message, state) {
+    sendESPMessage(module, message) {
       const vm = this;
       const esp = this.espModules[module];
 
-      fetch(`http://${esp.ipAddress}:${esp.port}?${message}=${state}`)
+      fetch(`http://${esp.ipAddress}:${esp.port}/${message}`)
         .then((resp) => resp.json())
         .then((apiObj) => {
           if (apiObj) {
@@ -132,38 +159,114 @@ const vue = new Vue({
           }
         });
     },
+    playSoundEffect(){
+      this.sendESPMessage("tapePlayer", `?play=${this.status.selectedSong}`)
+    },
+    sendLockboxMessage(lockbox, message) {
+      console.log(lockbox, message)
+      lockbox.loading = true;
+
+      fetch(`http://${lockbox.ip}?${message}`)
+        .then((resp) => resp.json())
+        .then((apiObj) => {
+          if (apiObj) {
+            if (apiObj.error) {
+              console.log("An unexpected error occured.");
+            }
+            else{
+              console.log(`Response from ${module}`, apiObj);
+              lockbox = apiObj.status ?? "Unknown"
+            }
+
+            lockbox.loading = false;
+          }
+        });
+    },
     getRoomStatus() {
       if (this.timeUntilStatusRefresh <= 0) {
         const vm = this;
         const esp = this.espModules.miniPC;
         this.statusLoading = true;
 
+        this.statusIntervalRunning = false;
+        
         //SIMULATE API CALL
-        setTimeout(() => {
-          vm.statusLoading = false;
-          vm.timeUntilStatusRefresh = SECONDS_UNTIL_STATUS_REFRESH + 1;
-        }, 2000);
+        // setTimeout(() => {
+        //   vm.statusLoading = false;
+        //   vm.timeUntilStatusRefresh = SECONDS_UNTIL_STATUS_REFRESH + 1;
+        // }, 2000);
 
-        // fetch(`http://${esp.ipAddress}:${esp.port}/status`)
-        //   .then((resp) => resp.json())
-        //   .then((apiObj) => {
-        //     if (apiObj) {
-        //       if (apiObj.error) {
-        //         console.log("An unexpected error occured.");
-        //       }
+        fetch(`http://${esp.ipAddress}:${esp.port}/status`)
+          .then((resp) => resp.json())
+          .then((apiObj) => {
+            if (apiObj) {
+              if (apiObj.error) {
+                console.log("An unexpected error occured.");
+              }
 
-        //       vm.status = apiObj.data;
-        //       vm.statusLoading = false;
-        //     }
-        //   })
-        //   .finally(() => vm.timeUntilStatusRefresh = SECONDS_UNTIL_STATUS_REFRESH);
+              console.log("apiObj status", apiObj.solved)
+              vm.puzzlesToBeSolved = apiObj.puzzlesToSolve
+              vm.solvedPuzzles = apiObj.solved ?? []
+              console.log(vm.solvedPuzzles)
+              vm.statusLoading = false;
+            }
+          })
+          .finally(() => vm.statusIntervalRunning = true);
       } else if (this.timeUntilStatusRefresh > 0) {
         this.timeUntilStatusRefresh--;
       }
+    },
+    showResetRoomModal(){
+      $(this.$refs.resetRoomModal).modal('show')
+    },
+    resetRoom(){
+      const vm = this;
+      const esp = this.espModules.miniPC;
+      this.resetting = true;
+
+      this.solvedPuzzles = []
+      this.puzzlesToSolve = []
+      this.puzzlesToSolve = []
+
+      fetch(`http://${esp.ipAddress}:${esp.port}/resetAndShuffle`)
+      .then((resp) => resp.json())
+      .then((apiObj) => {
+        if (apiObj) {
+          if (apiObj.error) {
+            console.log("An unexpected error occured.");
+          }
+
+          console.log('apiObj reset', apiObj)
+          
+          vm.puzzlesToBeSolved = apiObj.puzzlesToSolve
+          vm.resetting = false;
+
+          //Then sort the puzzles that are to be solved
+          vm.buildLockboxArrayForUser()
+        }
+      })
+
+      $(this.$refs.resetRoomModal).modal('hide')
     },
     runTest() {
       const lockbox = this.espModules.lockbox;
       console.log("lockbox", lockbox);
     },
+    buildLockboxArrayForUser(a, b){
+      this.lockboxesToShow = []
+      this.puzzlesToBeSolved.forEach((el, index) => {
+        console.log(el)
+        const lockbox = this.lockboxes.find(element => element.puzzleName == el)
+        // lockbox.orderNum = index
+        this.lockboxesToShow.push(lockbox)
+      })
+      // this.lockboxesToShow.sort((a, b) => a.orderNum > b.orderNum)
+      console.log(this.lockboxesToShow)
+    },
+    capitalizeFirstLetter(string) {
+      return string.charAt(0).toUpperCase() + string.slice(1);
+    }
   },
 });
+
+document.vm = vue
