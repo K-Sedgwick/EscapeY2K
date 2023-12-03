@@ -23,6 +23,20 @@ bool ledStatus = false;
 #define MP3_RX D4
 #define MP3_TX D3
 
+// ---- Sound Effect Indexes ----
+// 001 - spacejvke
+// 002 - knock
+// 003 - footsteps
+// 004 - growl
+// 005 - humming
+// 006 - monster footsteps
+// 007 - scream
+// 008 - whispering
+// 009 - rick
+// 011 - 
+// 012 - 
+// 013 - 
+
 // Define the required MP3 Player Commands:
 // Select storage device to TF card
 static int8_t select_SD_card[] = {0x7e, 0x03, 0X35, 0x01, 0xef}; // 7E 03 35 01 EF
