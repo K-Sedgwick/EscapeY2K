@@ -1,17 +1,28 @@
 // Load Required libraries
 #include <string.h>
-#include <ESP8266WiFi.h>
 #include <SoftwareSerial.h>
+#include <ESP8266WiFi.h>
+#include <ESP8266HTTPClient.h>
+#include <WiFiClient.h>
 
+//ESP pins
+#define D0 16
 #define D1 5
 #define D2 4
 #define D3 0
 #define D4 2
+#define D5 14
+#define D6 12
+#define D7 13
+#define D8 15
+#define TXPIN 1
+#define RXPIN 3
 
 // ---- WIFI SECTION ----
 const char *ssid = "EscapeY2K";//EscapeY2K
 const char *password = "caNY0u3scAp3?!";//caNY0u3scAp3?!
 WiFiServer server(1234);
+String tvIP = "192.168.1.211:8001"; // 10.0.0.64 at Jakes house
 
 // ---- GENERAL SECTION ----
 unsigned long currentTime = millis();
@@ -38,6 +49,8 @@ bool ledStatus = false;
 // 012 - 
 // 013 - 
 
+bool solved = false;
+
 // Define the required MP3 Player Commands:
 // Select storage device to TF card
 static int8_t select_SD_card[] = {0x7e, 0x03, 0X35, 0x01, 0xef}; // 7E 03 35 01 EF
@@ -53,6 +66,8 @@ static int8_t volUp[] = {0x7e, 0x02, 0x05, 0xef};
 static int8_t volDown[] = {0x7e, 0x02, 0x06, 0xef};
 // Set Volume
 static int8_t volMin[] = {0x7e, 0x03, 0x31, 0x01, 0xef};
+//Set Volume 15
+static int8_t volMid[] = {0x7e, 0x03, 0x31, 0x0F, 0xef};
 
 // Define the Serial MP3 Player Module.
 SoftwareSerial MP3(MP3_RX, MP3_TX);
@@ -76,6 +91,8 @@ void setup()
 	// send_command_to_MP3_player(volMin, 5);
   // send_command_to_MP3_player(play_default_song, 6);
 
+  pinMode(D1, INPUT_PULLUP);
+
 	//Setup pin for LED so we can test stuff
 	pinMode(LED_BUILTIN, OUTPUT); 
 	digitalWrite(LED_BUILTIN, HIGH); // Turn the LED off
@@ -89,6 +106,13 @@ void loop()
 	{
 		handleClientConnected(rcvClient);
 	}
+
+  int phone = digitalRead(D1);
+  if(phone == LOW && solved == false){
+    Serial.println("Phone on base");
+    sendMessageToESP("solved=phone", tvIP);
+    solved = true;
+  }
 
   //Add in other functionality here if you so desire
   //This will run once every TickTimeDelays
@@ -188,6 +212,7 @@ void handleClientConnected(WiFiClient rcvClient)
 					{
   					send_command_to_MP3_player(pause, 4);
 						send_command_to_MP3_player(volMid, 5);
+            solved = false;
             fullMessage = fullMessage + ",\"volume\":\"15\",\"reset\":\"true\"";
 					}
 
@@ -223,6 +248,55 @@ void handleClientConnected(WiFiClient rcvClient)
 	rcvClient.stop();
 	//Serial.println("Client disconnected.");
 	//Serial.println("");
+}
+
+/// @brief This simplifies sending a message to a server.
+/// @param command What do you want to tell the server? Dont include the "/?" at the beginning, but if you're going to do a long query dont forget to add the extra "&" signs.
+/// @param address IP Address of the ESP module you want to communicate with. "IP:PORT"
+/// @return The string response that was retrieved from the server or an error message if an error occured.
+String sendMessageToESP(String command, String address)
+{
+	String response = "";
+
+	// Check WiFi connection status
+	if (WiFi.status() == WL_CONNECTED)
+	{
+		WiFiClient sendClient;
+		HTTPClient http;
+
+		String serverPath = "http://" + address + "/?" + command;
+
+		// Your Domain name with URL path or IP address with path
+		http.begin(sendClient, serverPath.c_str());
+
+    //Change timeout so its not so long (5 seconds for now, maybe change later)
+    http.setTimeout(5000);
+		// Send HTTP GET request
+		int httpResponseCode = http.GET();
+
+		if (httpResponseCode > 0)
+		{
+			Serial.print("HTTP Response code: ");
+			Serial.println(httpResponseCode);
+			response = http.getString();
+			Serial.println(response);
+		}
+		else
+		{
+			Serial.print("Error code: ");
+			Serial.println(httpResponseCode);
+			response = "An error occured. Please try again. Error code: " + httpResponseCode;
+		}
+		// Free resources
+		http.end();
+	}
+	else
+	{
+		Serial.println("WiFi Disconnected");
+		response = "This ESP has been disconnected from WiFi.";
+	}
+
+	return response;
 }
 
 void send_command_to_MP3_player(int8_t command[], int len){
