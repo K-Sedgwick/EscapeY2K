@@ -33,7 +33,8 @@ bool ledStatus = false;
 // 007 - scream
 // 008 - whispering
 // 009 - rick
-// 011 - 
+// 010 - Unused
+// 011 - garble
 // 012 - 
 // 013 - 
 
