@@ -2,8 +2,13 @@
   display: none;
 }
 
-.solved{
+.solved, .linked{
   border: 1px solid rgb(101, 212, 144);
+}
+
+.not-linked{
+  color: #575757;
+  border-color: rgb(182, 62, 62);
 }
 
 .dual-ring-load {

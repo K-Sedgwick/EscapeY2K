@@ -9,8 +9,8 @@
 #define D4 2
 
 // ---- WIFI SECTION ----
-const char *ssid = "Whitefire";//EscapeY2K
-const char *password = "R00tb33R";//caNY0u3scAp3?!
+const char *ssid = "EscapeY2K";//EscapeY2K
+const char *password = "caNY0u3scAp3?!";//caNY0u3scAp3?!
 WiFiServer server(1234);
 
 // ---- GENERAL SECTION ----
@@ -61,20 +61,20 @@ SoftwareSerial MP3(MP3_RX, MP3_TX);
 
 void setup()
 {
-	// start serial connection
-	connectToWifi();
-
 	//Setup serial communication
 	Serial.begin(115200);
+
+	// start serial connection
+	connectToWifi();
 
   // Initiate the Serial MP3 Player Module.
   MP3.begin(9600);
 
 	// Select the SD Card.
-  send_command_to_MP3_player(select_SD_card, 6);
-	//And turn the volume down because I think it starts at max volume
-	send_command_to_MP3_player(volMin, 5);
-  send_command_to_MP3_player(play_default_song, 6);
+  // send_command_to_MP3_player(select_SD_card, 6);
+	// //And turn the volume down because I think it starts at max volume
+	// send_command_to_MP3_player(volMin, 5);
+  // send_command_to_MP3_player(play_default_song, 6);
 
 	//Setup pin for LED so we can test stuff
 	pinMode(LED_BUILTIN, OUTPUT); 
@@ -232,16 +232,16 @@ void send_command_to_MP3_player(int8_t command[], int len){
 void connectToWifi()
 {
 	// Connect to Wi-Fi network with SSID and password
-	//Serial.print("Connecting to ");
-	//Serial.println(ssid);
+	Serial.print("Connecting to ");
+	Serial.println(ssid);
 	WiFi.begin(ssid, password);
 	while (WiFi.status() != WL_CONNECTED)
 	{
 		delay(500);
-		//Serial.print(".");
+		Serial.print(".");
 	}
 	// Print local IP address and start web server
-	//Serial.println("");
+	Serial.println("");
 	Serial.println("WiFi connected.");
 	Serial.println("IP address: ");
 	Serial.println(WiFi.localIP());

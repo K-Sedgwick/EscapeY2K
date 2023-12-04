@@ -44,7 +44,8 @@ const vue = new Vue({
     return {
       // This is the status of the room, tracked by the Mini PC
       status: {
-        selectedSong: 1,
+        selectedTapeEffect: 1,
+        selectedPhoneEffect: 1,
         currentTime: 0,
         clockmode: "Unknown",
       },
@@ -57,13 +58,19 @@ const vue = new Vue({
           loading: false,
         },
         tapePlayer: {
-          ipAddress: "10.0.0.197", //10.0.0.197 at Jakes house, 192.168.1.211 on the escapey2k wifi
+          ipAddress: "192.168.1.212", //10.0.0.197 at Jakes house, 192.168.1.212 on the escapey2k wifi
+          port: "1234",
+          status: "Paused",
+          loading: false,
+        },
+        phoneBase: {
+          ipAddress: "192.168.1.151", //10.0.0.197 at Jakes house, 192.168.1.151 on the escapey2k wifi
           port: "1234",
           status: "Paused",
           loading: false,
         },
         dialPuzzle: {
-          ipAddress: "10.0.0.225", //10.0.0.225, 192.168.1.225
+          ipAddress: "192.168.1.225", //10.0.0.225, 192.168.1.225
           port: "1234",
           status: "LEDS OFF",
           loading: false,
@@ -75,7 +82,7 @@ const vue = new Vue({
           loading: false,
         },
         irReceiver: {
-          ipAddress: "10.0.0.181",
+          ipAddress: "192.168.1.181", //10.0.0.181 at Jakes house, 192.168.1.181 on EscapeY2K
           port: "1234",
           status: "Off",
           loading: false,
@@ -95,6 +102,7 @@ const vue = new Vue({
 
       //Sound effect stuff
       soundEffects: SOUND_EFFECTS,
+      soundEffectsLinked: false,
 
       //Status Stuff
       statusLoading: false,
@@ -120,7 +128,7 @@ const vue = new Vue({
         this.statusIntervalTimer = null;
         this.timeUntilStatusRefresh = SECONDS_UNTIL_STATUS_REFRESH;
       }
-    },
+    }
   },
 
   methods: {
@@ -159,8 +167,21 @@ const vue = new Vue({
           }
         });
     },
-    playSoundEffect(){
-      this.sendESPMessage("tapePlayer", `?play=${this.status.selectedSong}`)
+    playTapePlayerSoundEffect(){
+      if(this.soundEffectsLinked === true){
+        this.sendESPMessage("phoneBase", `?play=${this.status.selectedTapeEffect}`)
+      }
+      
+      this.sendESPMessage("tapePlayer", `?play=${this.status.selectedTapeEffect}`)
+    },
+    playPhoneSoundEffect(){
+      if(this.soundEffectsLinked === true){
+        this.sendESPMessage("phoneBase", `?play=${this.status.selectedTapeEffect}`)
+        this.sendESPMessage("tapePlayer", `?play=${this.status.selectedTapeEffect}`)
+      }
+      else{
+        this.sendESPMessage("phoneBase", `?play=${this.status.selectedPhoneEffect}`)
+      }
     },
     sendLockboxMessage(lockbox, message) {
       // console.log(lockbox, message)
