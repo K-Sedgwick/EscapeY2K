@@ -10,23 +10,28 @@ const int ledFour = A4;
 const int wrongPin = 10;
 const int correctPin = 11;
 
-#define numLEDS 5
-int ledPins [numLEDS] = {ledZero, ledOne, ledTwo, ledThree, ledFour};
+#define numLEDS 4
+int ledPins [numLEDS] = {ledZero, ledOne, ledTwo, ledThree};
 
 const byte ROWS = 4; 
 const byte COLS = 4;
 char previousKey = ' ';
 int charsEntered = 0;
-char combo [numLEDS] = {' ', ' ', ' ', ' ', ' '};
+char combo [numLEDS] = {' ', ' ', ' ', ' '};
 
-#define numCombos 5
+#define numCombos 10
 // These are the combos that are correct!
-char successfulCombos[numLEDS][numCombos] = {
-  {'A', '3', 'B', '2', '9'},
-  {'7', '3', '9', 'C', 'D'},
-  {'A', '5', '3', '0', '1'},
-  {'7', '2', 'B', '0', '1'},
-  {'4', '6', '8', 'D', 'C'},
+char successfulCombos[numCombos][numLEDS] = {
+  {'2', '3', '9', '2'},
+  {'7', '3', '9', '5'},
+  {'6', '5', '3', '0'},
+  {'7', '2', '1', '0'},
+  {'4', '6', '8', '4'},
+  {'3', '5', '1', '4'},
+  {'1', '0', '7', '1'},
+  {'7', '6', '2', '4'},
+  {'1', '8', '5', '0'},
+  {'1', '2', '3', '4'}
 };
 
 // ---- GENERAL SECTION ----
@@ -90,7 +95,7 @@ void handlePressLogic(char pressedKey){
       reset();
     }
     //# means submit
-    else if(pressedKey == '#' && charsEntered == 5){
+    else if(pressedKey == '#' && charsEntered == numLEDS){
       Serial.println("Send data");
       bool success = checkCombo();
       if(success == true){
@@ -135,11 +140,16 @@ bool checkCombo(){
       // Serial.print(" - ");
       // Serial.print(combo[j]);
       if(successCount == numLEDS){
+        //TODO: Remove that combo from the array of combinations
         success = true;
         break;
       }
       else if(successfulCombos[i][j] == combo[j]){
         successCount++;
+        if(successCount == numLEDS){
+          Serial.print(successfulCombos[i][j]);
+          successfulCombos[i][j] = 'u';
+        }
         continue;
       }
       
@@ -250,11 +260,11 @@ void passTheLight(){
       digitalWrite(ledFour, HIGH);
       ledStep = 0;
       break;
-    case 5:
-      digitalWrite(ledFour, LOW);
-      digitalWrite(ledZero, HIGH);
-      ledStep = 0;
-      break;
+    // case 5:
+    //   digitalWrite(ledFour, LOW);
+    //   digitalWrite(ledZero, HIGH);
+    //   ledStep = 0;
+    //   break;
     default:
       resetLEDS();
       ledStep = 0;
