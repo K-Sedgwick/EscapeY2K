@@ -30,7 +30,7 @@ ending = vlc.Media(f"{VIDEO_DIR}/ending.mp4")
 playlist = vlc.MediaList([game, midnight, dark, timetravel, seek, monster, ending])
     
 # Game timer setup
-BEGINNING_TIME = 600
+BEGINNING_TIME = 300
 SECOND_UPDATE = 1
 DEPLETION_UPDATE = 0.2
     
