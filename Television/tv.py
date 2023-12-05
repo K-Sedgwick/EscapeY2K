@@ -1,5 +1,5 @@
 # Server Imports
-from server import InitiateServer
+from server2 import InitiateServer, ConnectToESPAsync
 
 # Video Imports
 import threading
@@ -53,7 +53,7 @@ def set_loop(player, shouldLoop):
 def set_video_game_time(parent_conn):
     if (parent_conn.poll()):
         rotaryCounter = parent_conn.recv()
-        desiredTime = rotaryCounter*2
+        desiredTime = rotaryCounter*2.5
         game.add_option(f"start-time={desiredTime}")
         play_video(game)
         game.add_option("start-time=0")
@@ -64,32 +64,37 @@ def update_timer():
     game_timer -= 1
     timer_string = str(int(game_timer / 60)) + ':' + "{0:0=2d}".format(game_timer % 60)
     list(map(lambda list_player: list_player.get_media_player().video_set_marquee_string(vlc.VideoMarqueeOption.Text, vlc.str_to_bytes(timer_string)), list_players))
+    
+    if (not timer_active):
+        return
+    
     if (game_timer > 0):
         threading.Timer(timer_update, update_timer).start()
+    else:
+        # When the game timer is active and reaches 0, game over
+        ConnectToESPAsync("192.168.1.211", 8001, "gameover")
     
 def start_timer():
-    print("hello")
-    stop_timer() # Stop a timer if it is currently running
     global game_timer
     global timer_update
+    global timer_active
+    close_timer() # Stop a timer if it is currently running
+    timer_active = True
     game_timer = BEGINNING_TIME + 1
     timer_update = SECOND_UPDATE
     list(map(lambda list_player: list_player.get_media_player().video_set_marquee_int(vlc.VideoMarqueeOption.Enable, 1), list_players))
     update_timer()
     
-def stop_timer():
-    global game_timer
+def close_timer():
     global starting_thread_count
-    game_timer = 0
+    global timer_active
+    timer_active = False
     list(map(lambda list_player: list_player.get_media_player().video_set_marquee_int(vlc.VideoMarqueeOption.Enable, 0), list_players))
     while (threading.active_count() > starting_thread_count): pass # Wait for threads to close
     
 def add_minute():
     global game_timer
     game_timer += 60
-    
-def deplete_timer(hotkey):
-    while keyboard.is_pressed(hotkey): pass
     
 # Make sure we have a main function :)
 if __name__ == '__main__':
@@ -145,7 +150,7 @@ if __name__ == '__main__':
     keyboard.add_hotkey('9', lambda: list(map(lambda list_player: list_player.get_media_player().set_position(0.9), list_players)))
 
     keyboard.add_hotkey('[', lambda: start_timer())
-    keyboard.add_hotkey(']', lambda: stop_timer())
+    keyboard.add_hotkey(']', lambda: close_timer())
     keyboard.add_hotkey('a', lambda: add_minute())
 
     starting_thread_count = threading.active_count()
@@ -156,9 +161,23 @@ if __name__ == '__main__':
         current_mrl = check_player.get_media().get_mrl()
         if (current_mrl == midnight.get_mrl()):
             if (check_player.get_position() > 0.98): list(map(lambda list_player: list_player.get_media_player().set_position(0.1), list_players))
-        elif (current_mrl == seek.get_mrl()):
-            if (check_player.get_position() > 0.5): play_video(game)
         elif (current_mrl == ending.get_mrl()):
             if (check_player.get_position() > 0.99): play_video(dark)
               
     serverProcess.terminate()
+
+#   Game Flow
+#   
+#   Start game with timer
+#   Every ten ticks, send tick signal
+#   Every time going back to game, send tick signal
+#   At max ticks, send midnight signal (or send tick signal)
+#   At 60-90 ticks, 2% chance on each tick to summon monster
+#       Play footsteps sound, after 5 seconds send seek signal and pause clock
+#       Seek should play for 15 seconds IN TOTAL
+#       When motion detected, send monster signal (Not sure how long)
+#           When no longer motion detected, send seek signal
+#       After 15 total seconds of seek, send tick signal and continue clock
+#   
+#   When receiving gameover signal, send static signal
+#   When game is finished, send ending signal and close timer
