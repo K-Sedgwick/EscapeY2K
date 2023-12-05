@@ -70,7 +70,7 @@ void handleLatchLogic(){
         }
         else
         {
-            servoPos = 90;
+            servoPos = 120;
         }
         latchServo.write(servoPos);
         delay(250);
@@ -86,7 +86,7 @@ String changeBoxState(){
   delay(10);
   if (buttonState == 1)
   {
-      servoPos = 00;
+      servoPos = 0;
       latchServo.write(servoPos);
       delay(250);
       digitalWrite(relayPin, HIGH);
@@ -94,11 +94,11 @@ String changeBoxState(){
   }
   else
   {
-      servoPos = 90;
+      servoPos = 120;
       latchServo.write(servoPos);
       state = "Closed";
   }
-  delay(10);
+  delay(250);
   digitalWrite(relayPin, LOW);
   return state;
 }

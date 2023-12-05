@@ -27,8 +27,8 @@ bool sentCorrect = false;
 bool sentWrong = false;
 
 // ---- WIFI SECTION ----
-const char *ssid = "Whitefire";//EscapeY2K
-const char *password = "R00tb33R";//caNY0u3scAp3?!
+const char *ssid = "EscapeY2K";//EscapeY2K
+const char *password = "caNY0u3scAp3?!";//caNY0u3scAp3?!
 WiFiServer server(1234);
 
 String tvIP = "192.168.1.211:8001"; // 10.0.0.64:8001 at Jakes house, 192.168.1.211:8001 on Y2K
