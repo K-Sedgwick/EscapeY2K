@@ -24,10 +24,11 @@ midnight = vlc.Media(f"{VIDEO_DIR}/midnight.mp4")
 seek = vlc.Media(f"{VIDEO_DIR}/seek.mp4")
 monster = vlc.Media(f"{VIDEO_DIR}/monster.mp4")
 ending = vlc.Media(f"{VIDEO_DIR}/ending.mp4")
+gameover = vlc.Media(f"{VIDEO_DIR}/gameover.mp4")
 
 # The order of the playlist is crucial
 # MAKE SURE 'game' IS ALWAYS BEFORE 'midnight'
-playlist = vlc.MediaList([game, midnight, dark, timetravel, seek, monster, ending])
+playlist = vlc.MediaList([game, midnight, dark, timetravel, seek, monster, ending, gameover])
     
 # Game timer setup
 BEGINNING_TIME = 300
@@ -72,6 +73,7 @@ def update_timer():
         threading.Timer(timer_update, update_timer).start()
     else:
         # When the game timer is active and reaches 0, game over
+        play_video(dark)
         ConnectToESPAsync("192.168.1.211", 8001, "gameover")
     
 def start_timer():
@@ -135,6 +137,7 @@ if __name__ == '__main__':
     keyboard.add_hotkey('f', lambda: play_video(midnight))
     keyboard.add_hotkey('s', lambda: play_video(seek))
     keyboard.add_hotkey('e', lambda: play_video(ending))
+    keyboard.add_hotkey('z', lambda: play_video(gameover))
     keyboard.add_hotkey('w', lambda: play_video(timetravel))
 
     keyboard.add_hotkey('u', lambda: set_video_game_time(parent_conn))
@@ -161,7 +164,7 @@ if __name__ == '__main__':
         current_mrl = check_player.get_media().get_mrl()
         if (current_mrl == midnight.get_mrl()):
             if (check_player.get_position() > 0.98): list(map(lambda list_player: list_player.get_media_player().set_position(0.1), list_players))
-        elif (current_mrl == ending.get_mrl()):
+        elif (current_mrl == ending.get_mrl() or current_mrl == gameover.get_mrl()):
             if (check_player.get_position() > 0.99): play_video(dark)
               
     serverProcess.terminate()
