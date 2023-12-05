@@ -203,6 +203,27 @@
                 </div>
             </div>
         </div>
+        <div class="accordion">
+            <div class="text-center border rounded" style="background-color: #ffffff; overflow: hidden;">
+                <h2 data-toggle="collapse" data-target="#otherLockboxes" aria-expanded="false" aria-controls="otherLockboxes">Other Lockboxes <span id="carat" style="font-size: 15px;">&#9660;</span></h2>
+            </div>
+            <div id="otherLockboxes" class="row">
+                <div v-for="(lockbox, index) in lockboxesNotInRotation" class="col">
+                    <div class="m-3 text-center card">
+                        <div class="card-header">
+                            <h3>{{capitalizeFirstLetter(lockbox.puzzleName)}}</h3>
+                            <div :class="{'dual-ring-load':true, 'd-none':!lockbox.loading}" style="top: 0px; left: 5px;"></div>
+                        </div>
+                        <div class="card-body">
+                            <div class="mt-2">
+                                <button class="btn btn-dark" @click="sendLockboxMessage(lockbox, 'latch=change')"
+                                :disabled="lockbox.loading">Activate Box</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="modal fade" ref="resetRoomModal" tabindex="-1">
             <div class="modal-dialog">
               <div class="modal-content">

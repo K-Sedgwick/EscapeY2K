@@ -97,6 +97,7 @@ const vue = new Vue({
       resetting: false,
       lockboxes:LOCKBOXES,
       lockboxesToShow: [],
+      lockboxesNotInRotation: [],
       puzzlesToBeSolved: [],
       solvedPuzzles: [],
 
@@ -243,8 +244,7 @@ const vue = new Vue({
       this.resetting = true;
 
       this.solvedPuzzles = []
-      this.puzzlesToSolve = []
-      this.puzzlesToSolve = []
+      this.puzzlesToBeSolved = []
 
       fetch(`http://${esp.ipAddress}:${esp.port}/resetAndShuffle`)
       .then((resp) => resp.json())
@@ -267,6 +267,7 @@ const vue = new Vue({
       $(this.$refs.resetRoomModal).modal('hide')
     },
     buildLockboxArrayForUser(a, b){
+      //First, build the array of lockboxes that are in this rotation
       this.lockboxesToShow = []
       this.puzzlesToBeSolved.forEach((el, index) => {
         // console.log(el)
@@ -274,13 +275,16 @@ const vue = new Vue({
         // lockbox.orderNum = index
         this.lockboxesToShow.push(lockbox)
       })
-      // this.lockboxesToShow.sort((a, b) => a.orderNum > b.orderNum)
-      // console.log(this.lockboxesToShow)
+      //Then, build the array of boxes that are not in this rotation
+      this.lockboxesNotInRotation = this.lockboxes.filter(box => !this.puzzlesToBeSolved.includes(box.puzzleName))
     },
     capitalizeFirstLetter(string) {
       return string.charAt(0).toUpperCase() + string.slice(1);
     }
   },
+  mounted(){
+    this.lockboxesNotInRotation = this.lockboxes.filter(box => !this.puzzlesToBeSolved.includes(box.puzzleName))
+  }
 });
 
 document.vm = vue
