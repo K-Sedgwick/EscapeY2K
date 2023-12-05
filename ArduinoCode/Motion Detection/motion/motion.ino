@@ -1,46 +1,119 @@
+#include <IRremote.h>
+
+// Load Wi-Fi library
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
 #include <WiFiClient.h>
 
-/*
- * PIR sensor tester
- */
+// ESP pins
+#define D0 16
+#define D1 5
+#define D2 4
+#define D3 0
+#define D4 2
+#define D5 14
+#define D6 12
+#define TXPIN 1
+#define RXPIN 3
 
- //THIS TV IP MIGHT BE WRONG
-String tvIP = "192.168.1.211:8001"; // 10.0.0.64 at Jakes house
+// ---- WIFI SECTION ----
+const char *ssid = "EscapeY2K";//EscapeY2K
+const char *password = "caNY0u3scAp3?!";//caNY0u3scAp3?!
+WiFiServer server(1234);
+
+// IR Stuff
+#define IR_RECEIVE_PIN D1
+String previousCmd = "Unknown";
+
+String tvIp = "192.168.1.211:8001"; // 10.0.0.64 at Jakes house
  
-int ledPin = 13;                // choose the pin for the LED
-int inputPin = 2;               // choose the input pin (for PIR sensor)
+int inputPin = D4;               // choose the input pin (for PIR sensor)
 int pirState = LOW;             // we start, assuming no motion detected
 int val = 0;                    // variable for reading the pin status
+String status = "NOT seeking";
+
+bool seek = false;				// No reason to check the motion sensor if we dont have to
  
 void setup() {
-  pinMode(ledPin, OUTPUT);      // declare LED as output
-  pinMode(inputPin, INPUT);     // declare sensor as input
  
-  Serial.begin(9600);
-  Serial.println("Start");
+	Serial.begin(9600);
+	connectToWifi();
+
+	IrReceiver.begin(IR_RECEIVE_PIN);
+	pinMode(inputPin, INPUT);     // declare sensor as input
 }
  
 void loop(){
-  val = digitalRead(inputPin);  // read input value
-  if (val == HIGH) {            // check if the input is HIGH
-    digitalWrite(ledPin, HIGH);  // turn LED ON
-    if (pirState == LOW) {
+
+	WiFiClient rcvClient = server.available(); // Listen for incoming clients
+
+	if (rcvClient)
+	{
+		handleClientConnected(rcvClient);
+	}
+
+	handleIRLogic();
+	handleSensorLogic();
+
+	// Add in other functionality here if you so desire
+	// This will run once every TickTimeDelays
+	//  if ((millis() - previousTime) > TickDelayTime)
+	//  {
+	//    //DONT REMOVE THIS LINE! Its super important
+	//    previousTime = millis();
+
+	// }
+}
+
+// Helper methods
+void handleIRLogic()
+{
+	if (IrReceiver.decode())
+	{
+		IrReceiver.resume();
+		int cmd = IrReceiver.decodedIRData.command;
+		if (cmd == 21 && previousCmd != "Play")
+		{
+			previousCmd = "Play";
+			Serial.println(previousCmd);
+      sendMessageToESP("clockmode=tick", tvIp);
+		}
+		else if (cmd == 25 && previousCmd != "Reverse")
+		{
+			previousCmd = "Reverse";
+			Serial.println(previousCmd);
+      sendMessageToESP("clockmode=reverse", tvIp);
+		}
+		else if (cmd == 19 && previousCmd != "Fast forward")
+		{
+			previousCmd = "Fast forward";
+			Serial.println(previousCmd);
+      sendMessageToESP("clockmode=fastForward", tvIp);
+		}
+	}
+}
+
+
+void handleSensorLogic(){
+	if(seek){
+    val = digitalRead(inputPin);  // read input value
+    if (val == HIGH) {            // check if the input is HIGH
+      if (pirState == LOW) {
       // we have just turned on
       Serial.println("Motion detected!");
       // We only want to print on the output change, not state
       pirState = HIGH;
-      sendMessageToESP("monster=on", tvIP)
+      sendMessageToESP("monster=true", tvIp);
+      }
     }
-  } else {
-    digitalWrite(ledPin, LOW); // turn LED OFF
-    if (pirState == HIGH){
+    else {
+      if (pirState == HIGH){
       // we have just turned of
       Serial.println("Motion ended!");
       // We only want to print on the output change, not state
       pirState = LOW;
-      sendMessageToESP("monster=seek", tvIP)
+      sendMessageToESP("monster=seek", tvIp);
+      }
     }
   }
 }
@@ -119,9 +192,15 @@ void handleClientConnected(WiFiClient rcvClient)
 				// that's the end of the client HTTP request, so send a response:
 				if (currentLine.length() == 0)
 				{
-					if (header.indexOf("GET /?command=action") >= 0)
+					if (header.indexOf("GET /?seek=true") >= 0)
 					{
-						//TODO: Decide if we have to do anything
+						seek = true;
+            status = "seeking";
+					}
+					else if (header.indexOf("GET /?seek=false") >= 0)
+					{
+						seek = false;
+            status = "NOT seeking";
 					}
 
           String fullMessage = "{\"status\":\"" + status + "\"}";
