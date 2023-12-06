@@ -165,7 +165,7 @@ if __name__ == '__main__':
         if (current_mrl == midnight.get_mrl()):
             if (check_player.get_position() > 0.98): list(map(lambda list_player: list_player.get_media_player().set_position(0.1), list_players))
         elif (current_mrl == ending.get_mrl() or current_mrl == gameover.get_mrl()):
-            if (check_player.get_position() > 0.99): play_video(dark)
+            if (check_player.get_position() > 0.98): play_video(dark)
               
     serverProcess.terminate()
 
