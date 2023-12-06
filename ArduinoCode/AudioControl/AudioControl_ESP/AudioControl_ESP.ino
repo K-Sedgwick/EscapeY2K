@@ -187,7 +187,7 @@ void handleClientConnected(WiFiClient rcvClient)
           else if (header.indexOf("GET /reset") >= 0)
 					{
   					send_command_to_MP3_player(pause, 4);
-						send_command_to_MP3_player(volMid, 5);
+						send_command_to_MP3_player(volMin, 5);
             fullMessage = fullMessage + ",\"volume\":\"15\",\"reset\":\"true\"";
 					}
 
