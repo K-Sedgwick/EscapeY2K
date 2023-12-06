@@ -18,11 +18,11 @@ const int reset = 6;
 // The pins coming out the back of the enclosure are as follows:
 // SQUARE Red: 5V OUT (to ESP)
 // YELLOW: Ground
-// GREEN: Reset
+// GREEN: Reset (active low)
 // CIRCLE Red: Output
 // CIRCLE White: Enable
 
-bool enabled = 0;
+int enabled = 0;
 
 void setup() {
   // put your setup code here, to run once:
@@ -54,10 +54,10 @@ void loop() {
   {
     enabled = 1;
   }
-  if(digitalRead(reset) == LOW)
-  {
-    enabled = 0;
-  }
+  //if(digitalRead(reset) == LOW)
+  //{
+  //  enabled = 0;
+  //}
 
   //Serial.println(read1);
   //Serial.println(read2);
@@ -74,9 +74,7 @@ void loop() {
   {
     out1 = LOW;
   }
-
-  digitalWrite(LED_2, out1);
-
+  
   if(read2 > 600 && read2 < 700)
   {
     out2 = HIGH;
@@ -85,9 +83,6 @@ void loop() {
   {
     out2 = LOW;
   }
-
-  digitalWrite(LED_3, out2);
-  delay(50);
 
   if(read3 > 700 && read3 < 800)
   {
@@ -98,6 +93,8 @@ void loop() {
     out3 = LOW;
   }
 
+  digitalWrite(LED_2, out1);
+  digitalWrite(LED_3, out2);
   digitalWrite(LED_4, out3);
 
   if(enabled && out1 && out2 && out3)
