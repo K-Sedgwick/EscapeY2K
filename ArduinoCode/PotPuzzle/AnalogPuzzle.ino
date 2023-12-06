@@ -12,6 +12,17 @@ const int LED_4 = 11;
 const int LED_final = 12;
 
 const int output = 13;
+const int enable = 7; // The enable is going to be active LOW for the arduino uno puzzles.
+const int reset = 6;
+
+// The pins coming out the back of the enclosure are as follows:
+// SQUARE Red: 5V OUT (to ESP)
+// YELLOW: Ground
+// GREEN: Reset
+// CIRCLE Red: Output
+// CIRCLE White: Enable
+
+bool enabled = 0;
 
 void setup() {
   // put your setup code here, to run once:
@@ -21,13 +32,16 @@ void setup() {
   pinMode(LED_3, OUTPUT);
   pinMode(LED_4, OUTPUT);
   pinMode(LED_final, OUTPUT);
+  pinMode(enable, INPUT);
+  pinMode(reset, INPUT);
+  enabled = 0;
 
   digitalWrite(LED_initial, HIGH);
   digitalWrite(LED_2, out1);
   digitalWrite(LED_3, out2);
   digitalWrite(LED_4, out3);
   digitalWrite(LED_final, LOW);
-  digitalWrite(output, HIGH;)
+  digitalWrite(output, HIGH);
 }
 
 void loop() {
@@ -36,12 +50,21 @@ void loop() {
   read2 = analogRead(A1);
   read3 = analogRead(A2);
 
-  Serial.println(read1);
-  Serial.println(read2);
-  Serial.println(read3);
-  Serial.println("");
-  Serial.println(out1 && out2 && out3);
-  Serial.println("");
+  if(digitalRead(enable) == LOW)
+  {
+    enabled = 1;
+  }
+  if(digitalRead(reset) == LOW)
+  {
+    enabled = 0;
+  }
+
+  //Serial.println(read1);
+  //Serial.println(read2);
+  //Serial.println(read3);
+  //Serial.println("");
+  //Serial.println(out1 && out2 && out3);
+  //Serial.println("");
 
   if(read1 > 400 && read1 < 500)
   {
@@ -56,7 +79,7 @@ void loop() {
 
   if(read2 > 600 && read2 < 700)
   {
-    out2= HIGH;
+    out2 = HIGH;
   }
   else
   {
@@ -77,7 +100,7 @@ void loop() {
 
   digitalWrite(LED_4, out3);
 
-  if(out1 && out2 && out3)
+  if(enabled && out1 && out2 && out3)
   {
     digitalWrite(LED_final, HIGH);
     digitalWrite(output, LOW);
