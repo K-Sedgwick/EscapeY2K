@@ -18,8 +18,8 @@
 #define RXPIN 3
 
 // ---- WIFI SECTION ----
-const char *ssid = "EscapeY2K";//EscapeY2K
-const char *password = "caNY0u3scAp3?!";//caNY0u3scAp3?!
+const char *ssid = "Whitefire";//EscapeY2K
+const char *password = "R00tb33R";//caNY0u3scAp3?!
 WiFiServer server(1234);
 
 String tvIP = "192.168.1.211:8001"; // 10.0.0.64 at Jakes house
@@ -28,13 +28,14 @@ String snowflakeIP = "192.168.1.59:1234"; //10.0.0.174:1234 at jakes house
 // ---- GENERAL SECTION ----
 unsigned long currentTime = millis();
 unsigned long previousTime = 0;
-const long TickDelayTime = 200;
+const long TickDelayTime = 1000;
 
 // ---- Puzzle Stuff ----
 String status = "Unsolved";
 bool solved1 = false;
 bool solved2 = false;
-bool solved3 = false;
+
+bool tooLazyToNameThisSomethingAccurate = false;
 
 //Plugboard pin declaration FOR PUZZLE 1
 const int plug1Pin = D1;
@@ -82,25 +83,27 @@ void loop() {
   if(solved1 == false){
     patternLogic();
   }
-  else if(solved1 == true && solved2 == true && solved3 == false){
+  else if(solved1 == true && solved2 == false){
     checkFourthPlug();
-  }
-  else if(solved3 == true){
-    allOn();
-    delay(500);
-    resetLEDS();
-    delay(500);
   }
   
 
   //This is just for ticking
-  // if ((millis() - previousTime) > TickDelayTime)
-  // {
-  //   previousTime = millis();
-
-  //   //Check for solved stuff
-    
-  // }
+  if ((millis() - previousTime) > TickDelayTime)
+  {
+    previousTime = millis();
+    //Check for solved stuff
+    if(solved2 == true){
+      Serial.println("tick");
+      tooLazyToNameThisSomethingAccurate = !tooLazyToNameThisSomethingAccurate;
+      if(tooLazyToNameThisSomethingAccurate == true){
+        allOn();
+      }
+      else{
+        resetLEDS();
+      }
+    }
+  }
 }
 
 // ---- HELPER METHODS ----
@@ -136,8 +139,8 @@ void patternLogic(){
   if(plug1 == LOW && plug2 == LOW && plug3 == LOW){
     if(solved1 == false){
       status = "Solved";
-      sendMessageToESP("firstSolved=true", snowflakeIP);
       flashLEDSFirstPattern();
+      sendMessageToESP("solved=firstPlugCombo", tvIP);
     }
     solved1 = true;
   }
@@ -146,11 +149,11 @@ void patternLogic(){
 void checkFourthPlug(){
   plug4 = digitalRead(plug4Pin);
   if(plug4 == LOW){
-    if(solved3 == false){
-      Serial.println("Send message to two that final is solved");
-      sendMessageToESP("finalSolved=true", snowflakeIP);
+    if(solved2 == false){
+      Serial.println("Send message to the TV that final is solved");
+      sendMessageToESP("solved=finalPlug", tvIP);
     }
-    solved3 = true;
+    solved2 = true;
   }
 }
 
@@ -166,10 +169,6 @@ void flashLEDSFirstPattern(){
   delay(delayTime);
   allOn();
   delay(delayTime);
-}
-
-void flashLEDSSecondPattern(){
-  flashLEDSFirstPattern();
 }
 
 // ---- LED PATTERN HELPERS ----
@@ -240,22 +239,24 @@ void handleClientConnected(WiFiClient rcvClient)
 					{
             flashLEDSFirstPattern();
             solved1 = true;
-					}
-					else if (header.indexOf("GET /?secondSolved=true") >= 0)
-					{
-            Serial.println("Got second solved message!");
-            solved2 = true;
-            secondSolved = true;
+            status = "First Solved";
 					}
           else if (header.indexOf("GET /?finalSolved=true") >= 0)
 					{
-            solved3 = true;
+            solved2 = true;
+            status = "Final Solved";
 					}
           else if (header.indexOf("GET /?reset=reset") >= 0)
 					{
             solved1 = false;
             solved2 = false;
-            solved3 = false;
+            status = "Unsolved";
+            resetLEDS();
+					}
+          else if (header.indexOf("GET /reset") >= 0)
+					{
+            solved1 = false;
+            solved2 = false;
             status = "Unsolved";
             resetLEDS();
 					}
@@ -291,10 +292,6 @@ void handleClientConnected(WiFiClient rcvClient)
 	rcvClient.stop();
 	Serial.println("Client disconnected.");
 	Serial.println("");
-
-  if(secondSolved == true){
-    flashLEDSFirstPattern();
-  }
 }
 
 /// @brief This simplifies sending a message to a server.

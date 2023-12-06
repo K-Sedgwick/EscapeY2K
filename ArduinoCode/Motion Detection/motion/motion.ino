@@ -17,8 +17,8 @@
 #define RXPIN 3
 
 // ---- WIFI SECTION ----
-const char *ssid = "EscapeY2K";//EscapeY2K
-const char *password = "caNY0u3scAp3?!";//caNY0u3scAp3?!
+const char *ssid = "Whitefire";//EscapeY2K
+const char *password = "R00tb33R";//caNY0u3scAp3?!
 WiFiServer server(1234);
 
 // IR Stuff
@@ -33,6 +33,7 @@ int val = 0;                    // variable for reading the pin status
 String status = "NOT seeking";
 
 bool seek = false;				// No reason to check the motion sensor if we dont have to
+bool initialized = false;
  
 void setup() {
  
@@ -40,7 +41,7 @@ void setup() {
 	connectToWifi();
 
 	IrReceiver.begin(IR_RECEIVE_PIN);
-	pinMode(inputPin, INPUT);     // declare sensor as input
+	pinMode(inputPin, INPUT_PULLUP);     // declare sensor as input
 }
  
 void loop(){
@@ -72,24 +73,31 @@ void handleIRLogic()
 	{
 		IrReceiver.resume();
 		int cmd = IrReceiver.decodedIRData.command;
-		if (cmd == 21 && previousCmd != "Play")
-		{
-			previousCmd = "Play";
-			Serial.println(previousCmd);
-      sendMessageToESP("clockmode=tick", tvIp);
-		}
-		else if (cmd == 25 && previousCmd != "Reverse")
-		{
-			previousCmd = "Reverse";
-			Serial.println(previousCmd);
-      sendMessageToESP("clockmode=reverse", tvIp);
-		}
-		else if (cmd == 19 && previousCmd != "Fast forward")
-		{
-			previousCmd = "Fast forward";
-			Serial.println(previousCmd);
-      sendMessageToESP("clockmode=fastForward", tvIp);
-		}
+		
+    if (initialized == false){
+      if(cmd == 18){
+        initialized = true;
+        Serial.println("Power");
+        sendMessageToESP("initialize=true", tvIp);
+      }
+    }
+    else{
+      if (cmd == 21 && previousCmd != "Play"){
+        previousCmd = "Play";
+        Serial.println(previousCmd);
+        sendMessageToESP("clockmode=tick", tvIp);
+      }
+      else if (cmd == 25 && previousCmd != "Reverse"){
+        previousCmd = "Reverse";
+        Serial.println(previousCmd);
+        sendMessageToESP("clockmode=reverse", tvIp);
+      }
+      else if (cmd == 19 && previousCmd != "Fast forward"){
+        previousCmd = "Fast forward";
+        Serial.println(previousCmd);
+        sendMessageToESP("clockmode=fastForward", tvIp);
+      }
+    }
 	}
 }
 
@@ -97,10 +105,10 @@ void handleIRLogic()
 void handleSensorLogic(){
 	if(seek){
     val = digitalRead(inputPin);  // read input value
-    if (val == HIGH) {            // check if the input is HIGH
+    if (val == LOW) {            // check if the input is HIGH
       if (pirState == LOW) {
       // we have just turned on
-      Serial.println("Motion detected!");
+      Serial.println("Motion ended!");
       // We only want to print on the output change, not state
       pirState = HIGH;
       sendMessageToESP("monster=true", tvIp);
@@ -109,7 +117,7 @@ void handleSensorLogic(){
     else {
       if (pirState == HIGH){
       // we have just turned of
-      Serial.println("Motion ended!");
+      Serial.println("Motion detected!");
       // We only want to print on the output change, not state
       pirState = LOW;
       sendMessageToESP("monster=seek", tvIp);
@@ -192,6 +200,8 @@ void handleClientConnected(WiFiClient rcvClient)
 				// that's the end of the client HTTP request, so send a response:
 				if (currentLine.length() == 0)
 				{
+          String fullMessage = "{\"status\":\"" + status + "\"";
+
 					if (header.indexOf("GET /?seek=true") >= 0)
 					{
 						seek = true;
@@ -202,8 +212,22 @@ void handleClientConnected(WiFiClient rcvClient)
 						seek = false;
             status = "NOT seeking";
 					}
+          else if (header.indexOf("GET /?reset=reset") >= 0)
+					{
+            seek = false;
+            status = "NOT seeking";
+            initialized = false;
+						fullMessage = fullMessage + ",\"resetting\":\"true\"";
+					}
+          else if (header.indexOf("GET /reset") >= 0)
+					{
+            seek = false;
+            status = "NOT seeking";
+						initialized = false;
+						fullMessage = fullMessage + ",\"resetting\":\"true\"";
+					}
 
-          String fullMessage = "{\"status\":\"" + status + "\"}";
+          fullMessage = fullMessage + "}";
           String contentLengthString = "Content-Length: " + fullMessage.length() + 2;
 
 					rcvClient.println("HTTP/1.1 200 OK");

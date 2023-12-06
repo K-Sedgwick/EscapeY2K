@@ -6,8 +6,8 @@
 #include <WiFiClient.h>
 
 // ---- WIFI SECTION ----
-const char *ssid = "EscapeY2K";	   // EscapeY2K
-const char *password = "caNY0u3scAp3?!"; // caNY0u3scAp3?!
+const char *ssid = "Whitefire";	   // EscapeY2K
+const char *password = "R00tb33R"; // caNY0u3scAp3?!
 WiFiServer server(1234);
 String tvIp = "192.168.1.211:8001";
 String clockIp = "192.168.1.50:1234";
@@ -26,6 +26,8 @@ String clockIp = "192.168.1.50:1234";
 // IR Stuff
 #define IR_RECEIVE_PIN D1
 String previousCmd = "Unknown";
+
+bool initialized = false;
 
 void setup()
 {
@@ -69,24 +71,31 @@ void handleIRLogic()
 	{
 		IrReceiver.resume();
 		int cmd = IrReceiver.decodedIRData.command;
+    Serial.println(cmd);
+    
 		if (cmd == 21 && previousCmd != "Play")
 		{
 			previousCmd = "Play";
 			Serial.println(previousCmd);
-      sendMessageToESP("clockmode=tick", tvIp);
+      //sendMessageToESP("clockmode=tick", tvIp);
 		}
 		else if (cmd == 25 && previousCmd != "Reverse")
 		{
 			previousCmd = "Reverse";
 			Serial.println(previousCmd);
-      sendMessageToESP("clockmode=reverse", tvIp);
+      //sendMessageToESP("clockmode=reverse", tvIp);
 		}
 		else if (cmd == 19 && previousCmd != "Fast forward")
 		{
 			previousCmd = "Fast forward";
 			Serial.println(previousCmd);
-      sendMessageToESP("clockmode=fastForward", tvIp);
+      //sendMessageToESP("clockmode=fastForward", tvIp);
 		}
+    else if (cmd == 18 && initialized == false){
+      initialized = true;
+      Serial.println("Power");
+      sendMessageToESP("initialize=true", tvIp)
+    }
 	}
 }
 
@@ -120,6 +129,17 @@ void handleClientConnected(WiFiClient rcvClient)
 					{
 						fullMessage = fullMessage + ",\"previous\":\"" + previousCmd + "\"";
 					}
+          else if (header.indexOf("GET /?reset=reset") >= 0)
+					{
+            initialized = false;
+						fullMessage = fullMessage + ",\"resetting\":\"true\"";
+					}
+          else if (header.indexOf("GET /reset") >= 0)
+					{
+						initialized = false;
+						fullMessage = fullMessage + ",\"resetting\":\"true\"";
+					}
+
 
 					// This allows us to add any other properties we may want to add and then still close the response when were done
 					fullMessage = fullMessage + "}";
