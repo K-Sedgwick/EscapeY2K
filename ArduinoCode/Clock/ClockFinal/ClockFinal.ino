@@ -70,9 +70,10 @@ unsigned long previousTime = 0;
 const long TickDelayTime = 500;
 // This is whether we have told all of the devices about midnight that need to know so we don't just keep screaming it into the void
 bool informed = false;
-bool pause = false;
+bool pause = true;
 bool reset = false;
-bool manualOverride = false; //If the room admin has to do stuff allow them extra control while in this mode
+bool readyToStart = false;
+bool initialized = false;
 String status = "starting...";
 
 // ---- SETUP AND LOOP ----
@@ -108,7 +109,7 @@ void setup()
 	// Rotate CW quickly at 10 RPM
 	// TODO: Figure out how to change direction
 	clockStepper.setSpeed(stepperSpeed);
-  status = "Normal";
+  status = "Paused";
 }
 
 void loop()
@@ -129,7 +130,7 @@ void loop()
   }
 
   //If the admin hasnt requested control just operate normally
-  if(!manualOverride && !pause){
+  if(!pause){
     //If it's midnight send messages to all of the devices that need to know and dont allow the user to do any more adjusting of the time
     if(midnight){
       if(!informed){
@@ -219,6 +220,8 @@ void handleClientConnected(WiFiClient rcvClient)
 						directionFastForward = false;
 						timeCurrentlyControlledByUser = false;
             status = "Normal";
+            pause = false;
+            initialized = true;
 					}
           else if (header.indexOf("GET /?reset=on") >= 0)
 					{
@@ -228,35 +231,14 @@ void handleClientConnected(WiFiClient rcvClient)
 						directionFastForward = false;
 						timeCurrentlyControlledByUser = true;
             reset = true;
+            pause = false;
             status = "Resetting";
-					}
-          else if (header.indexOf("GET /?manualOverride=on") >= 0)
-					{
-						//Serial.println("ADMIN MODE ON");
-            //First, let the system know the admin is in charge of the room currently
-            manualOverride = true;
-						// Reset the variables that control clock function
-						directionReverse = false;
-						directionFastForward = false;
-						timeCurrentlyControlledByUser = false;
-            fullMessage = fullMessage + ",\"admin\":\"on\"";
-					}
-          else if (header.indexOf("GET /?manualOverride=off") >= 0)
-					{
-						//Serial.println("ADMIN MODE OFF");
-            //First, let the system know the admin is no longer in charge of the room currently
-            manualOverride = false;
-						// Reset the variables that control clock function
-						directionReverse = false;
-						directionFastForward = false;
-						timeCurrentlyControlledByUser = false;
-            fullMessage = fullMessage + ",\"admin\":\"on\"";
+            initialized = false;
 					}
           else if (header.indexOf("GET /?pause=on") >= 0)
 					{
 						//Serial.println("PAUSE ON");
             pause = true;
-            manualOverride = true;
             status = "Paused";
             fullMessage = fullMessage + ",\"mode\":\"\"";
 					}
@@ -264,7 +246,6 @@ void handleClientConnected(WiFiClient rcvClient)
 					{
 						//Serial.println("PAUSE OFF");
             pause = false;
-            manualOverride = false;
             directionReverse = false;
 						directionFastForward = false;
 						timeCurrentlyControlledByUser = false;
@@ -325,19 +306,37 @@ void processInterruptorSwitches()
   }
 
   // Interruptor at midnight is on D3 (Interruptor(1))
-	if (interruptorVal == LOW)
-	{
-		timeCurrentlyControlledByUser = false;
-    midnight = true;
-	}
-  else if(interruptor2Val == LOW){
-    timeCurrentlyControlledByUser = false;
-    startingPosition = true;
-    reset = false;
+  if(readyToStart == false){
+    if (interruptorVal == LOW)
+    {
+      timeCurrentlyControlledByUser = false;
+      midnight = true;
+    }
+    else if(interruptor2Val == LOW){
+      timeCurrentlyControlledByUser = false;
+      startingPosition = true;
+      reset = false;
+
+      if(initialized == false){
+        pause = true;
+        readyToStart = true;
+      }
+      else{
+        directionReverse = false;
+        directionFastForward = false;
+        timeCurrentlyControlledByUser = false;
+        status = "Normal";
+        pause = false;
+        initialized = true;
+        sendMessageToESP("clockmode=start", tvIP);
+      }
+      rotaryCounter = 0;
+    }
+    else{
+      startingPosition = false;
+    }
   }
-  else{
-    startingPosition = false;
-  }
+	
 }
 
 void handleRotaryLogic() {
@@ -359,14 +358,14 @@ void handleRotaryLogic() {
 		}
     //Serial.print("Direction: " + currentDir + "Count: ");
     Serial.println(rotaryCounter);
+
+    if(rotaryCounter > 3){
+      readyToStart = false;
+    }
 	}
 
   // Remember last A state
 	lastStateA = currentStateA;
-
-  if(startingPosition == true){
-    rotaryCounter = 0;
-  }
   // else if(rotaryCounter == midnightCount){
   //   midnight = true;
   // }

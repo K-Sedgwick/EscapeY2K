@@ -131,6 +131,11 @@ class ServerHandler(BaseHTTPRequestHandler):
             elif clockmode == "reverse":
                 self.__pressAndRelease('w')
                 ConnectToESPAsync(self.clock["ip"], self.clock["port"], "?reverse=on", 5000)
+            elif clockmode == 'start':
+                self.updateStatusDict({"rotaryCounter":0})
+                # Then tell the TV to update the position using that value
+                self.child_conn.send(0)
+                self.__pressAndRelease('u')
             elif clockmode == "tick":
                 # This "ConnectToESP" cant be async because we need the response from it
                 responseFromESP = ConnectToESP(self.clock["ip"], self.clock["port"], "?normal=on", 5000)                
@@ -196,9 +201,7 @@ class ServerHandler(BaseHTTPRequestHandler):
             if reset == None:
                 ...
             elif reset == 'reset':
-                self.initializeRoom = True
-                self.__pressAndRelease('d')
-                self.__pressAndRelease(']')
+                self.resetRoom()
 
             # HEY NAMI! (Hi Jake :D) Come here if you need to add more query string commands
             #  that you would like the server to process (or if you need to change the keys that get pressed)
@@ -232,6 +235,9 @@ class ServerHandler(BaseHTTPRequestHandler):
     
     # Once we call this method, this resets the room and changes the puzzles that need to be solved in order for the room to be completable
     def resetRoom(self):
+        self.initializeRoom = True
+        self.__pressAndRelease('d')
+        self.__pressAndRelease(']')
         self.gameover = False
         # TODO: Then tell all of the espModules to reset
 
