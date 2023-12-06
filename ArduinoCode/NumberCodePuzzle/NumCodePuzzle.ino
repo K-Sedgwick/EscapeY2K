@@ -34,7 +34,7 @@ void setup() {
 
   pinMode(out, OUTPUT);
 
-  digitalWrite(out, LOW);
+  digitalWrite(out, HIGH);
 }
 
 void loop() {
@@ -46,9 +46,9 @@ void loop() {
 
   delay(10);
   if ((digitalRead(digit_1) == LOW && digitalRead(digit_2) == LOW && digitalRead(digit_3) == LOW && digitalRead(digit_4) == LOW && digitalRead(digit_5) == LOW && digitalRead(digit_6) == LOW) && (digitalRead(xero_1) == HIGH && digitalRead(xero_2) == HIGH)) {
-    digitalWrite(out, HIGH);
+    digitalWrite(out, LOW);
   }
   else {
-    digitalWrite(out, LOW);
+    digitalWrite(out, HIGH);
   }
 }
