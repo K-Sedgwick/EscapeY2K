@@ -12,7 +12,13 @@ const int digit_5 = 8;
 const int digit_6 = 9;
 const int xero_1 = 2;
 const int xero_2 = 3;
-const int out = 13;
+
+const int out = 11;
+const int LED = 13;
+
+const int enable = 12;
+
+int enabled = 0;
 
 //int read0 = 0;
 //int read1 = 0;
@@ -32,9 +38,12 @@ void setup() {
   pinMode(xero_1, INPUT);
   pinMode(xero_2, INPUT);
 
-  pinMode(out, OUTPUT);
+  pinMode(enable, INPUT); // PIN 12
+  pinMode(LED, OUTPUT);
+  pinMode(out, OUTPUT); // PIN 11
 
-  digitalWrite(out, HIGH);
+  digitalWrite(out, LOW);
+  enabled = 0;
 }
 
 void loop() {
@@ -44,11 +53,23 @@ void loop() {
 //  read3 = analogRead(A3);
   // put your main code here, to run repeatedly:
 
+  if(digitalRead(enable) == LOW)
+  {
+    enabled = 1;
+  }
+  //else
+  //{
+  //  enabled = 0;
+  //}
+
   delay(10);
-  if ((digitalRead(digit_1) == LOW && digitalRead(digit_2) == LOW && digitalRead(digit_3) == LOW && digitalRead(digit_4) == LOW && digitalRead(digit_5) == LOW && digitalRead(digit_6) == LOW) && (digitalRead(xero_1) == HIGH && digitalRead(xero_2) == HIGH)) {
+  if (enabled && (digitalRead(digit_1) == LOW && digitalRead(digit_2) == LOW && digitalRead(digit_3) == LOW && digitalRead(digit_4) == LOW && digitalRead(digit_5) == LOW && digitalRead(digit_6) == LOW) && (digitalRead(xero_1) == HIGH && digitalRead(xero_2) == HIGH)) {
+    digitalWrite(LED, HIGH);
     digitalWrite(out, LOW);
+
   }
   else {
     digitalWrite(out, HIGH);
+    digitalWrite(LED, LOW);
   }
 }
