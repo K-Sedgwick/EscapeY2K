@@ -87,6 +87,12 @@ const vue = new Vue({
           status: "Off",
           loading: false,
         },
+        circlePlug: {
+          ipAddress: "192.168.1.202", //idk at Jakes house, 192.168.1.202 on EscapeY2K
+          port: "1234",
+          status: "Off",
+          loading: false,
+        }
       },
 
       //This is just in relation to the clock

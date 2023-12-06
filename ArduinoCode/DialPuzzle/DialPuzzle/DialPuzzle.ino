@@ -82,7 +82,12 @@ void loop()
 	}
 
   //We have to handle the dial puzzle logic as fast as possible, so dont put it in the delay stuff
-  handleDialPuzzleLogic();
+  if(solved == false && ledEnabled == true){
+    handleDialPuzzleLogic();
+  }
+  else{
+    //do nothing, effectively
+  }
 
   //Add in other functionality here if you so desire
   //This will run once every TickTimeDelays
@@ -136,11 +141,9 @@ void handleDialPuzzleLogic() {
       else if(checkpoints[1] == 1 && counter == thirdVal){
         Serial.println("You did it!");
         solved = true;
-        if(ledEnabled){
-          digitalWrite(D0, HIGH);
-          digitalWrite(D4, HIGH);
-          digitalWrite(D3, HIGH);
-        }
+        digitalWrite(D0, HIGH);
+        digitalWrite(D4, HIGH);
+        digitalWrite(D3, HIGH);
         //Let a box know that the puzzle has been solved
         sendMessageToESP("solved=dial", tvIP);
       }
@@ -229,11 +232,22 @@ void handleClientConnected(WiFiClient rcvClient)
 					{
             ledEnabled = false;
             resetLEDS();
+            //reset the checkpoints as well
+            checkpoints[0] = 0;
+            checkpoints[1] = 0;
             fullMessage = fullMessage + ",\"leds\":\"Disabled\"";
+            lastButtonPress = millis();
 					}
-					else if (header.indexOf("GET /?leds=flash") >= 0)
+					else if (header.indexOf("GET /reset") >= 0)
 					{
             //Not sure what this is going to do just yet
+            solved = false;
+            ledEnabled = false;
+            resetLEDS();
+            //reset the checkpoints as well
+            checkpoints[0] = 0;
+            checkpoints[1] = 0;
+            fullMessage = fullMessage + ",\"leds\":\"Disabled\",\"solved\":\"false\"";
 					}
 
           //This allows us to add any other properties we may want to add and then still close the response when were done

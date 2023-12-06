@@ -39,6 +39,9 @@ WiFiServer server(1234);
 //IP addresses of the devices that need to know about what time it is
 const int numOfMidnightDependentDevices = 1;
 String tvIP = "192.168.1.211:8001"; // 10.0.0.64 at Jakes house, 192.168.1.211:8001 on escapeY2K
+String dialIP = "192.168.1.225:1234";
+String potIP = "192.168.1.59:1234";
+String numberPuzzleIP = "";
 String midnightDependentIPs[numOfMidnightDependentDevices] = {tvIP};
 
 // ---- ROTARY ENCODER SECTION ----
@@ -63,6 +66,7 @@ bool midnight = false;
 bool timeCurrentlyControlledByUser = false;
 bool directionReverse = false;
 bool directionFastForward = false;
+bool tvAtStart = false;
 
 // ---- GENERAL SECTION ----
 unsigned long currentTime = millis();
@@ -72,9 +76,13 @@ const long TickDelayTime = 500;
 bool informed = false;
 bool pause = true;
 bool reset = false;
-bool readyToStart = false;
 bool initialized = false;
 String status = "starting...";
+
+//Help us keep track of which puzzles are enabled and which ones arent
+bool dialEnabled = false;
+bool potsEnabled = false;
+bool numberPuzzleEnabled = false;
 
 // ---- SETUP AND LOOP ----
 int numLoops = 0;
@@ -82,7 +90,7 @@ int numLoops = 0;
 void setup()
 {
 	// start serial connection
-	Serial.begin(115200);
+	Serial.begin(9600);
 
 	connectToWifi();
 
@@ -129,8 +137,14 @@ void loop()
     processInterruptorSwitches();
   }
 
+  //Handle reset here because it is a bit different
+  if (reset)
+  {
+    clockStepper.step(reverseSteps); // TODO: Figure out what direction is positive and what is negative
+  }
+
   //If the admin hasnt requested control just operate normally
-  if(!pause){
+  else if(!pause){
     //If it's midnight send messages to all of the devices that need to know and dont allow the user to do any more adjusting of the time
     if(midnight){
       if(!informed){
@@ -145,10 +159,6 @@ void loop()
       //Serial.print("Tick");
       clockStepper.step(tickSteps);
       previousTime = millis();
-    }
-    else if (reset)
-    {
-      clockStepper.step(reverseSteps); // TODO: Figure out what direction is positive and what is negative
     }
     // If they selected reverse, tell the stepper to reverse until they ask to be done
     else if (directionReverse)
@@ -202,6 +212,7 @@ void handleClientConnected(WiFiClient rcvClient)
 						timeCurrentlyControlledByUser = true;
 						directionFastForward = false;
 						directionReverse = true;
+            pause = false;
             status = "Reverse";
 					}
 					else if (header.indexOf("GET /?fastForward=on") >= 0)
@@ -210,6 +221,7 @@ void handleClientConnected(WiFiClient rcvClient)
 						timeCurrentlyControlledByUser = true;
 						directionReverse = false;
 						directionFastForward = true;
+            pause = false;
             status = "Fast Forward";
 					}
 					else if (header.indexOf("GET /?normal=on") >= 0)
@@ -225,15 +237,15 @@ void handleClientConnected(WiFiClient rcvClient)
 					}
           else if (header.indexOf("GET /?reset=on") >= 0)
 					{
-						//Serial.println("Clock is running normally");
-						// Reset the variables that control clock function
-						directionReverse = false;
-						directionFastForward = false;
-						timeCurrentlyControlledByUser = true;
-            reset = true;
-            pause = false;
-            status = "Resetting";
-            initialized = false;
+						resetClockFromESP();
+					}
+          else if (header.indexOf("GET /?reset=reset") >= 0)
+					{
+						resetClockFromESP();
+					}
+          else if (header.indexOf("GET /reset") >= 0)
+					{
+						resetClockFromESP();
 					}
           else if (header.indexOf("GET /?pause=on") >= 0)
 					{
@@ -255,7 +267,7 @@ void handleClientConnected(WiFiClient rcvClient)
             //We might need to add more metadata on to the response here someday, but for now we dont need to do anything extra here.
           }
 
-          fullMessage = fullMessage + ",\"mode\":\"" + status + "\"}";
+          fullMessage = fullMessage + ",\"status\":\"" + status + "\"}";
           String contentLengthString = "Content-Length: " + fullMessage.length() + 2;
 
 					rcvClient.println("HTTP/1.1 200 OK");
@@ -288,6 +300,18 @@ void handleClientConnected(WiFiClient rcvClient)
 	Serial.println("");
 }
 
+void resetClockFromESP(){
+  //Serial.println("Clock is running normally");
+  // Reset the variables that control clock function
+  directionReverse = false;
+  directionFastForward = false;
+  timeCurrentlyControlledByUser = true;
+  reset = true;
+  pause = true;
+  status = "Resetting";
+  initialized = false;
+}
+
 void processInterruptorSwitches()
 {
 	// read the interruptor values into variables
@@ -297,44 +321,41 @@ void processInterruptorSwitches()
 	// Keep in mind the pull-up means the pushbutton's logic is inverted. It goes
 	// HIGH when it's open, and LOW when it's pressed. Turn on pin 13 when the
 	// button's pressed, and off when it's not:
-  if(interruptorVal == LOW && midnight == false){
-    Serial.println("We just got to mignight");
-  }
 
-  if(interruptor2Val == LOW && startingPosition == false){
-    Serial.println("We just got to the starting position");
-  }
 
   // Interruptor at midnight is on D3 (Interruptor(1))
-  if(readyToStart == false){
-    if (interruptorVal == LOW)
-    {
-      timeCurrentlyControlledByUser = false;
-      midnight = true;
-    }
-    else if(interruptor2Val == LOW){
-      timeCurrentlyControlledByUser = false;
-      startingPosition = true;
-      reset = false;
+  if (interruptorVal == LOW && midnight == false)
+  {
+    //Serial.println("We just got to mignight");
+    timeCurrentlyControlledByUser = false;
+    midnight = true;
+  }
+  else if(interruptor2Val == LOW && startingPosition == false){
+    //Serial.println("We just got to the starting position");
+    timeCurrentlyControlledByUser = false;
+    startingPosition = true;
+    reset = false;
 
-      if(initialized == false){
-        pause = true;
-        readyToStart = true;
-      }
-      else{
-        directionReverse = false;
-        directionFastForward = false;
-        timeCurrentlyControlledByUser = false;
-        status = "Normal";
-        pause = false;
-        initialized = true;
-        sendMessageToESP("clockmode=start", tvIP);
-      }
-      rotaryCounter = 0;
+    if(initialized == false){
+      pause = true;
+      status = "paused";
     }
     else{
-      startingPosition = false;
+      directionReverse = false;
+      directionFastForward = false;
+      timeCurrentlyControlledByUser = false;
+      status = "Normal";
+      pause = false;
+      initialized = true;
+      if(tvAtStart == false){
+        sendMessageToESP("clockmode=start", tvIP);
+        tvAtStart = true;
+      }
     }
+    rotaryCounter = 0;
+  }
+  else{
+    startingPosition = false;
   }
 	
 }
@@ -359,8 +380,51 @@ void handleRotaryLogic() {
     //Serial.print("Direction: " + currentDir + "Count: ");
     Serial.println(rotaryCounter);
 
-    if(rotaryCounter > 3){
-      readyToStart = false;
+    if(rotaryCounter == 3){
+      tvAtStart = false;
+    }
+
+    //Send messages to various ESP's depending on whether they should be activated or not
+    //DIAL TIME FRAME
+    if(rotaryCounter > 10 && rotaryCounter < 30){
+      if(dialEnabled == false){
+        dialEnabled = true;
+        sendMessageToESP("leds=on", dialIP);
+      }
+    }
+    else{
+      if(dialEnabled == true){
+        sendMessageToESP("leds=off", dialIP);
+        dialEnabled = false;
+      }
+    }
+
+    //POT TIME FRAME
+    if(rotaryCounter > 31 && rotaryCounter < 50){
+      if(potsEnabled == false){
+        potsEnabled = true;
+        sendMessageToESP("enabled=true", potIP);
+      }
+    }
+    else{
+      if(potsEnabled == true){
+        sendMessageToESP("enabled=false", potIP);
+        potsEnabled = false;
+      }
+    }
+
+    //NUMBER PUZZLE TIME FRAME
+    if(rotaryCounter > 51 && rotaryCounter < 70){
+      if(numberPuzzleEnabled == false){
+        numberPuzzleEnabled = true;
+        sendMessageToESP("enabled=true", numberPuzzleIP);
+      }
+    }
+    else{
+      if(numberPuzzleEnabled == true){
+        sendMessageToESP("enabled=false", numberPuzzleIP);
+        numberPuzzleEnabled = false;
+      }
     }
 	}
 
