@@ -17,13 +17,14 @@
 #define RXPIN 3
 
 // ---- WIFI SECTION ----
-const char *ssid = "Whitefire";//EscapeY2K
-const char *password = "R00tb33R";//caNY0u3scAp3?!
+const char *ssid = "EscapeY2K";//EscapeY2K
+const char *password = "caNY0u3scAp3?!";//caNY0u3scAp3?!
 WiFiServer server(1234);
 
 // IR Stuff
 #define IR_RECEIVE_PIN D1
 String previousCmd = "Unknown";
+String otherIR = "192.168.1.54:1234";
 
 String tvIp = "192.168.1.211:8001"; // 10.0.0.64 at Jakes house
  
@@ -79,22 +80,23 @@ void handleIRLogic()
         initialized = true;
         Serial.println("Power");
         sendMessageToESP("initialize=true", tvIp);
+        sendMessageToESP("initialized=true", otherIR);
       }
     }
     else{
       if (cmd == 21 && previousCmd != "Play"){
-        previousCmd = "Play";
-        Serial.println(previousCmd);
+        //previousCmd = "Play";
+        Serial.println("Play");
         sendMessageToESP("clockmode=tick", tvIp);
       }
       else if (cmd == 25 && previousCmd != "Reverse"){
-        previousCmd = "Reverse";
-        Serial.println(previousCmd);
+        //previousCmd = "Reverse";
+        Serial.println("Reverse");
         sendMessageToESP("clockmode=reverse", tvIp);
       }
       else if (cmd == 19 && previousCmd != "Fast forward"){
-        previousCmd = "Fast forward";
-        Serial.println(previousCmd);
+        //previousCmd = "Fast forward";
+        Serial.println("Fast Forward");
         sendMessageToESP("clockmode=fastForward", tvIp);
       }
     }
@@ -211,6 +213,10 @@ void handleClientConnected(WiFiClient rcvClient)
 					{
 						seek = false;
             status = "NOT seeking";
+					}
+          else if (header.indexOf("GET /?initialized=true") >= 0)
+					{
+						initialized=true;
 					}
           else if (header.indexOf("GET /?reset=reset") >= 0)
 					{

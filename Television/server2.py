@@ -32,7 +32,7 @@ class ServerHandler(BaseHTTPRequestHandler):
     # Empty dictionary that contains status of all WiFi components that have spoken to it
     # Basically, its going to store information about which puzzles have been solved (not which havent)
     gameover = False
-    statusDict = {"gameover":gameover}
+    statusDict = {"gameover":gameover, "monster":False}
     statusLock = None # This will get set by external code, so dont worry about the fact its None here XD
     child_conn = None # This will also get set by external code, so we can use it without worry
     initializeRoom = True
@@ -83,6 +83,8 @@ class ServerHandler(BaseHTTPRequestHandler):
             self.gameover = True
             gameoverDict = {'gameover':True}
             self.updateStatusDict(gameoverDict)
+            gameoverScreenThread = threading.Thread(target=self.showGameoverScreenAfterDelay, args=(3))
+            gameoverScreenThread.start()
             return gameoverDict
 
         elif self.path == '/reset':
@@ -138,7 +140,7 @@ class ServerHandler(BaseHTTPRequestHandler):
                 self.__pressAndRelease('u')
             elif clockmode == "tick":
                 # This "ConnectToESP" cant be async because we need the response from it
-                responseFromESP = ConnectToESP(self.clock["ip"], self.clock["port"], "?normal=on", 5000)                
+                responseFromESP = ConnectToESP(self.clock["ip"], self.clock["port"], "?normal=on")                
                 try:
                     responseDict = json.loads(responseFromESP)
                     # First, get the values that the time it going to be set to
@@ -161,6 +163,10 @@ class ServerHandler(BaseHTTPRequestHandler):
             elif monster == "seek":
                 self.__pressAndRelease('s')
             elif monster == "true":
+                # Get a copy of the status dict and if monster is currently in seek go ahead and press this button
+                self.statusLock.acquire()
+                copyOfStatus = self.statusDict.copy()
+                self.statusLock.release()
                 self.__pressAndRelease('m')
             elif monster == "false":
                 self.__pressAndRelease('g')
@@ -243,7 +249,7 @@ class ServerHandler(BaseHTTPRequestHandler):
 
         # And reset the statusDict, so its as if we just started from zero
         self.clearStatusDict()
-        self.updateStatusDict({"gameover":False})
+        self.updateStatusDict({"gameover":False, "monster":False})
 
         # Also, make sure to tell the TVs to go back to black (FORGET THE HERSE CUZ I NEVER DIE)
         self.__pressAndRelease('d') # d for dark
@@ -266,6 +272,10 @@ class ServerHandler(BaseHTTPRequestHandler):
         print(self.statusDict)
         self.statusLock.release()
         return copyOfStatus
+    
+    def showGameoverScreenAfterDelay(self, secondsToWait):
+        time.sleep(secondsToWait)
+        self.__pressAndRelease('z')
 
     def updateStatusDict(self, newStatusDict):
         self.statusLock.acquire()
