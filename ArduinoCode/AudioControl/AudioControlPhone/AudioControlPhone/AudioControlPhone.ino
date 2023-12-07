@@ -23,6 +23,7 @@ const char *ssid = "EscapeY2K";//EscapeY2K
 const char *password = "caNY0u3scAp3?!";//caNY0u3scAp3?!
 WiFiServer server(1234);
 String tvIP = "192.168.1.211:8001"; // 10.0.0.64 at Jakes house
+String irESPTwo = "192.168.1.54:1234";
 
 // ---- GENERAL SECTION ----
 unsigned long currentTime = millis();
@@ -41,6 +42,7 @@ bool ledStatus = false;
 // 004 - growl
 // 005 - humming
 // 006 - monster footsteps
+#define MONSTER_FOOTSTEPS 6
 // 007 - scream
 // 008 - whispering
 // 009 - rick
@@ -66,8 +68,8 @@ static int8_t volUp[] = {0x7e, 0x02, 0x05, 0xef};
 static int8_t volDown[] = {0x7e, 0x02, 0x06, 0xef};
 // Set Volume
 static int8_t volMin[] = {0x7e, 0x03, 0x31, 0x01, 0xef};
-//Set Volume 15
-static int8_t volMid[] = {0x7e, 0x03, 0x31, 0x0F, 0xef};
+//Set Volume 20
+static int8_t volMid[] = {0x7e, 0x03, 0x31, 0x14, 0xef};
 
 // Define the Serial MP3 Player Module.
 SoftwareSerial MP3(MP3_RX, MP3_TX);
@@ -77,7 +79,7 @@ SoftwareSerial MP3(MP3_RX, MP3_TX);
 void setup()
 {
 	//Setup serial communication
-	Serial.begin(115200);
+	Serial.begin(9600);
 
 	// start serial connection
 	connectToWifi();
@@ -133,6 +135,7 @@ void loop()
 // ---- HELPER METHODS ----
 void handleClientConnected(WiFiClient rcvClient)
 {
+	bool startSeekSequence = false;
 	// SETUP VARIABLES
   String header = "";
 	String currentLine = ""; // make a String to hold incoming data from the client
@@ -158,7 +161,6 @@ void handleClientConnected(WiFiClient rcvClient)
 					String fullMessage = "{\"message\":\"received\"";
 					if (header.indexOf("GET /?play=") >= 0)
 					{
-						//TODO: Break up the string, parse the val sent as an int, then send that value over serial
 
             String intToParse = "";
             int parsedInt = -1;
@@ -177,7 +179,12 @@ void handleClientConnected(WiFiClient rcvClient)
               index++;
               intToParse.concat(parsedInt);
             }
+
             int8_t selectedSong = lowByte(intToParse.toInt());
+			//Check if we need to initialize seeking for later
+			if(selectedSong == MONSTER_FOOTSTEPS){
+				startSeekSequence = true;
+			} 
 						int8_t play_selected_song[] = {0x7e, 0x04, 0x42, 0x01, selectedSong, 0xef}; // 7E 04 41 04 01 EF
 						send_command_to_MP3_player(play_selected_song, 6);
             fullMessage = fullMessage + ",\"playing\":\"" + selectedSong + "\",\"status\":\"Playing\"";
@@ -208,12 +215,17 @@ void handleClientConnected(WiFiClient rcvClient)
 						send_command_to_MP3_player(volMin, 5);
             fullMessage = fullMessage + ",\"volume\":\"Min\"";
 					}
+			else if (header.indexOf("GET /?vol=mid") >= 0)
+					{
+						send_command_to_MP3_player(volMid, 5);
+            fullMessage = fullMessage + ",\"volume\":\"Mid20\"";
+					}
           else if (header.indexOf("GET /reset") >= 0)
 					{
   					send_command_to_MP3_player(pause, 4);
 						send_command_to_MP3_player(volMid, 5);
             solved = false;
-            fullMessage = fullMessage + ",\"volume\":\"15\",\"reset\":\"true\"";
+            fullMessage = fullMessage + ",\"volume\":\"20\",\"reset\":\"true\"";
 					}
 
           //This allows us to add any other properties we may want to add and then still close the response when were done
@@ -248,6 +260,12 @@ void handleClientConnected(WiFiClient rcvClient)
 	rcvClient.stop();
 	//Serial.println("Client disconnected.");
 	//Serial.println("");
+
+	if(startSeekSequence == true){
+		delay(5000);
+		sendMessageToESP("monster=seek", tvIP);
+		sendMessageToESP("seek=true", irESPTwo);
+	}
 }
 
 /// @brief This simplifies sending a message to a server.
