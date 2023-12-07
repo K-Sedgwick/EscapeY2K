@@ -18,7 +18,7 @@ const int resetPin = D1; //Output (active low)
 const int solvedPin = D2; //Input_Pullup
 const int enablePin = D3; //Output (active low)
 
-int solvedStatus = 0;
+int solvedStatus = HIGH;
 String status = "Unsolved";
 String enabledStr = "false";
 
