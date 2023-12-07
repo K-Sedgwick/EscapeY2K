@@ -1,3 +1,6 @@
+//192.168.1.181 = #1 (bug)
+//192.168.1.54 = #2
+
 #include <IRremote.h>
 
 // Load Wi-Fi library
@@ -33,8 +36,18 @@ int pirState = LOW;             // we start, assuming no motion detected
 int val = 0;                    // variable for reading the pin status
 String status = "NOT seeking";
 
+bool mainModule = true; //Only let one of the IR sensors do this, we dont need both to do it
+int secondsSpentSeeking = 0; //In seconds
+const int seekDuration = 15; //In seconds
 bool seek = false;				// No reason to check the motion sensor if we dont have to
 bool initialized = false;
+bool firstRotation = true;
+bool pause = false;
+
+// ---- GENERAL SECTION ----
+unsigned long currentTime = millis();
+unsigned long previousTime = 0;
+const long TickDelayTime = 1000;
  
 void setup() {
  
@@ -57,14 +70,29 @@ void loop(){
 	handleIRLogic();
 	handleSensorLogic();
 
+	if(seek == false){
+		secondsSpentSeeking = 0;
+	}
+
 	// Add in other functionality here if you so desire
 	// This will run once every TickTimeDelays
-	//  if ((millis() - previousTime) > TickDelayTime)
-	//  {
-	//    //DONT REMOVE THIS LINE! Its super important
-	//    previousTime = millis();
+	if ((millis() - previousTime) > TickDelayTime){
+	   //DONT REMOVE THIS LINE! Its super important
+	   previousTime = millis();
 
-	// }
+	   if(seek == true && pirState == HIGH && pause == false){
+		secondsSpentSeeking = secondsSpentSeeking + 1;
+    Serial.println(secondsSpentSeeking);
+	   }
+
+	   if(secondsSpentSeeking >= seekDuration){
+      Serial.println("Return to normal");
+		if(mainModule == true){
+			sendMessageToESP("clockmode=tick", tvIp);
+		}
+		seek = false;
+	   }
+	}
 }
 
 // Helper methods
@@ -109,20 +137,25 @@ void handleSensorLogic(){
     val = digitalRead(inputPin);  // read input value
     if (val == LOW) {            // check if the input is HIGH
       if (pirState == LOW) {
-      // we have just turned on
-      Serial.println("Motion ended!");
-      // We only want to print on the output change, not state
-      pirState = HIGH;
-      sendMessageToESP("monster=true", tvIp);
+		// we have just turned on
+		Serial.println("Motion ended!");
+		// We only want to print on the output change, not state
+		pirState = HIGH;
+		if(!firstRotation){
+      firstRotation = false;
+      sendMessageToESP("pause=false", otherIR);
+      sendMessageToESP("monster=seek", tvIp);
+    }
       }
     }
     else {
       if (pirState == HIGH){
-      // we have just turned of
-      Serial.println("Motion detected!");
-      // We only want to print on the output change, not state
-      pirState = LOW;
-      sendMessageToESP("monster=seek", tvIp);
+		// we have just turned of
+		Serial.println("Motion detected!");
+		// We only want to print on the output change, not state
+		pirState = LOW;
+    sendMessageToESP("pause=true", otherIR);
+		sendMessageToESP("monster=true", tvIp);
       }
     }
   }
@@ -202,25 +235,36 @@ void handleClientConnected(WiFiClient rcvClient)
 				// that's the end of the client HTTP request, so send a response:
 				if (currentLine.length() == 0)
 				{
-          String fullMessage = "{\"status\":\"" + status + "\"";
-
+          String fullMessage = "{\"message\":\"received\"";
 					if (header.indexOf("GET /?seek=true") >= 0)
 					{
 						seek = true;
             status = "seeking";
+            firstRotation = true;
 					}
 					else if (header.indexOf("GET /?seek=false") >= 0)
 					{
+            firstRotation = true;
 						seek = false;
             status = "NOT seeking";
 					}
           else if (header.indexOf("GET /?initialized=true") >= 0)
 					{
 						initialized=true;
+            firstRotation = true;
+					}
+          else if (header.indexOf("GET /?pause=true") >= 0)
+					{
+						pause = true;
+					}
+          else if (header.indexOf("GET /?pause=false") >= 0)
+					{
+						pause = false;
 					}
           else if (header.indexOf("GET /?reset=reset") >= 0)
 					{
             seek = false;
+            firstRotation = true;
             status = "NOT seeking";
             initialized = false;
 						fullMessage = fullMessage + ",\"resetting\":\"true\"";
@@ -228,11 +272,13 @@ void handleClientConnected(WiFiClient rcvClient)
           else if (header.indexOf("GET /reset") >= 0)
 					{
             seek = false;
+            firstRotation = true;
             status = "NOT seeking";
 						initialized = false;
 						fullMessage = fullMessage + ",\"resetting\":\"true\"";
 					}
 
+          fullMessage = fullMessage + ",\"status\":\"" + status + "\"";
           fullMessage = fullMessage + "}";
           String contentLengthString = "Content-Length: " + fullMessage.length() + 2;
 
