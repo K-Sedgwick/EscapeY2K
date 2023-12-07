@@ -8,6 +8,7 @@
 const char *ssid = "EscapeY2K";//EscapeY2K
 const char *password = "caNY0u3scAp3?!";//caNY0u3scAp3?!
 WiFiServer server(1234);
+String tvIp = "192.168.1.211:8001"; // 10.0.0.64 at Jakes house
 
 //ESP pins
 #define D0 16
@@ -17,6 +18,8 @@ WiFiServer server(1234);
 #define D4 2
 #define D5 14
 #define D6 12
+#define D7 13
+#define D8 15
 #define TXPIN 1
 #define RXPIN 3
 
@@ -31,9 +34,27 @@ int servoPos = 0;  // variable to store the servo position
 // variables will change:
 int buttonState = 0;  // variable for reading the pushbutton status
 
+// IF THIS ESP WILL ALSO BE USED AS A PUZZLE INTERFACE DO THIS
+bool helpPuzzle = false;
+const int enablePin = D5;
+const int solvedPin = D6;
+int puzzleSolved = HIGH;
+bool solvedSent = false;
+
 void setup()
 {
     Serial.begin(9600);
+
+    if(helpPuzzle == true){
+      //Setup pin that lets puzzle tell ESP whether it was solved or not
+      pinMode(solvedPin, INPUT_PULLUP);
+
+      //Setup pin that tells puzzle whether its enabled or not
+      pinMode(enablePin, OUTPUT);
+      digitalWrite(enablePin, LOW);
+      delay(50);
+    }
+
     connectToWifi();
     // put your setup code here, to run once:
     // initialize the pushbutton pin as an input:
@@ -52,7 +73,13 @@ void loop()
     }
     // check if the pushbutton is pressed. If it is, the buttonState is HIGH:
     //handleLatchLogic();
-
+    if(helpPuzzle == true){
+      puzzleSolved = digitalRead(solvedPin);
+      if(puzzleSolved == LOW && solvedSent == false){
+        sendMessageToESP("solved=numberPuzzle", tvIp);
+        solvedSent = true;
+      }
+    }
 }
 
 // ---- HELPER METHODS ----
@@ -134,6 +161,23 @@ void handleClientConnected(WiFiClient rcvClient)
             String state = changeBoxState();
             fullMessage = fullMessage + ",\"latch\":\"" + state + "\"";
 					}
+          if(helpPuzzle == true){
+            if (header.indexOf("GET /?enabled=true") >= 0)
+            {
+              digitalWrite(enablePin, LOW);
+              fullMessage = fullMessage + ",\"enabled\":\"true\"";
+            }
+            else if (header.indexOf("GET /?enabled=false") >= 0)
+            {
+              digitalWrite(enablePin, HIGH);
+              fullMessage = fullMessage + ",\"enabled\":\"false\"";
+            }
+            else if (header.indexOf("GET /reset") >= 0)
+            {
+              solvedSent = false;
+              fullMessage = fullMessage + ",\"reset\":\"true\"";
+            }
+          }
 
           //This allows us to add any other properties we may want to add and then still close the response when were done
           fullMessage = fullMessage + "}";
