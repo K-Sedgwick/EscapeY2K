@@ -1,9 +1,14 @@
 const SECONDS_UNTIL_STATUS_REFRESH = 5;
 const SOUND_EFFECTS = {
-  Scream : 1,
-  Footsteps : 2,
-  "Monster Footsteps":3,
-  "Scary Whispering":4
+  Knock : 2,
+  Footsteps : 3,
+  Growl: 4,
+  Humming: 5,
+  //"Monster Footsteps":6,
+  Scream:7,
+  Whispering:8,
+  "Rick Roll":9,
+  Garble:11
 }
 const LOCKBOXES = [
   { // PCB-1
@@ -12,27 +17,27 @@ const LOCKBOXES = [
     status: "Unknown",
     loading: false
   },
-  { // PCB-2   192.168.1.242 on EscapeY2K and 10.0.0.155 at Jakes house
-    puzzleName:"bust",
-    ip:"192.168.1.242:1234",
-    status: "Unknown",
-    loading: false
-  }, 
+  // { // PCB-2   192.168.1.242 on EscapeY2K and 10.0.0.155 at Jakes house
+  //   puzzleName:"bust",
+  //   ip:"192.168.1.242:1234",
+  //   status: "Unknown",
+  //   loading: false
+  // }, 
   { // PCB-3
-    puzzleName:"rando",
+    puzzleName:"potentiometer",
     ip:"192.168.1.150:1234",
     status: "Unknown",
     loading: false
   }, 
+  { // PCB-5
+    puzzleName:"Combo",
+    ip:"192.168.1.54:1234",
+    status: "Unknown",
+    loading: false
+  },
   { // PCB-4
     puzzleName:"plugboard",
     ip:"192.168.1.143:1234",
-    status: "Unknown",
-    loading: false
-  }, 
-  { // PCB-5
-    puzzleName:"potentiometer",
-    ip:"192.168.1.54:1234",
     status: "Unknown",
     loading: false
   }
@@ -44,9 +49,9 @@ const vue = new Vue({
     return {
       // This is the status of the room, tracked by the Mini PC
       status: {
-        selectedTapeEffect: 1,
-        selectedPhoneEffect: 1,
-        currentTime: 0,
+        selectedTapeEffect: 2,
+        selectedPhoneEffect: 2,
+        rotaryCounter: 0,
         clockmode: "Unknown",
       },
       //ESP Modules
@@ -92,6 +97,18 @@ const vue = new Vue({
           port: "1234",
           status: "Off",
           loading: false,
+        },
+        potentiometer: {
+          ipAddress: "TBD", //TODO: GET THE IP FOR THE POTENTIOMETER PUZZLE
+          port: "1234",
+          status: "Off",
+          loading: false,
+        },
+        numberPuzzle: {
+          ipAddress: "TBD", //TODO: GET THE IP FOR THE NUMBER PUZZLE
+          port: "1234",
+          status: "Off",
+          loading: false,
         }
       },
 
@@ -102,9 +119,6 @@ const vue = new Vue({
       loading: false,
       resetting: false,
       lockboxes:LOCKBOXES,
-      lockboxesToShow: [],
-      lockboxesNotInRotation: [],
-      puzzlesToBeSolved: [],
       solvedPuzzles: [],
 
       //Sound effect stuff
@@ -231,7 +245,6 @@ const vue = new Vue({
               }
 
               // console.log("apiObj status", apiObj.solved)
-              vm.puzzlesToBeSolved = apiObj.puzzlesToSolve
               vm.solvedPuzzles = apiObj.solved ?? []
               vm.statusLoading = false;
             }
@@ -240,6 +253,24 @@ const vue = new Vue({
       } else if (this.timeUntilStatusRefresh > 0) {
         this.timeUntilStatusRefresh--;
       }
+    },
+    getClockStatus(){
+      const vm = this;
+      const esp = this.espModules["clock"];
+
+      fetch(`http://${esp.ipAddress}:${esp.port}/getStatus`)
+        .then((resp) => resp.json())
+        .then((apiObj) => {
+          if (apiObj) {
+            if (apiObj.error) {
+              console.log("An unexpected error occured.");
+            }
+
+            vm.status.rotaryCounter = apiObj.rotaryCounter
+            // console.log(`Response from ${module}`, apiObj);
+            vm.loading = false;
+          }
+        });
     },
     showResetRoomModal(){
       $(this.$refs.resetRoomModal).modal('show')
@@ -250,9 +281,8 @@ const vue = new Vue({
       this.resetting = true;
 
       this.solvedPuzzles = []
-      this.puzzlesToBeSolved = []
 
-      fetch(`http://${esp.ipAddress}:${esp.port}/resetAndShuffle`)
+      fetch(`http://${esp.ipAddress}:${esp.port}/reset`)
       .then((resp) => resp.json())
       .then((apiObj) => {
         if (apiObj) {
@@ -261,35 +291,15 @@ const vue = new Vue({
           }
 
           // console.log('apiObj reset', apiObj)
-          
-          vm.puzzlesToBeSolved = apiObj.puzzlesToSolve
           vm.resetting = false;
-
-          //Then sort the puzzles that are to be solved
-          vm.buildLockboxArrayForUser()
         }
       })
 
       $(this.$refs.resetRoomModal).modal('hide')
     },
-    buildLockboxArrayForUser(a, b){
-      //First, build the array of lockboxes that are in this rotation
-      this.lockboxesToShow = []
-      this.puzzlesToBeSolved.forEach((el, index) => {
-        // console.log(el)
-        const lockbox = this.lockboxes.find(element => element.puzzleName == el)
-        // lockbox.orderNum = index
-        this.lockboxesToShow.push(lockbox)
-      })
-      //Then, build the array of boxes that are not in this rotation
-      this.lockboxesNotInRotation = this.lockboxes.filter(box => !this.puzzlesToBeSolved.includes(box.puzzleName))
-    },
     capitalizeFirstLetter(string) {
       return string.charAt(0).toUpperCase() + string.slice(1);
     }
-  },
-  mounted(){
-    this.lockboxesNotInRotation = this.lockboxes.filter(box => !this.puzzlesToBeSolved.includes(box.puzzleName))
   }
 });
 

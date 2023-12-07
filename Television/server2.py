@@ -17,17 +17,25 @@ from multiprocessing import Process, Pipe
 class ServerHandler(BaseHTTPRequestHandler):
     # These are for helping us keep track of which puzzles are going to be used in that playthrough of the room
     puzzles = [
-        {"name":"dial", "ip":"FILL IN", "port":1234},
+        {"name":"dial", "ip":"192.168.1.225", "port":1234},
         {"name":"plugboard", "ip":"FILL IN", "port":1234}, # This is sort of a final puzzle, just here so I dont lose it
         {"name":"potentiometer", "ip":"FILL IN", "port":1234},
-        {"name":"numberPuzzle", "ip":"FILL IN", "port":1234}
+        {"name":"numberPuzzle", "ip":"FILL IN", "port":1234},
+        {"name":"keypad", "ip":"FILL IN", "port":1234}
     ]
     lockBoxes = [
         {"id":"1", "ip":"192.168.1.127", "port":1234}, # 1
-        {"id":"2", "ip":"192.168.1.242", "port":1234}, # PCB-2   192.168.1.242 on EscapeY2K and 10.0.0.155 at Jakes house
         {"id":"3", "ip":"192.168.1.143", "port":1234}, # 3
-        {"id":"4", "ip":"192.168.1.54", "port":1234}, # 4
-        {"id":"5", "ip":"192.168.1.150", "port":1234} # 5
+        {"id":"5", "ip":"192.168.1.150", "port":1234}, # 5 THIS IS THE SPECIAL ONE THAT ALSO CONTROLS A PUZZLE
+        {"id":"2", "ip":"192.168.1.242", "port":1234}, # PCB-2   192.168.1.242 on EscapeY2K and 10.0.0.155 at Jakes house
+    ]
+    motionModules = [
+        {"name":"bug", "ip":"192.168.1.181", "port":1234},
+        {"name":"otherGuy", "ip":"192.168.1.54", "port":1234} # TODO: GET THE OTHER IP FOR THE MOTION MODULE
+    ]
+    audioModules = [
+        {"name":"tape", "ip":"192.168.1.212", "port":1234}, # TODO: FILL IN AUDIO MODULES IP ADDRESSES
+        {"name":"phone", "ip":"192.168.1.151", "port":1234}
     ]
     # Empty dictionary that contains status of all WiFi components that have spoken to it
     # Basically, its going to store information about which puzzles have been solved (not which havent)
@@ -38,7 +46,7 @@ class ServerHandler(BaseHTTPRequestHandler):
     initializeRoom = True
     keyboardForVideoControl = Controller()
     clock = {"ip":"192.168.1.50", "port":1234}
-    finalPuzzleBox = {"ip":"TBD", "port":1234}
+    finalPuzzleBox = {"ip":"192.168.1.54", "port":1234} # TBD, but for now its ID4
 
     def do_GET(self):
         return self.router()
@@ -160,8 +168,13 @@ class ServerHandler(BaseHTTPRequestHandler):
             monster = query_components.get("monster", None)
             if monster == None:
                 ...
+            elif monster == "preseek":
+                monsterFootsteps = 6
+                ConnectToESPAsync(self.audioModules[0]["ip"], self.audioModules[0]["ip"], f"?play={monsterFootsteps}")  # TODO: FIX THIS SONG VAL
+                ConnectToESPAsync(self.audioModules[1]["ip"], self.audioModules[1]["port"], f"?play={monsterFootsteps}")
             elif monster == "seek":
                 self.__pressAndRelease('s')
+                ConnectToESPAsync(self.clock['ip'], self.clock['port'], '?pause=on')
             elif monster == "true":
                 # Get a copy of the status dict and if monster is currently in seek go ahead and press this button
                 self.statusLock.acquire()
@@ -246,6 +259,24 @@ class ServerHandler(BaseHTTPRequestHandler):
         self.__pressAndRelease(']')
         self.gameover = False
         # TODO: Then tell all of the espModules to reset
+        dialIndex = self.findIndexInList(self.puzzles, "name", "dial")
+        dial = self.puzzles[dialIndex]
+        potIndex = self.findIndexInList(self.puzzles, "name", "potentiometer")
+        potPuzzle = self.puzzles[potIndex]
+        numberPuzzleIndex = self.findIndexInList(self.puzzles, "name", "numberPuzzle")
+        numberPuzzle = self.puzzles[numberPuzzleIndex]
+        keypadIndex = self.findIndexInList(self.puzzles, "name", "keypad")
+        keypadPuzzle = self.puzzles[keypadIndex]
+
+        # Tell any module that might need to reset to reset
+        ConnectToESPAsync(dial["ip"], dial["port"], "reset")
+        ConnectToESPAsync(potPuzzle["ip"], potPuzzle["port"], "reset")
+        ConnectToESPAsync(numberPuzzle["ip"], numberPuzzle["port"], "reset")
+        ConnectToESPAsync(keypadPuzzle["ip"], keypadPuzzle["port"], "reset")
+        ConnectToESPAsync(self.clock["ip"], self.clock["ip"], "reset")
+        ConnectToESPAsync(self.motionModules[0]["ip"], self.motionModules[0]["port"], "reset")
+        ConnectToESPAsync(self.motionModules[1]["ip"], self.motionModules[1]["port"], "reset")
+        # TODO: FIGURE OUT IF THERES ANYTHING ELSE THAT HAS TO RESET
 
         # And reset the statusDict, so its as if we just started from zero
         self.clearStatusDict()
@@ -369,10 +400,9 @@ def InitiateServer(child_conn = None):
     # the main thread has to keep running for the child thread to keep running
     while True:
         time.sleep(5)
-        # print('escapey2k status')
-        # server.PrintStatus()
-        #print("Every 5 seconds this should go")
-        #ConnectToESPAsync('localhost', 8001, "status")
+        # statusDict = server.GetStatus()
+        # print('escapey2k status', statusDict)
+        # ConnectToESPAsync('localhost', 8001, "status")
 
 if __name__ == '__main__':
     InitiateServer()

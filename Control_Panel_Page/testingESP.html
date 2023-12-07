@@ -47,7 +47,7 @@
                             <button class="btn btn-dark"
                                 @click="sendESPMessage('miniPC', '?monster=false')">Deactivate Monster</button>
                             <button class="btn btn-dark"
-                                @click="sendESPMessage('miniPC', '?monster=seek')">Seek</button>
+                                @click="sendESPMessage('miniPC', '?monster=preseek')">Seek</button>
                             <button class="btn btn-dark"
                                 @click="sendESPMessage('miniPC', '?clockmode=tick')">Normal</button>
                         </div>
@@ -55,40 +55,49 @@
                 </div>
                 <div class="m-3 text-center card">
                     <div class="card-header">
-                        <h3>Dial Puzzle</h3>
+                        <h3>Puzzles</h3>
                         <div :class="{'dual-ring-load':true, 'd-none':!espModules.dialPuzzle.loading}"></div>
                     </div>
                     <div class="card-body">
-                        <div class="row">
-                            <div class="col">
-                                <h4>Dial status: {{espModules.dialPuzzle.status}}</h4>
-                            </div>
-                        </div>
-                        <div class="mt-2">
-                            <button class="btn btn-dark" @click="sendESPMessage('dialPuzzle', '?leds=on')"
-                                :disabled="espModules.dialPuzzle.loading">Enable LEDS</button>
+                        <div class="d-flex justify-content-center">
+                            <h4 class="mr-2">Dial Puzzle:</h4>
+                            <button class="btn btn-dark mr-2" @click="sendESPMessage('dialPuzzle', '?leds=on')"
+                                :disabled="espModules.dialPuzzle.loading">Enable</button>
                             <button class="btn btn-dark" @click="sendESPMessage('dialPuzzle', '?leds=off')"
-                                :disabled="espModules.dialPuzzle.loading">Disable LEDS</button>
+                                :disabled="espModules.dialPuzzle.loading">Disable</button>
+                        </div>
+                        <div class="mt-2 d-flex justify-content-center">
+                            <h4 class="mr-2">Potentiometers:</h4>
+                            <button class="btn btn-dark mr-2" @click="sendESPMessage('potentiometer', '?enabled=true')"
+                                :disabled="espModules.dialPuzzle.loading">Enable</button>
+                            <button class="btn btn-dark" @click="sendESPMessage('potentiometer', '?enabled=false')"
+                                :disabled="espModules.dialPuzzle.loading">Disable</button>
+                        </div>
+                        <div class="mt-2 d-flex justify-content-center">
+                            <h4 class="mr-2">5-Digit Number Combo:</h4>
+                            <button class="btn btn-dark mr-2" @click="sendESPMessage('numberPuzzle', '?enabled=true')"
+                                :disabled="espModules.dialPuzzle.loading">Enable</button>
+                            <button class="btn btn-dark" @click="sendESPMessage('numberPuzzle', '?enabled=false')"
+                                :disabled="espModules.dialPuzzle.loading">Disable</button>
                         </div>
                     </div>
                 </div>
-
             </div>
             <div class="col">
                 <div class="m-3 text-center card">
                     <div class="card-header">
                         <div class="position-absolute" style="padding-bottom: 5px;">
                             <button class="btn btn-dark" @click="sendESPMessage('clock', '?reset=on')"
-                            :disabled="espModules.clock.loading"><img src="img/reset.png" width="20px" style="filter: invert(1)"></button>
+                            :disabled="espModules.clock.loading">Reset</button>
                         </div>
                         <h3>Clock Stuff</h3>
                         <div :class="{'dual-ring-load':true, 'd-none':!espModules.clock.loading}"></div>
-
+                        <button class="btn btn-dark" @click="getClockStatus">Refresh</button>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col">
-                                <h4>Current Time: {{status.currentTime}}</h4>
+                                <h4>Rotary Count: {{status.rotaryCounter}}</h4>
                             </div>
                             <div class="col">
                                 <h4>Clock Status: {{status.clockmode}}</h4>
@@ -111,10 +120,10 @@
                 </div>
                 <div class="m-3 text-center card" style="border-color: #c79d15;">
                     <div class="card-header">
-                        <h3>Puzzles to be Solved</h3>
+                        <h3>Puzzles that have been solved</h3>
                     </div>
                     <div class="card-body">
-                        <div v-for="name in puzzlesToBeSolved" class="text-center">
+                        <div v-for="name in solvedPuzzles" class="text-center">
                             <h5>{{capitalizeFirstLetter(name)}}</h5>
                         </div>
                     </div>
@@ -134,10 +143,10 @@
                                 <input type="number" v-model="status.selectedTapeEffect">
                             </div>
                             <div v-else>
-                                <!-- <select v-model="status.selectedPhoneEffect">
+                                <select v-model="status.selectedPhoneEffect">
                                     <option v-for="(value, key) in soundEffects" :value="value">{{key}}</option> 
-                                </select> -->
-                                <input type="number" v-model="status.selectedPhoneEffect">
+                                </select>
+                                <!-- <input type="number" v-model="status.selectedPhoneEffect"> -->
                             </div>
                             <button class="btn btn-dark"
                                 @click="playPhoneSoundEffect">Play</button>
@@ -146,7 +155,7 @@
                             <button class="btn btn-dark" @click="sendESPMessage('phoneBase', '?vol=min')">Vol
                                 Min</button>
                             <button class="btn btn-dark"
-                                @click="sendESPMessage('phoneBase', '?vol=up')">Vol Up</button>
+                                @click="sendESPMessage('phoneBase', '?vol=mid')">Vol Max</button>
                         </div>
                     </div>
                 </div>
@@ -159,10 +168,10 @@
                     </div>
                     <div class="mt-2 card-body">
                         <div class="d-flex justify-content-around">
-                            <!-- <select v-model="status.selectedTapeEffect">
+                            <select v-model="status.selectedTapeEffect">
                                 <option v-for="(value, key) in soundEffects" :value="value">{{key}}</option> 
-                            </select> -->
-                            <input type="number" v-model="status.selectedTapeEffect">
+                            </select>
+                            <!-- <input type="number" v-model="status.selectedTapeEffect"> -->
                             <button class="btn btn-dark"
                                 @click="playTapePlayerSoundEffect">Play</button>
                             <button class="btn btn-dark"
@@ -170,21 +179,21 @@
                             <button class="btn btn-dark" @click="sendESPMessage('tapePlayer', '?vol=min')">Vol
                                 Min</button>
                             <button class="btn btn-dark"
-                                @click="sendESPMessage('tapePlayer', '?vol=up')">Vol Up</button>
+                                @click="sendESPMessage('tapePlayer', '?vol=mid')">Vol Max</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <hr>
+        <hr class="mt-1">
         <div class="text-center border rounded" style="background-color: #ffffff;">
             <h2>Lockboxes</h2>
         </div>
         <div class="row">
-            <div v-for="(lockbox, index) in lockboxesToShow" :class="{'col':true, 'hide':!puzzlesToBeSolved.includes(lockbox.puzzleName)}">
+            <div v-for="(lockbox, index) in lockboxes" class="col">
                 <div :class="{'m-3 text-center card':true, 'solved':solvedPuzzles.includes(lockbox.puzzleName)}">
                     <div class="card-header">
-                        <h3>{{index+1}} - {{capitalizeFirstLetter(lockbox.puzzleName)}}</h3>
+                        <h3>Box {{index+1}}</h3>
                         <div :class="{'dual-ring-load':true, 'd-none':!lockbox.loading}" style="top: 0px; left: 5px;"></div>
                     </div>
                     <div class="card-body">
@@ -196,29 +205,6 @@
                         <div class="mt-2">
                             <button class="btn btn-dark" @click="sendLockboxMessage(lockbox, 'latch=change')"
                             :disabled="lockbox.loading">Activate Box</button>
-                            <button class="btn btn-dark" @click="sendESPMessage('miniPC', '?solved='+lockbox.puzzleName)"
-                                :disabled="lockbox.loading">Mark as Solved</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="accordion">
-            <div class="text-center border rounded" style="background-color: #ffffff; overflow: hidden;">
-                <h2 data-toggle="collapse" data-target="#otherLockboxes" aria-expanded="false" aria-controls="otherLockboxes">Other Lockboxes <span id="carat" style="font-size: 15px;">&#9660;</span></h2>
-            </div>
-            <div id="otherLockboxes" class="row">
-                <div v-for="(lockbox, index) in lockboxesNotInRotation" class="col">
-                    <div class="m-3 text-center card">
-                        <div class="card-header">
-                            <h3>{{capitalizeFirstLetter(lockbox.puzzleName)}}</h3>
-                            <div :class="{'dual-ring-load':true, 'd-none':!lockbox.loading}" style="top: 0px; left: 5px;"></div>
-                        </div>
-                        <div class="card-body">
-                            <div class="mt-2">
-                                <button class="btn btn-dark" @click="sendLockboxMessage(lockbox, 'latch=change')"
-                                :disabled="lockbox.loading">Activate Box</button>
-                            </div>
                         </div>
                     </div>
                 </div>

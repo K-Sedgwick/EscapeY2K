@@ -26,6 +26,8 @@ int wrong = 0;
 bool sentCorrect = false;
 bool sentWrong = false;
 
+const int resetPin = D3;
+
 // ---- WIFI SECTION ----
 const char *ssid = "EscapeY2K";//EscapeY2K
 const char *password = "caNY0u3scAp3?!";//caNY0u3scAp3?!
@@ -47,6 +49,7 @@ void setup() {
   // initialize the pushbutton pin as an input:
   pinMode(sendCorrect, INPUT_PULLUP);
   pinMode(sendWrong, INPUT_PULLUP);
+  pinMode(resetPin, OUTPUT);
 }
 
 void loop() {
@@ -74,6 +77,7 @@ void checkPins(){
   correct = digitalRead(sendCorrect);
   if(correct == LOW && sentCorrect == false){
     sentCorrect = true;
+    Serial.println("Correct!");
     sendMessageToESP("keypad=correct", tvIP);
   }
   else if(correct == HIGH){
@@ -84,6 +88,7 @@ void checkPins(){
   wrong = digitalRead(sendWrong);
   if(wrong == LOW && sentWrong == false){
     sentWrong = true;
+    Serial.println("Wrong!");
     sendMessageToESP("keypad=wrong", tvIP);
   }
   else if(wrong == HIGH){
@@ -116,9 +121,11 @@ void handleClientConnected(WiFiClient rcvClient)
 				// that's the end of the client HTTP request, so send a response:
 				if (currentLine.length() == 0)
 				{
-          if (header.indexOf("GET /?reset=reset") >= 0)
+          if (header.indexOf("GET /reset") >= 0)
 					{
-            //TODO: Do I even have to reset anything here?
+            digitalWrite(resetPin, LOW);
+			delay(20);
+			digitalWrite(resetPin, HIGH);
 					}
 
           String fullMessage = "{\"message\":\"received\"}";

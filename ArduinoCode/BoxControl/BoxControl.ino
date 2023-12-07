@@ -35,7 +35,7 @@ int servoPos = 0;  // variable to store the servo position
 int buttonState = 0;  // variable for reading the pushbutton status
 
 // IF THIS ESP WILL ALSO BE USED AS A PUZZLE INTERFACE DO THIS
-bool helpPuzzle = false;
+bool helpPuzzle = true;
 const int enablePin = D5;
 const int solvedPin = D6;
 int puzzleSolved = HIGH;
@@ -51,7 +51,7 @@ void setup()
 
       //Setup pin that tells puzzle whether its enabled or not
       pinMode(enablePin, OUTPUT);
-      digitalWrite(enablePin, LOW);
+      digitalWrite(enablePin, HIGH);
       delay(50);
     }
 

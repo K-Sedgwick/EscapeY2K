@@ -9,6 +9,9 @@ const int ledFour = A4;
 //Pull these pins low when we want to talk to the ESP to tell it there was a wrong/right combo.
 const int wrongPin = 10;
 const int correctPin = 11;
+const int resetPin = 12;
+
+int resetVal = HIGH;
 
 #define numLEDS 4
 int ledPins [numLEDS] = {ledZero, ledOne, ledTwo, ledThree};
@@ -22,6 +25,19 @@ char combo [numLEDS] = {' ', ' ', ' ', ' '};
 #define numCombos 10
 // These are the combos that are correct!
 char successfulCombos[numCombos][numLEDS] = {
+  {'2', '3', '9', '2'},
+  {'7', '3', '9', '5'},
+  {'6', '5', '3', '0'},
+  {'7', '2', '1', '0'},
+  {'4', '6', '8', '4'},
+  {'3', '5', '1', '4'},
+  {'1', '0', '7', '1'},
+  {'7', '6', '2', '4'},
+  {'1', '8', '5', '0'},
+  {'1', '2', '3', '4'}
+};
+
+char successfulCombosCOPY[numCombos][numLEDS] = {
   {'2', '3', '9', '2'},
   {'7', '3', '9', '5'},
   {'6', '5', '3', '0'},
@@ -66,6 +82,7 @@ void setup(){
   digitalWrite(wrongPin, HIGH);
   pinMode(correctPin, OUTPUT);
   digitalWrite(correctPin, HIGH);
+  pinMode(resetPin, INPUT_PULLUP);
 }
   
 void loop(){
@@ -73,6 +90,18 @@ void loop(){
   
   if (customKey){
     handlePressLogic(customKey);
+  }
+
+  //Handle reset
+  resetVal = digitalRead(resetPin);
+  if(resetVal == LOW){
+    int i = 0;
+    int j = 0;
+    for (i = 0; i < numLEDS; i++){
+      for(j = 0; i < numCombos; j++){
+        successfulCombos[i][j] = successfulCombosCOPY[i][j];
+      }
+    }
   }
 
   //This is just for ticking
@@ -125,7 +154,6 @@ void handlePressLogic(char pressedKey){
 }
 
 // HELPER METHODS
-//A 3 B 2 9
 bool checkCombo(){
   Serial.println("COMBO CHECKING");
   bool success = false;

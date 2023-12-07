@@ -41,7 +41,7 @@ const int numOfMidnightDependentDevices = 1;
 String tvIP = "192.168.1.211:8001"; // 10.0.0.64 at Jakes house, 192.168.1.211:8001 on escapeY2K
 String dialIP = "192.168.1.225:1234";
 String potIP = "192.168.1.59:1234";
-String numberPuzzleIP = "";
+String numberPuzzleIP = "192.168.1.150:1234";
 String midnightDependentIPs[numOfMidnightDependentDevices] = {tvIP};
 
 // ---- ROTARY ENCODER SECTION ----
@@ -78,6 +78,7 @@ bool pause = true;
 bool reset = false;
 bool initialized = false;
 String status = "starting...";
+int monsterProbability = 0;   //The probability that the monster will show up (higher = more likely)
 
 //Help us keep track of which puzzles are enabled and which ones arent
 bool dialEnabled = false;
@@ -113,6 +114,9 @@ void setup()
 
   //Setup pin for LED so we can test stuff
   // pinMode(LedPin, OUTPUT); 
+
+  //Generate the random seed so the monster comes at different times each playthrough
+  randomSeed(analogRead(0));
 
 	// Rotate CW quickly at 10 RPM
 	// TODO: Figure out how to change direction
@@ -159,6 +163,13 @@ void loop()
       //Serial.print("Tick");
       clockStepper.step(tickSteps);
       previousTime = millis();
+      //Determine whether the monster should show up at any given point
+      for(int i = 0; i < monsterProbability; i++){
+        if(random(100) == 1){ //1 is arbitrary here, but this loops "monsterProbability" times and tries to make the monster activate
+          sendMessageToESP("monster=preseek", tvIP);
+          break;
+        }
+      }
     }
     // If they selected reverse, tell the stepper to reverse until they ask to be done
     else if (directionReverse)
@@ -346,7 +357,6 @@ void processInterruptorSwitches()
       timeCurrentlyControlledByUser = false;
       status = "Normal";
       pause = false;
-      initialized = true;
       if(tvAtStart == false){
         sendMessageToESP("clockmode=start", tvIP);
         tvAtStart = true;
@@ -426,6 +436,18 @@ void handleRotaryLogic() {
         numberPuzzleEnabled = false;
       }
     }
+
+    //Last thing were adding to the clock is the monster encounter
+    if(rotaryCounter > 45 && rotaryCounter < 75){
+      monsterProbability = 2;
+    }
+    else if(rotaryCounter > 76){
+      monsterProbability = 3;
+    }
+    else{
+      monsterProbability = 0;
+    }
+
 	}
 
   // Remember last A state
