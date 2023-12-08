@@ -17,13 +17,14 @@
 #define TXPIN 1
 #define RXPIN 3
 
-// ---- WIFI SECTION ----
+// ---- WIFI SECTION ---
 const char *ssid = "EscapeY2K";//EscapeY2K
 const char *password = "caNY0u3scAp3?!";//caNY0u3scAp3?!
 WiFiServer server(1234);
 
 String tvIP = "192.168.1.211:8001"; // 10.0.0.64 at Jakes house
 String snowflakeIP = "192.168.1.59:1234"; //10.0.0.174:1234 at jakes house
+String clockIP = "192.168.1.50:1234";
 
 // ---- GENERAL SECTION ----
 unsigned long currentTime = millis();
@@ -140,7 +141,7 @@ void patternLogic(){
     if(solved1 == false){
       status = "Solved";
       flashLEDSFirstPattern();
-      sendMessageToESP("solved=firstPlugCombo", tvIP);
+      //sendMessageToESP("solved=firstPlugCombo", tvIP);
     }
     solved1 = true;
   }
@@ -154,7 +155,8 @@ void checkFourthPlug(){
   if(plug1 == LOW && plug2 == LOW && plug3 == LOW && plug4 == LOW){
     if(solved2 == false){
       Serial.println("Send message to the TV that final is solved");
-      sendMessageToESP("solved=finalPlug", tvIP);
+      sendMessageToESP("disableMonster=true", clockIP);
+      sendMessageToESP("win=true", tvIP);
     }
     solved2 = true;
   }

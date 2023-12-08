@@ -12,6 +12,7 @@ const int correctPin = 11;
 const int resetPin = 12;
 
 int resetVal = HIGH;
+bool resetTracker = false;
 
 #define numLEDS 4
 int ledPins [numLEDS] = {ledZero, ledOne, ledTwo, ledThree};
@@ -22,9 +23,11 @@ char previousKey = ' ';
 int charsEntered = 0;
 char combo [numLEDS] = {' ', ' ', ' ', ' '};
 
+
 #define numCombos 10
 // These are the combos that are correct!
 char successfulCombos[numCombos][numLEDS] = {
+  {'1', '2', '3', '4'},
   {'2', '3', '9', '2'},
   {'7', '3', '9', '5'},
   {'6', '5', '3', '0'},
@@ -34,10 +37,10 @@ char successfulCombos[numCombos][numLEDS] = {
   {'1', '0', '7', '1'},
   {'7', '6', '2', '4'},
   {'1', '8', '5', '0'},
-  {'1', '2', '3', '4'}
 };
 
 char successfulCombosCOPY[numCombos][numLEDS] = {
+  {'1', '2', '3', '4'},
   {'2', '3', '9', '2'},
   {'7', '3', '9', '5'},
   {'6', '5', '3', '0'},
@@ -47,7 +50,6 @@ char successfulCombosCOPY[numCombos][numLEDS] = {
   {'1', '0', '7', '1'},
   {'7', '6', '2', '4'},
   {'1', '8', '5', '0'},
-  {'1', '2', '3', '4'}
 };
 
 // ---- GENERAL SECTION ----
@@ -92,16 +94,20 @@ void loop(){
     handlePressLogic(customKey);
   }
 
-  //Handle reset
   resetVal = digitalRead(resetPin);
-  if(resetVal == LOW){
-    int i = 0;
-    int j = 0;
-    for (i = 0; i < numLEDS; i++){
-      for(j = 0; i < numCombos; j++){
-        successfulCombos[i][j] = successfulCombosCOPY[i][j];
+  if(resetVal == LOW && resetTracker == false){
+    int l = 0;
+    int k = 0;
+    for(l = 0; l < numCombos; l++){
+      for(k = 0; k < numLEDS; k++){
+        successfulCombos[l][k] = successfulCombosCOPY[l][k];
       }
     }
+
+    resetTracker = true;
+  }
+  else{
+    resetTracker == false;
   }
 
   //This is just for ticking
@@ -159,33 +165,37 @@ bool checkCombo(){
   bool success = false;
   int i = 0;
   int j = 0;
+  int p = 0;
   int successCount = 0;
-  for (i = 0; i < numLEDS; i++){
+
+  //Display combo
+  // Serial.print("COMBO: ");
+  // for(p = 0; p < numLEDS; p++){
+  //   Serial.print(combo[p]);
+  // }
+
+  for (i = 0; i < numCombos; i++){
     successCount = 0;
-    for(j = 0; i < numCombos; j++){
+    for(j = 0; j < numLEDS; j++){
       // Serial.print("Comparing: ");
       // Serial.print(successfulCombos[i][j]);
       // Serial.print(" - ");
       // Serial.print(combo[j]);
-      if(successCount == numLEDS){
-        //TODO: Remove that combo from the array of combinations
-        success = true;
-        break;
-      }
-      else if(successfulCombos[i][j] == combo[j]){
+      if(successfulCombos[i][j] == combo[j]){
         successCount++;
         if(successCount == numLEDS){
-          Serial.print(successfulCombos[i][j]);
+          success = true;
           successfulCombos[i][j] = 'u';
         }
         continue;
       }
-      
+
       break;
     }
     if(success == true){
       break;
     }
+    
   }
 
   return success;

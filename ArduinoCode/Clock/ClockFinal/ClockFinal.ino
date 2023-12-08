@@ -76,6 +76,7 @@ const long TickDelayTime = 500;
 bool informed = false;
 bool pause = true;
 bool reset = false;
+bool disableMonster = false;
 bool initialized = false;
 String status = "starting...";
 int monsterProbability = 0;   //The probability that the monster will show up (higher = more likely)
@@ -146,26 +147,24 @@ void loop()
   {
     clockStepper.step(reverseSteps); // TODO: Figure out what direction is positive and what is negative
   }
+  else if(midnight && !informed){
+    informed = true;
+    Serial.println("midnight is on");
+    sendMessageToESP("midnight=true", tvIP);
+  }
 
   //If the admin hasnt requested control just operate normally
   else if(!pause){
     //If it's midnight send messages to all of the devices that need to know and dont allow the user to do any more adjusting of the time
-    if(midnight){
-      if(!informed){
-        informed = true;
-        //InformAllDevicesOfTime();
-        InformAllDevicesMidnight();
-      }
-    }
     // If the user hasnt selected a different time just tick normally
-    else if (!timeCurrentlyControlledByUser && (millis() - previousTime) > TickDelayTime)
+    if (!timeCurrentlyControlledByUser && (millis() - previousTime) > TickDelayTime)
     {
       //Serial.print("Tick");
       clockStepper.step(tickSteps);
       previousTime = millis();
       //Determine whether the monster should show up at any given point
       for(int i = 0; i < monsterProbability; i++){
-        if(random(100) == 1){ //1 is arbitrary here, but this loops "monsterProbability" times and tries to make the monster activate
+        if(random(100) == 1 && disableMonster == false){ //1 is arbitrary here, but this loops "monsterProbability" times and tries to make the monster activate
           sendMessageToESP("monster=preseek", tvIP);
           break;
         }
@@ -225,6 +224,7 @@ void handleClientConnected(WiFiClient rcvClient)
 						directionReverse = true;
             pause = false;
             status = "Reverse";
+            disableMonster = false;
 					}
 					else if (header.indexOf("GET /?fastForward=on") >= 0)
 					{
@@ -234,6 +234,7 @@ void handleClientConnected(WiFiClient rcvClient)
 						directionFastForward = true;
             pause = false;
             status = "Fast Forward";
+            disableMonster = false;
 					}
 					else if (header.indexOf("GET /?normal=on") >= 0)
 					{
@@ -245,6 +246,7 @@ void handleClientConnected(WiFiClient rcvClient)
             status = "Normal";
             pause = false;
             initialized = true;
+            disableMonster = false;
 					}
           else if (header.indexOf("GET /?reset=on") >= 0)
 					{
@@ -263,20 +265,49 @@ void handleClientConnected(WiFiClient rcvClient)
 						//Serial.println("PAUSE ON");
             pause = true;
             status = "Paused";
-            fullMessage = fullMessage + ",\"mode\":\"\"";
 					}
           else if (header.indexOf("GET /?pause=off") >= 0)
 					{
 						//Serial.println("PAUSE OFF");
-            pause = false;
             directionReverse = false;
 						directionFastForward = false;
 						timeCurrentlyControlledByUser = false;
             status = "Normal";
+            pause = false;
+            initialized = true;
 					}
           else if(header.indexOf("GET /?status=get" >= 0)){
             //We might need to add more metadata on to the response here someday, but for now we dont need to do anything extra here.
           }
+          else if (header.indexOf("GET /?disableMonster=true") >= 0)
+					{
+						//Serial.println("PAUSE ON");
+            pause = true;
+            disableMonster = true;
+            status = "Monster Disabled";
+					}
+          else if (header.indexOf("GET /?disableMonster=false") >= 0)
+					{
+						//Serial.println("Clock is running normally");
+						// Reset the variables that control clock function
+						directionReverse = false;
+						directionFastForward = false;
+						timeCurrentlyControlledByUser = false;
+            status = "Normal";
+            pause = false;
+            initialized = true;
+            disableMonster = false;
+					}
+          else if (header.indexOf("GET /?win=true") >= 0)
+					{
+						//Serial.println("PAUSE ON");
+            directionReverse = false;
+						directionFastForward = false;
+						timeCurrentlyControlledByUser = false;
+            pause = true;
+            disableMonster = true;
+            status = "WIN";
+					}
 
           fullMessage = fullMessage + ",\"status\":\"" + status + "\"}";
           String contentLengthString = "Content-Length: " + fullMessage.length() + 2;
@@ -321,6 +352,8 @@ void resetClockFromESP(){
   pause = true;
   status = "Resetting";
   initialized = false;
+  disableMonster = false;
+  informed = false;
 }
 
 void processInterruptorSwitches()
@@ -332,6 +365,13 @@ void processInterruptorSwitches()
 	// Keep in mind the pull-up means the pushbutton's logic is inverted. It goes
 	// HIGH when it's open, and LOW when it's pressed. Turn on pin 13 when the
 	// button's pressed, and off when it's not:
+  if(interruptorVal == LOW && midnight == false){
+    Serial.println("We just got to mignight");
+  }
+
+  if(interruptor2Val == LOW && startingPosition == false){
+    Serial.println("We just got to the starting position");
+  }
 
 
   // Interruptor at midnight is on D3 (Interruptor(1))
@@ -340,6 +380,8 @@ void processInterruptorSwitches()
     //Serial.println("We just got to mignight");
     timeCurrentlyControlledByUser = false;
     midnight = true;
+    pause = true;
+    status = "Midnight";
   }
   else if(interruptor2Val == LOW && startingPosition == false){
     //Serial.println("We just got to the starting position");
@@ -439,10 +481,10 @@ void handleRotaryLogic() {
 
     //Last thing were adding to the clock is the monster encounter
     if(rotaryCounter > 45 && rotaryCounter < 75){
-      monsterProbability = 2;
+      monsterProbability = 1;
     }
     else if(rotaryCounter > 76){
-      monsterProbability = 3;
+      monsterProbability = 2;
     }
     else{
       monsterProbability = 0;
@@ -458,15 +500,6 @@ void handleRotaryLogic() {
 
 	// Put in a slight delay to help debounce the reading (maybe remove)
   delay(2);
-}
-
-//This makes sending the time to every ESP that needs to be aware of it easier. This might need to be offloaded to a different ESP if it becomes too slow
-void InformAllDevicesMidnight(){
-  String midnightMessage  = midnight ? "midnight=true" : "midnight=false";
-
-  for(int i = 0; i < numOfMidnightDependentDevices; i++){
-    sendMessageToESP(midnightMessage, midnightDependentIPs[i]);
-  }
 }
 
 /// @brief This simplifies sending a message to a server.

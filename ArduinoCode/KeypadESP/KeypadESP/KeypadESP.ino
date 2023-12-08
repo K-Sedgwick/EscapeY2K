@@ -50,6 +50,11 @@ void setup() {
   pinMode(sendCorrect, INPUT_PULLUP);
   pinMode(sendWrong, INPUT_PULLUP);
   pinMode(resetPin, OUTPUT);
+  digitalWrite(resetPin, HIGH);
+  delay(10);
+  digitalWrite(resetPin, LOW);
+  delay(5);
+  digitalWrite(resetPin, HIGH);
 }
 
 void loop() {
@@ -89,7 +94,8 @@ void checkPins(){
   if(wrong == LOW && sentWrong == false){
     sentWrong = true;
     Serial.println("Wrong!");
-    sendMessageToESP("keypad=wrong", tvIP);
+	//For now we dont do anything. May change later.
+    //sendMessageToESP("keypad=wrong", tvIP);
   }
   else if(wrong == HIGH){
     sentWrong = false;

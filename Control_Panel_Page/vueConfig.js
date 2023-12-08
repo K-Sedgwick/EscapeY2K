@@ -12,32 +12,26 @@ const SOUND_EFFECTS = {
 }
 const LOCKBOXES = [
   { // PCB-1
-    puzzleName:"dial",
-    ip:"192.168.1.127:1234",
-    status: "Unknown",
-    loading: false
-  },
-  // { // PCB-2   192.168.1.242 on EscapeY2K and 10.0.0.155 at Jakes house
-  //   puzzleName:"bust",
-  //   ip:"192.168.1.242:1234",
-  //   status: "Unknown",
-  //   loading: false
-  // }, 
-  { // PCB-3
     puzzleName:"potentiometer",
     ip:"192.168.1.150:1234",
     status: "Unknown",
     loading: false
   }, 
-  { // PCB-5
+  { // PCB-2   192.168.1.242 on EscapeY2K and 10.0.0.155 at Jakes house
+    puzzleName:"bust",
+    ip:"192.168.1.242:1234",
+    status: "Unknown",
+    loading: false
+  }, 
+  { // PCB-3
     puzzleName:"Combo",
-    ip:"192.168.1.54:1234",
+    ip:"192.168.1.143:1234",
     status: "Unknown",
     loading: false
   },
   { // PCB-4
-    puzzleName:"plugboard",
-    ip:"192.168.1.143:1234",
+    puzzleName:"dial",
+    ip:"192.168.1.127:1234",
     status: "Unknown",
     loading: false
   }
@@ -99,7 +93,7 @@ const vue = new Vue({
           loading: false,
         },
         potentiometer: {
-          ipAddress: "TBD", //TODO: GET THE IP FOR THE POTENTIOMETER PUZZLE
+          ipAddress: "192.168.1.59", //TODO: GET THE IP FOR THE POTENTIOMETER PUZZLE
           port: "1234",
           status: "Off",
           loading: false,

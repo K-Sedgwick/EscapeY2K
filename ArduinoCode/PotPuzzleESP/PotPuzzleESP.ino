@@ -37,7 +37,7 @@ unsigned long previousTime = 0;
 const long TickDelayTime = 1000;
 
 void setup() {
-  delay(10000);
+  delay(5000);
   Serial.begin(9600);
   connectToWifi();
 

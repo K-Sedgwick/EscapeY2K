@@ -49,6 +49,9 @@ void setup()
       //Setup pin that lets puzzle tell ESP whether it was solved or not
       pinMode(solvedPin, INPUT_PULLUP);
 
+      pinMode(D4, OUTPUT);
+      digitalWrite(D4, LOW);
+
       //Setup pin that tells puzzle whether its enabled or not
       pinMode(enablePin, OUTPUT);
       digitalWrite(enablePin, HIGH);
@@ -118,12 +121,14 @@ String changeBoxState(){
       delay(250);
       digitalWrite(relayPin, HIGH);
       state = "Open";
+      digitalWrite(D4, HIGH);
   }
   else
   {
       servoPos = 120;
       latchServo.write(servoPos);
       state = "Closed";
+      digitalWrite(D4, LOW);
   }
   delay(250);
   digitalWrite(relayPin, LOW);

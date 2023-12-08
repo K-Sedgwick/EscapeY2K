@@ -27,7 +27,7 @@ WiFiServer server(1234);
 // IR Stuff
 #define IR_RECEIVE_PIN D1
 String previousCmd = "Unknown";
-String otherIR = "192.168.1.54:1234";
+String otherIR = "192.168.1.181:1234";
 
 String tvIp = "192.168.1.211:8001"; // 10.0.0.64 at Jakes house
  
@@ -36,9 +36,9 @@ int pirState = LOW;             // we start, assuming no motion detected
 int val = 0;                    // variable for reading the pin status
 String status = "NOT seeking";
 
-bool mainModule = true; //Only let one of the IR sensors do this, we dont need both to do it
+bool mainModule = false; //Only let one of the IR sensors do this, we dont need both to do it
 int secondsSpentSeeking = 0; //In seconds
-const int seekDuration = 15; //In seconds
+const int seekDuration = 10; //In seconds
 bool seek = false;				// No reason to check the motion sensor if we dont have to
 bool initialized = false;
 bool firstRotation = true;
@@ -141,11 +141,12 @@ void handleSensorLogic(){
 		Serial.println("Motion ended!");
 		// We only want to print on the output change, not state
 		pirState = HIGH;
+      pause = false;
 		if(!firstRotation){
-      firstRotation = false;
       sendMessageToESP("pause=false", otherIR);
-      sendMessageToESP("monster=seek", tvIp);
     }
+      sendMessageToESP("monster=seek", tvIp);
+      firstRotation = false;
       }
     }
     else {
@@ -154,6 +155,7 @@ void handleSensorLogic(){
 		Serial.println("Motion detected!");
 		// We only want to print on the output change, not state
 		pirState = LOW;
+    pause = true;
     sendMessageToESP("pause=true", otherIR);
 		sendMessageToESP("monster=true", tvIp);
       }
