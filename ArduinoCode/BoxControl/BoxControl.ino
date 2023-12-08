@@ -28,6 +28,7 @@ const int buttonPin = D1;  // the number of the pushbutton pin
 Servo latchServo;         // create servo object to control a servo -- twelve servo objects can be created on most boards.
 const int relayPin = D2;
 const int servoPin = RX;
+const int LEDPin = D4;
 
 int servoPos = 0;  // variable to store the servo position
 
@@ -63,7 +64,10 @@ void setup()
     // initialize the pushbutton pin as an input:
     pinMode(buttonPin, INPUT);
     pinMode(relayPin, OUTPUT);
+	pinMode(LEDPin, OUTPUT); // Attach the on-board LED pin to the available pinout
     latchServo.attach(servoPin);
+
+	digitalWrite(LEDPin, LOW); // Pin starts low to show box is locked. Will activate when box is solved for.
 }
 
 void loop()
@@ -121,14 +125,22 @@ String changeBoxState(){
       delay(250);
       digitalWrite(relayPin, HIGH);
       state = "Open";
+<<<<<<< HEAD
       digitalWrite(D4, HIGH);
+=======
+	  digitalWrite(LEDPin, HIGH); // Turn on signal LED when opened.
+>>>>>>> 64c5995b9752e9820ab10aed0ea788297644ebbd
   }
   else
   {
       servoPos = 120;
       latchServo.write(servoPos);
       state = "Closed";
+<<<<<<< HEAD
       digitalWrite(D4, LOW);
+=======
+	  digitalWrite(LEDPin, LOW); // Turn off signal LED when closed again.
+>>>>>>> 64c5995b9752e9820ab10aed0ea788297644ebbd
   }
   delay(250);
   digitalWrite(relayPin, LOW);
