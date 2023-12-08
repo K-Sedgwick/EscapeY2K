@@ -52,6 +52,9 @@ bool ledStatus = false;
 // 013 - 
 
 bool solved = false;
+bool allowNewEffect = true;
+int dontPlayNewEffectCount = 0;
+const int namiTapeLength = 60; //IN SECONDS
 
 // Define the required MP3 Player Commands:
 // Select storage device to TF card
@@ -70,6 +73,8 @@ static int8_t volDown[] = {0x7e, 0x02, 0x06, 0xef};
 static int8_t volMin[] = {0x7e, 0x03, 0x31, 0x01, 0xef};
 //Set Volume 20
 static int8_t volMid[] = {0x7e, 0x03, 0x31, 0x14, 0xef};
+//NAMIS MESSAGE
+static int8_t namiPhoneMessage[] = {0x7e, 0x04, 0x42, 0x01, 0x0C, 0xef};
 
 // Define the Serial MP3 Player Module.
 SoftwareSerial MP3(MP3_RX, MP3_TX);
@@ -112,7 +117,9 @@ void loop()
   int phone = digitalRead(D1);
   if(phone == LOW && solved == false){
     Serial.println("Phone on base");
-    sendMessageToESP("solved=phone", tvIP);
+    allowNewEffect = false;
+		send_command_to_MP3_player(namiPhoneMessage, 6);
+    //sendMessageToESP("solved=phone", tvIP);
     solved = true;
   }
 
@@ -128,6 +135,21 @@ void loop()
     else{
       ledStatus = true;
       digitalWrite(LED_BUILTIN, HIGH); // Turn the LED off
+    }
+
+    //This is so that monster footsteps dont override what nami is saying
+    if(allowNewEffect == false){
+      if(dontPlayNewEffectCount >= namiTapeLength){
+        allowNewEffect = true;
+      }
+      else{
+        dontPlayNewEffectCount++;
+        Serial.print("Nami count: ");
+        Serial.println(dontPlayNewEffectCount);
+      }
+    }
+    else{
+      dontPlayNewEffectCount = 0;
     }
   }
 }
@@ -159,7 +181,7 @@ void handleClientConnected(WiFiClient rcvClient)
 				if (currentLine.length() == 0)
 				{
 					String fullMessage = "{\"message\":\"received\"";
-					if (header.indexOf("GET /?play=") >= 0)
+					if (header.indexOf("GET /?play=") >= 0 && allowNewEffect == true)
 					{
 
             String intToParse = "";
@@ -226,6 +248,16 @@ void handleClientConnected(WiFiClient rcvClient)
 						send_command_to_MP3_player(volMid, 5);
             solved = false;
             fullMessage = fullMessage + ",\"volume\":\"20\",\"reset\":\"true\"";
+					}
+          else if (header.indexOf("GET /?allowNewEffect=true") >= 0)
+					{
+            allowNewEffect = true;
+            fullMessage = fullMessage + ",\"newEffect\":\"allowed\"";
+					}
+          else if (header.indexOf("GET /?allowNewEffect=false") >= 0)
+					{
+            allowNewEffect = false;
+            fullMessage = fullMessage + ",\"newEffect\":\"not allowed\"";
 					}
 
           //This allows us to add any other properties we may want to add and then still close the response when were done

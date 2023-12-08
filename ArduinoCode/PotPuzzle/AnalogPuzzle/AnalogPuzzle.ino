@@ -54,6 +54,10 @@ void loop() {
   {
     enabled = 1;
   }
+  else
+  {
+    enabled = 0;
+  }
   //if(digitalRead(reset) == LOW)
   //{
   //  enabled = 0;
