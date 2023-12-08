@@ -1,4 +1,5 @@
 # Server Imports
+import time
 from server2 import InitiateServer, ConnectToESPAsync
 
 # Video Imports
@@ -31,7 +32,7 @@ gameover = vlc.Media(f"{VIDEO_DIR}/gameover.mp4")
 playlist = vlc.MediaList([game, midnight, dark, timetravel, seek, monster, ending, gameover])
     
 # Game timer setup
-BEGINNING_TIME = 300
+BEGINNING_TIME =   480
 SECOND_UPDATE = 1
 DEPLETION_UPDATE = 0.2
     
@@ -73,7 +74,7 @@ def update_timer():
         threading.Timer(timer_update, update_timer).start()
     else:
         # When the game timer is active and reaches 0, game over
-        play_video(dark)
+        play_video(gameover)
         ConnectToESPAsync("192.168.1.211", 8001, "gameover")
     
 def start_timer():
@@ -97,6 +98,21 @@ def close_timer():
 def add_minute():
     global game_timer
     game_timer += 60
+    
+def start_game():
+    play_video(game)
+    time.sleep(0.05)
+    start_timer()
+    
+def reset_game():
+    play_video(dark)
+    time.sleep(0.05)
+    close_timer()
+    
+def win_game():#
+    play_video(ending)
+    time.sleep(0.05)
+    close_timer()
     
 # Make sure we have a main function :)
 if __name__ == '__main__':
@@ -136,7 +152,7 @@ if __name__ == '__main__':
     keyboard.add_hotkey('m', lambda: play_video(monster))
     keyboard.add_hotkey('f', lambda: play_video(midnight))
     keyboard.add_hotkey('s', lambda: play_video(seek))
-    keyboard.add_hotkey('e', lambda: play_video(ending))
+    keyboard.add_hotkey('e', lambda: win_game())
     keyboard.add_hotkey('z', lambda: play_video(gameover))
     keyboard.add_hotkey('w', lambda: play_video(timetravel))
 
@@ -155,6 +171,9 @@ if __name__ == '__main__':
     keyboard.add_hotkey('[', lambda: start_timer())
     keyboard.add_hotkey(']', lambda: close_timer())
     keyboard.add_hotkey('a', lambda: add_minute())
+    
+    keyboard.add_hotkey('.', lambda: start_game())
+    keyboard.add_hotkey(',', lambda: reset_game())
 
     starting_thread_count = threading.active_count()
 
@@ -165,7 +184,8 @@ if __name__ == '__main__':
         if (current_mrl == midnight.get_mrl()):
             if (check_player.get_position() > 0.98): list(map(lambda list_player: list_player.get_media_player().set_position(0.1), list_players))
         elif (current_mrl == ending.get_mrl() or current_mrl == gameover.get_mrl()):
-            if (check_player.get_position() > 0.98): play_video(dark)
+            if (check_player.get_position() > 0.98): 
+                reset_game()
               
     serverProcess.terminate()
 
