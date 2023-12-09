@@ -354,6 +354,7 @@ void resetClockFromESP(){
   initialized = false;
   disableMonster = false;
   informed = false;
+  midnight = false;
 }
 
 void processInterruptorSwitches()
@@ -366,11 +367,11 @@ void processInterruptorSwitches()
 	// HIGH when it's open, and LOW when it's pressed. Turn on pin 13 when the
 	// button's pressed, and off when it's not:
   if(interruptorVal == LOW && midnight == false){
-    Serial.println("We just got to mignight");
+    //Serial.println("We just got to mignight");
   }
 
   if(interruptor2Val == LOW && startingPosition == false){
-    Serial.println("We just got to the starting position");
+    //Serial.println("We just got to the starting position");
   }
 
 

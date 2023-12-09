@@ -70,7 +70,8 @@ void loop() {
   // Check pins for signals and send ESP messages as needed
   solvedStatus = digitalRead(solvedPin);
   if(solvedStatus == LOW && solvedSent == false){
-    solvedSent == true;
+    Serial.println("Solved");
+    solvedSent = true;
     status="solved";
     sendMessageToESP("solved=pot", tvIp);
   }
@@ -195,6 +196,7 @@ void handleClientConnected(WiFiClient rcvClient)
 					{
             status = "unsolved";
             enabledStr = "false";
+            solvedSent = false;
 
             digitalWrite(enablePin, HIGH);
             delay(50);

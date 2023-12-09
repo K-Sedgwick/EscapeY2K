@@ -34,6 +34,7 @@ void setup() {
   pinMode(LED_final, OUTPUT);
   pinMode(enable, INPUT);
   pinMode(reset, INPUT);
+  pinMode(output, OUTPUT);
   enabled = 0;
 
   digitalWrite(LED_initial, HIGH);

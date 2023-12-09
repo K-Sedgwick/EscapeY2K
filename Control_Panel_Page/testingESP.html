@@ -65,6 +65,7 @@
                                 :disabled="espModules.dialPuzzle.loading">Enable</button>
                             <button class="btn btn-dark" @click="sendESPMessage('dialPuzzle', '?leds=off')"
                                 :disabled="espModules.dialPuzzle.loading">Disable</button>
+                            <button class="btn btn-dark" @click="sendESPMessage('miniPC', '?solved=dial')">Mark as Solved</button>
                         </div>
                         <div class="mt-2 d-flex justify-content-center">
                             <h4 class="mr-2">Potentiometers:</h4>
@@ -72,14 +73,16 @@
                                 :disabled="espModules.dialPuzzle.loading">Enable</button>
                             <button class="btn btn-dark" @click="sendESPMessage('potentiometer', '?enabled=false')"
                                 :disabled="espModules.dialPuzzle.loading">Disable</button>
-                        </div>
+                            <button class="btn btn-dark" @click="sendESPMessage('miniPC', '?solved=pot')">Mark as Solved</button>
+                            </div>
                         <div class="mt-2 d-flex justify-content-center">
                             <h4 class="mr-2">5-Digit Number Combo:</h4>
                             <button class="btn btn-dark mr-2" @click="sendESPMessage('numberPuzzle', '?enabled=true')"
                                 :disabled="espModules.dialPuzzle.loading">Enable</button>
                             <button class="btn btn-dark" @click="sendESPMessage('numberPuzzle', '?enabled=false')"
                                 :disabled="espModules.dialPuzzle.loading">Disable</button>
-                        </div>
+                            <button class="btn btn-dark" @click="sendESPMessage('miniPC', '?solved=number')">Mark as Solved</button>
+                            </div>
                     </div>
                 </div>
             </div>
@@ -107,13 +110,13 @@
                             <button class="btn btn-dark" @click="sendESPMessage('clock', '?pause=on')"
                                 :disabled="espModules.clock.loading">Pause Clock</button>
                             <button class="btn btn-dark"
-                                @click="sendESPMessage('miniPC', '?clockmode=tick');"
+                                @click="sendESPMessage('clock', '?normal=on');"
                                 :disabled="espModules.clock.loading">Tick Normally</button>
                             <button class="btn btn-dark"
-                                @click="sendESPMessage('miniPC', '?clockmode=reverse');"
+                                @click="sendESPMessage('clock', '?reverse=on');"
                                 :disabled="espModules.clock.loading">Reverse</button>
                             <button class="btn btn-dark"
-                                @click="sendESPMessage('miniPC', '?clockmode=fastForward');"
+                                @click="sendESPMessage('clock', '?fastForward=on');"
                                 :disabled="espModules.clock.loading">Fast Forward</button>
                         </div>
                     </div>
