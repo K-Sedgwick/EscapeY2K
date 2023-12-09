@@ -18,35 +18,35 @@ class ServerHandler(BaseHTTPRequestHandler):
     # These are for helping us keep track of which puzzles are going to be used in that playthrough of the room
     puzzles = [
         {"name":"dial", "ip":"192.168.1.225", "port":1234},
-        {"name":"plugboard", "ip":"FILL IN", "port":1234}, # This is sort of a final puzzle, just here so I dont lose it
-        {"name":"potentiometer", "ip":"FILL IN", "port":1234},
+        #{"name":"plugboard", "ip":"192.168.202", "port":1234}, # This is sort of a final puzzle, just here so I dont lose it
+        {"name":"potentiometer", "ip":"192.168.1.59", "port":1234},
         {"name":"numberPuzzle", "ip":"FILL IN", "port":1234},
         {"name":"keypad", "ip":"FILL IN", "port":1234}
     ]
     lockBoxes = [
-        {"id":"1", "ip":"192.168.1.127", "port":1234}, # 1
-        {"id":"3", "ip":"192.168.1.143", "port":1234}, # 3
-        {"id":"5", "ip":"192.168.1.150", "port":1234}, # 5 THIS IS THE SPECIAL ONE THAT ALSO CONTROLS A PUZZLE
-        {"id":"2", "ip":"192.168.1.242", "port":1234}, # PCB-2   192.168.1.242 on EscapeY2K and 10.0.0.155 at Jakes house
+        {"id":"1", "ip":"192.168.1.150", "port":1234}, # 1
+        {"id":"2", "ip":"192.168.1.242", "port":1234}, # 3
+        {"id":"3", "ip":"192.168.1.143", "port":1234}, # 5 THIS IS THE SPECIAL ONE THAT ALSO CONTROLS A PUZZLE
+        {"id":"4", "ip":"192.168.1.127", "port":1234}, # PCB-2   192.168.1.242 on EscapeY2K and 10.0.0.155 at Jakes house
     ]
     motionModules = [
         {"name":"bug", "ip":"192.168.1.181", "port":1234},
-        {"name":"otherGuy", "ip":"192.168.1.54", "port":1234} # TODO: GET THE OTHER IP FOR THE MOTION MODULE
+        {"name":"otherGuy", "ip":"192.168.1.54", "port":1234}
     ]
     audioModules = [
-        {"name":"tape", "ip":"192.168.1.212", "port":1234}, # TODO: FILL IN AUDIO MODULES IP ADDRESSES
+        {"name":"tape", "ip":"192.168.1.212", "port":1234},
         {"name":"phone", "ip":"192.168.1.151", "port":1234}
     ]
+    HOTKEY_DELAY = 0.5
     # Empty dictionary that contains status of all WiFi components that have spoken to it
     # Basically, its going to store information about which puzzles have been solved (not which havent)
     gameover = False
-    statusDict = {"gameover":gameover, "monster":False}
+    statusDict = {"gameover":gameover, "monster":False, "phone":"NOT Placed", "midnight":False, "win":False}
     statusLock = None # This will get set by external code, so dont worry about the fact its None here XD
     child_conn = None # This will also get set by external code, so we can use it without worry
     initializeRoom = True
     keyboardForVideoControl = Controller()
     clock = {"ip":"192.168.1.50", "port":1234}
-    finalPuzzleBox = {"ip":"192.168.1.54", "port":1234} # TBD, but for now its ID4
 
     def do_GET(self):
         return self.router()
@@ -105,6 +105,8 @@ class ServerHandler(BaseHTTPRequestHandler):
         self.statusLock.release()
         if copyOfStatus["gameover"] == True:
             return {"status":"GAMEOVER"}
+        elif copyOfStatus["win"] == True:
+            return {"YOU WON":"PLEASE STOP"}
         
 
         # Else, process query commands
@@ -170,16 +172,13 @@ class ServerHandler(BaseHTTPRequestHandler):
                 ...
             elif monster == "preseek":
                 monsterFootsteps = 6
-                ConnectToESPAsync(self.audioModules[0]["ip"], self.audioModules[0]["ip"], f"?play={monsterFootsteps}")  # TODO: FIX THIS SONG VAL
                 ConnectToESPAsync(self.audioModules[1]["ip"], self.audioModules[1]["port"], f"?play={monsterFootsteps}")
+                ConnectToESPAsync(self.audioModules[0]["ip"], self.audioModules[0]["port"], f"?play={monsterFootsteps}")
+                ConnectToESPAsync(self.clock['ip'], self.clock['port'], '?pause=on')
             elif monster == "seek":
                 self.__pressAndRelease('s')
-                ConnectToESPAsync(self.clock['ip'], self.clock['port'], '?pause=on')
             elif monster == "true":
                 # Get a copy of the status dict and if monster is currently in seek go ahead and press this button
-                self.statusLock.acquire()
-                copyOfStatus = self.statusDict.copy()
-                self.statusLock.release()
                 self.__pressAndRelease('m')
             elif monster == "false":
                 self.__pressAndRelease('g')
@@ -188,7 +187,7 @@ class ServerHandler(BaseHTTPRequestHandler):
             keypad = query_components.get("keypad", None)
             if keypad == None:
                 ...
-            elif keypad == "increment":
+            elif keypad == "correct":
                 self.__pressAndRelease('a')
 
             # Check if midnight should be showing
@@ -197,6 +196,7 @@ class ServerHandler(BaseHTTPRequestHandler):
                 ...
             elif midnight == 'true':
                 self.__pressAndRelease('f')
+                ConnectToESPAsync(self.lockBoxes[3]["ip"], self.lockBoxes[3]["port"], "?latch=change")
 
             # When a puzzle is solved, receive this command
             solvedPuzzle = query_components.get("solved", None)
@@ -204,16 +204,23 @@ class ServerHandler(BaseHTTPRequestHandler):
                 ...
             else:
                 self.processNextStep(solvedPuzzle)
-
+                                
             initialize = query_components.get("initialize", None)
             if initialize == None:
                 ...
             elif initialize == 'true':
                 print("initializing...")
-                    
+                ConnectToESPAsync(self.clock["ip"], self.clock["port"], "?normal=on")
                 self.initializeRoom = False
-                self.__pressAndRelease('g')
-                self.__pressAndRelease('[')
+                self.__pressAndRelease('.')
+                
+            win = query_components.get("win", None)
+            if win == None:
+                ...
+            elif win == 'true':
+                print("THEY WON")
+                self.__pressAndRelease('e')
+                ConnectToESPAsync(self.clock["ip"], self.clock["port"], "?win=true")
 
             # When telling the room to reset, execute the code here
             reset = query_components.get("reset", None)
@@ -239,12 +246,12 @@ class ServerHandler(BaseHTTPRequestHandler):
         copyOfStatus = self.statusDict.copy()
         self.statusLock.release()
         # Check if solved even exists (and hasnt already been solved)
-        if(solvedPuzzle[0] in copyOfStatus["solved"]):    
-            nextPuzzleIndex = len(copyOfStatus["solved"])-1
+        nextPuzzleIndex = len(copyOfStatus["solved"])-1
+        if(nextPuzzleIndex >= 3):
+            ConnectToESPAsync(self.audioModules[1]["ip"], self.audioModules[1]["port"], "?play=12")
+        else:
             lockboxToOpen = self.lockBoxes[nextPuzzleIndex]
             print(f'Opening lockbox {lockboxToOpen["id"]} at {lockboxToOpen["ip"]}:{lockboxToOpen["port"]}')
-        else:
-            print(f"{solvedPuzzle[0]} was already solved.")
             ConnectToESPAsync(lockboxToOpen["ip"], lockboxToOpen["port"], "?latch=change")
     
     def processHint(self):
@@ -255,8 +262,7 @@ class ServerHandler(BaseHTTPRequestHandler):
     # Once we call this method, this resets the room and changes the puzzles that need to be solved in order for the room to be completable
     def resetRoom(self):
         self.initializeRoom = True
-        self.__pressAndRelease('d')
-        self.__pressAndRelease(']')
+        self.__pressAndRelease(',')
         self.gameover = False
         # TODO: Then tell all of the espModules to reset
         dialIndex = self.findIndexInList(self.puzzles, "name", "dial")
@@ -271,16 +277,16 @@ class ServerHandler(BaseHTTPRequestHandler):
         # Tell any module that might need to reset to reset
         ConnectToESPAsync(dial["ip"], dial["port"], "reset")
         ConnectToESPAsync(potPuzzle["ip"], potPuzzle["port"], "reset")
-        ConnectToESPAsync(numberPuzzle["ip"], numberPuzzle["port"], "reset")
-        ConnectToESPAsync(keypadPuzzle["ip"], keypadPuzzle["port"], "reset")
-        ConnectToESPAsync(self.clock["ip"], self.clock["ip"], "reset")
+        # ConnectToESPAsync(numberPuzzle["ip"], numberPuzzle["port"], "reset")
+        # ConnectToESPAsync(keypadPuzzle["ip"], keypadPuzzle["port"], "reset")
+        ConnectToESPAsync(self.clock["ip"], self.clock["port"], "reset")
         ConnectToESPAsync(self.motionModules[0]["ip"], self.motionModules[0]["port"], "reset")
         ConnectToESPAsync(self.motionModules[1]["ip"], self.motionModules[1]["port"], "reset")
         # TODO: FIGURE OUT IF THERES ANYTHING ELSE THAT HAS TO RESET
 
         # And reset the statusDict, so its as if we just started from zero
         self.clearStatusDict()
-        self.updateStatusDict({"gameover":False, "monster":False})
+        self.updateStatusDict({"gameover":False, "monster":False,  "phone":"NOT Placed", "midnight":False, "win":False})
 
         # Also, make sure to tell the TVs to go back to black (FORGET THE HERSE CUZ I NEVER DIE)
         self.__pressAndRelease('d') # d for dark
