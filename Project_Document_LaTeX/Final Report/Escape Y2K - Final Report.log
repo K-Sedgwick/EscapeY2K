@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 23.1) (preloaded format=pdflatex 2023.3.23)  14 DEC 2023 09:15
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 23.1) (preloaded format=pdflatex 2023.3.23)  14 DEC 2023 10:04
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -336,157 +336,128 @@ LaTeX Font Info:    Trying to load font information for U+msb on input line 41.
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 
-LaTeX Warning: Citation `wikipediaEscapeRoom' on page 1 undefined on input line 105.
-
-
-LaTeX Warning: Citation `wikipediaEscapeRoom' on page 1 undefined on input line 110.
-
-
-LaTeX Warning: Citation `whatIsAnEscapeRoom' on page 1 undefined on input line 113.
-
-
-LaTeX Warning: Citation `wikipediaEscapeRoom' on page 1 undefined on input line 115.
+LaTeX Warning: Citation `wikipediaEscapeRoom' on page 1 undefined on input line 108.
 
 [1{C:/Users/schno/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}
 
 
 ]
 
-LaTeX Warning: Citation `whatIsAnEscapeRoom' on page 2 undefined on input line 129.
+LaTeX Warning: File `Images/tvcomparison.png' not found on input line 154.
 
 
-LaTeX Warning: File `Images/tvcomparison.png' not found on input line 177.
-
-
-c:/Users/schno/Documents/escapeY2K/EscapeY2K-1/Project_Document_LaTeX/Final Report/Escape Y2K - Final Report.tex:177: Package pdftex.def Error: File `Images/tvcomparison.png' not found: using draft setting.
+c:/Users/schno/Documents/escapeY2K/EscapeY2K-1/Project_Document_LaTeX/Final Report/Escape Y2K - Final Report.tex:154: Package pdftex.def Error: File `Images/tvcomparison.png' not found: using draft setting.
 
 See the pdftex.def package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.177 ....90\columnwidth]{Images/tvcomparison.png}
+l.154 ....90\columnwidth]{Images/tvcomparison.png}
                                                   
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
-LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 177.
+LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 154.
 (C:\Users\schno\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ot1pcr.fd
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
 )
 
-LaTeX Warning: File `Images/tvsketch.png' not found on input line 193.
+LaTeX Warning: File `Images/tvsketch.png' not found on input line 170.
 
 
-c:/Users/schno/Documents/escapeY2K/EscapeY2K-1/Project_Document_LaTeX/Final Report/Escape Y2K - Final Report.tex:193: Package pdftex.def Error: File `Images/tvsketch.png' not found: using draft setting.
-
-See the pdftex.def package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.193 ...th=0.90\columnwidth]{Images/tvsketch.png}
-                                                  
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-[2]
-
-LaTeX Warning: File `Images/EscapeRoomIsoFront.jpg' not found on input line 234.
-
-
-c:/Users/schno/Documents/escapeY2K/EscapeY2K-1/Project_Document_LaTeX/Final Report/Escape Y2K - Final Report.tex:234: Package pdftex.def Error: File `Images/EscapeRoomIsoFront.jpg' not found: using draft setting.
+c:/Users/schno/Documents/escapeY2K/EscapeY2K-1/Project_Document_LaTeX/Final Report/Escape Y2K - Final Report.tex:170: Package pdftex.def Error: File `Images/tvsketch.png' not found: using draft setting.
 
 See the pdftex.def package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.234 ...lumnwidth]{Images/EscapeRoomIsoFront.jpg}
+l.170 ...th=0.90\columnwidth]{Images/tvsketch.png}
                                                   
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
 
-LaTeX Warning: File `Images/EscapeRoomIsoRear.jpg' not found on input line 240.
+Underfull \vbox (badness 3668) has occurred while \output is active []
+
+ [2]
+
+LaTeX Warning: File `Images/EscapeRoomIsoFront.jpg' not found on input line 214.
 
 
-c:/Users/schno/Documents/escapeY2K/EscapeY2K-1/Project_Document_LaTeX/Final Report/Escape Y2K - Final Report.tex:240: Package pdftex.def Error: File `Images/EscapeRoomIsoRear.jpg' not found: using draft setting.
+c:/Users/schno/Documents/escapeY2K/EscapeY2K-1/Project_Document_LaTeX/Final Report/Escape Y2K - Final Report.tex:214: Package pdftex.def Error: File `Images/EscapeRoomIsoFront.jpg' not found: using draft setting.
 
 See the pdftex.def package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.240 ...olumnwidth]{Images/EscapeRoomIsoRear.jpg}
+l.214 ...lumnwidth]{Images/EscapeRoomIsoFront.jpg}
                                                   
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 246--251
+LaTeX Warning: File `Images/EscapeRoomIsoRear.jpg' not found on input line 220.
+
+
+c:/Users/schno/Documents/escapeY2K/EscapeY2K-1/Project_Document_LaTeX/Final Report/Escape Y2K - Final Report.tex:220: Package pdftex.def Error: File `Images/EscapeRoomIsoRear.jpg' not found: using draft setting.
+
+See the pdftex.def package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.220 ...olumnwidth]{Images/EscapeRoomIsoRear.jpg}
+                                                  
+Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 226--231
 
  []
 
 [3]
 
-LaTeX Warning: File `Images/pebble charger.jpg' not found on input line 290.
+LaTeX Warning: File `Images/pebble charger.jpg' not found on input line 270.
 
 
-c:/Users/schno/Documents/escapeY2K/EscapeY2K-1/Project_Document_LaTeX/Final Report/Escape Y2K - Final Report.tex:290: Package pdftex.def Error: File `Images/pebble charger.jpg' not found: using draft setting.
+c:/Users/schno/Documents/escapeY2K/EscapeY2K-1/Project_Document_LaTeX/Final Report/Escape Y2K - Final Report.tex:270: Package pdftex.def Error: File `Images/pebble charger.jpg' not found: using draft setting.
 
 See the pdftex.def package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.290 ...5\columnwidth]{Images/pebble charger.jpg}
+l.270 ...5\columnwidth]{Images/pebble charger.jpg}
                                                   
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
 [4]
 
-LaTeX Warning: File `Images/big-clock.jpg' not found on input line 375.
+LaTeX Warning: File `Images/big-clock.jpg' not found on input line 355.
 
 
-c:/Users/schno/Documents/escapeY2K/EscapeY2K-1/Project_Document_LaTeX/Final Report/Escape Y2K - Final Report.tex:375: Package pdftex.def Error: File `Images/big-clock.jpg' not found: using draft setting.
-
-See the pdftex.def package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.375 ...h=0.85\columnwidth]{Images/big-clock.jpg}
-                                                  
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-[5]
-Underfull \hbox (badness 10000) in paragraph at lines 421--428
-
- []
-
-
-LaTeX Warning: File `Images/LockMech.png' not found on input line 431.
-
-
-c:/Users/schno/Documents/escapeY2K/EscapeY2K-1/Project_Document_LaTeX/Final Report/Escape Y2K - Final Report.tex:431: Package pdftex.def Error: File `Images/LockMech.png' not found: using draft setting.
+c:/Users/schno/Documents/escapeY2K/EscapeY2K-1/Project_Document_LaTeX/Final Report/Escape Y2K - Final Report.tex:355: Package pdftex.def Error: File `Images/big-clock.jpg' not found: using draft setting.
 
 See the pdftex.def package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.431 ...th=0.85\columnwidth]{Images/LockMech.png}
+l.355 ...h=0.85\columnwidth]{Images/big-clock.jpg}
                                                   
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
 
-LaTeX Warning: File `Images/ClosedLock.png' not found on input line 446.
+LaTeX Warning: File `Images/ClosedLock.png' not found on input line 383.
 
 
-c:/Users/schno/Documents/escapeY2K/EscapeY2K-1/Project_Document_LaTeX/Final Report/Escape Y2K - Final Report.tex:446: Package pdftex.def Error: File `Images/ClosedLock.png' not found: using draft setting.
+c:/Users/schno/Documents/escapeY2K/EscapeY2K-1/Project_Document_LaTeX/Final Report/Escape Y2K - Final Report.tex:383: Package pdftex.def Error: File `Images/ClosedLock.png' not found: using draft setting.
 
 See the pdftex.def package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.446 ...=0.85\columnwidth]{Images/ClosedLock.png}
+l.383 ...=0.85\columnwidth]{Images/ClosedLock.png}
                                                   
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
@@ -494,33 +465,33 @@ If that doesn't work, type  X <return>  to quit.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [6]
+ [5]
 
-LaTeX Warning: File `Images/OpenLock.png' not found on input line 452.
+LaTeX Warning: File `Images/OpenLock.png' not found on input line 389.
 
 
-c:/Users/schno/Documents/escapeY2K/EscapeY2K-1/Project_Document_LaTeX/Final Report/Escape Y2K - Final Report.tex:452: Package pdftex.def Error: File `Images/OpenLock.png' not found: using draft setting.
+c:/Users/schno/Documents/escapeY2K/EscapeY2K-1/Project_Document_LaTeX/Final Report/Escape Y2K - Final Report.tex:389: Package pdftex.def Error: File `Images/OpenLock.png' not found: using draft setting.
 
 See the pdftex.def package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.452 ...th=0.85\columnwidth]{Images/OpenLock.png}
+l.389 ...th=0.85\columnwidth]{Images/OpenLock.png}
                                                   
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
 
 
-LaTeX Warning: File `Images/OpenContainer.png' not found on input line 458.
+LaTeX Warning: File `Images/OpenContainer.png' not found on input line 395.
 
 
-c:/Users/schno/Documents/escapeY2K/EscapeY2K-1/Project_Document_LaTeX/Final Report/Escape Y2K - Final Report.tex:458: Package pdftex.def Error: File `Images/OpenContainer.png' not found: using draft setting.
+c:/Users/schno/Documents/escapeY2K/EscapeY2K-1/Project_Document_LaTeX/Final Report/Escape Y2K - Final Report.tex:395: Package pdftex.def Error: File `Images/OpenContainer.png' not found: using draft setting.
 
 See the pdftex.def package documentation for explanation.
 Type  H <return>  for immediate help.
  ...                                              
                                                   
-l.458 ...85\columnwidth]{Images/OpenContainer.png}
+l.395 ...85\columnwidth]{Images/OpenContainer.png}
                                                   
 Try typing  <return>  to proceed.
 If that doesn't work, type  X <return>  to quit.
@@ -530,32 +501,28 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 
-LaTeX Warning: Citation `wifiVsZigbee' on page 7 undefined on input line 476.
+LaTeX Warning: Citation `wifiVsZigbee' on page 6 undefined on input line 414.
 
 
-LaTeX Warning: Citation `wifiVsZigbee' on page 7 undefined on input line 489.
+LaTeX Warning: Citation `wifiVsZigbee' on page 6 undefined on input line 427.
 
-[7] [8]
-
-LaTeX Warning: Citation `germanEscapeRoom' on page 9 undefined on input line 643.
-
-
-Underfull \hbox (badness 7504) in paragraph at lines 696--697
+[6]
+Underfull \hbox (badness 7504) in paragraph at lines 473--474
 []\OT1/ptm/m/n/8 A. Ascalon, \Es-cape rooms: Ev-ery-thing you need to know
  []
 
 
-Underfull \hbox (badness 6493) in paragraph at lines 696--697
+Underfull \hbox (badness 6493) in paragraph at lines 473--474
 \OT1/ptm/m/n/8 01-Dec-2022. [On-line]. Avail-able: $https : / / theescapegame . com / blog /
  []
 
 
-Underfull \hbox (badness 7291) in paragraph at lines 698--699
+Underfull \hbox (badness 7291) in paragraph at lines 475--476
 \OT1/ptm/m/n/8 Tu-to-ri-als Point, 17-Mar-2022. [On-line]. Avail-able: $https : / / www .
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 698--699
+Underfull \hbox (badness 10000) in paragraph at lines 475--476
 \OT1/ptm/m/n/8 tutorialspoint . com / what-[]are-[]the-[]dierences-[]between-[]zigbee-[]and-[]wi-[]^^L$.
  []
 
@@ -570,7 +537,7 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[9] (Escape Y2K - Final Report.aux)
+[7] (Escape Y2K - Final Report.aux)
 
 LaTeX Warning: There were undefined references.
 
@@ -579,17 +546,17 @@ LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
  ) 
 Here is how much of TeX's memory you used:
- 5054 strings out of 476334
- 86298 string characters out of 5787971
- 1873382 words of memory out of 5000000
- 25383 multiletter control sequences out of 15000+600000
- 556929 words of font info for 122 fonts, out of 8000000 for 9000
+ 5017 strings out of 476334
+ 85357 string characters out of 5787971
+ 1867382 words of memory out of 5000000
+ 25351 multiletter control sequences out of 15000+600000
+ 553002 words of font info for 118 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 57i,11n,62p,539b,343s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 57i,11n,62p,538b,341s stack positions out of 10000i,1000n,20000p,200000b,200000s
 {C:/Users/schno/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc}<C:/Users/schno/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/schno/AppData/Local/Programs/MiKTeX/fonts/type1/urw/courier/ucrr8a.pfb><C:/Users/schno/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmb8a.pfb><C:/Users/schno/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmbi8a.pfb><C:/Users/schno/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmr8a.pfb><C:/Users/schno/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmri8a.pfb>
-Output written on "Escape Y2K - Final Report.pdf" (9 pages, 125803 bytes).
+Output written on "Escape Y2K - Final Report.pdf" (7 pages, 110850 bytes).
 PDF statistics:
- 63 PDF objects out of 1000 (max. 8388607)
+ 57 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
