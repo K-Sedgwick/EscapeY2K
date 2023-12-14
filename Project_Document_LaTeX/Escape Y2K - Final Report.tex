@@ -161,12 +161,33 @@ in the game clock.
 \subsection{Props and Hints}
 
 \subsection{Adding Time} %Jake
+Originally, the idea was to give players a set amount of time to complete the room. Fifteen minutes seemed to be a reasonable amount
+time to give them because the puzzles were designed to take about 5 minutes each to solve and there were three puzzles. However,
+this all changed when a wonderful idea struck. This idea was motivated by the idea that the players not solving the puzzles might
+just be standing around for a large majority of their time in the escape room. This idea came in an effort to keep everyone bustling about, doing
+their best to solve the puzzles that had been created for them.
+\\
+\indent To help remedy this, one puzzle was set aside for a special purpose. This puzzle had a keypad on the face, and when a correct combination was
+entered it would give players an extra minute to escape the room. However, in order to make this a bit more complicated, the combinations were broken down
+into math problems that, when solved, would reveal one of the combinations. This would help to keep some players busy while others did their best to solve
+the room within the alloted time, and also would cause the room to end quicker if players were unable to correctly calculate all ten math equations.
 
 \subsection{TVs, State, and Detection}
 
 \subsection{Time Control and the Clock}
 
 \subsection{Wireless Communication and Circuit Design} %Jake
+One of the central ideas behind what makes this escape room different from other escape rooms is that all of the puzzles are able to communicate
+wirelessly with a central server, indicating when they had been solved. Using this information, the server could then communcate wirelessly with
+the locked puzzle boxes, telling them to open without needing any external intervention. This paradigm was used extensively throught the escape
+room, allowing special events to trigger themselves and allowing certain components to connect and function synchronously, giving the room a 
+sense of interconnectedness. This wireless communication was achieved through the use of a dummy WiFi router and arduinos with ESP modules
+attached to them, restricting their connection to the internet as a whole but allowing them to talk on an interconnected LAN network.
+\\
+\indent This network was further enhanced by the implementation of a server, which would propagate signals to any module that may need to be informed
+of an event and keep track of the current state of the room. An "admin control panel" was also developed, which allows any user that is "behind the
+scenes" to activate special events, lock or unlock boxes, and reset the current state of the room.
+
 
 \subsection{Box Control}
 
@@ -181,102 +202,6 @@ in the game clock.
     \includegraphics[width=0.75\columnwidth]{Images/EscapeRoomIsoRear.jpg}
     \caption{Rear isometric scale depiction of the initial escape room layout.}
 \end{figure}
-
-
-\section{Puzzles in our Escape Room}
-This section contains a list of all of the puzzles that our escape room will feature, as well as
-the solution to each of them. If you haven't already experienced the escape room, be warned that
-this section does contain spoilers and will prevent you from experiencing the joy of solving the
-puzzles on your own.
-\\
-
-% *************************************************************************************************************************************
-% ************************************* THIS SECTION MUST BE REVISED ******************************************************************
-% *************************************************************************************************************************************
-
-\indent This section will be greatly expanded on as we decide what other puzzles we want to incorporate and how they will function.
-A stretch goal we have is to have a pool of around 10-15 puzzles that can be randomly selected, so that each time a player is in the
-room the experience will be different from the last. More may be added, depending on time contstraints and how many ideas we
-have, but this is the idea for now.
-\\
-\indent Furthermore, we want to develop puzzles that take between 3-5 minutes to solve. This will be a hard balance
-to achieve because we really want the puzzles to feel rewarding to solve, but also not frustrate the players
-to a point when they are no longer able to continue with the escape room. Various tests will be run on friends, family members,
-and anyone else who would like to help us tune the puzzles until they arrive at a happy medium.
-
-
-\subsection{Bust} %Nami we gotta change this one cuz it talks about the chess piece
-A small bust of a statue's head will be attached on a disc and situated
-on a podium. This bust can be rotated physically, which will rotate the
-disc under it as well. On the podium is a small hole that may contain a key
-or chess piece. The disc will also have an indent on it. When the players
-rotate the bust, if the disc is rotated so that the indent is overlapping
-with the hole on the podium, the players are able to retrieve the key
-or chess piece. As a bonus, the direction the bust is facing will be either
-the lock the key unlocks or a clue as to where the chess piece goes.
-
-\subsection{Tape Player}
-An audio cassette player will be centered in the room, with one tape nearby
-to be played as players first enter the room. The general function of the tape
-player will be to both give the players story elements and instructions on
-puzzles as they play, as well as be used to play clues or hints to the active
-puzzle that the players are working on. Beyond these basic functions of the
-cassette player, we will run wires from our microcontroller and digital audio
-player into the built-in speaker of the cassette player to inject noises or music
-files while the cassette player is not actively in use, or no tape is even in the
-deck. This will add to the horror experience, and emulate rouge transmissions
-being received over the duration of the escape experience.
-
-\subsection{Encoded Audio/Radio Signal}
-%KYLE, DONT FORGET TO TALK ABOUT YOUR SUPER DOPE ANALOG WAVE PUZZLE IDEA WITH PLAYING THE RIGHT CASSETTE TAPE
-There are many devices available to convert an audio signal, supplied via an AUX audio cable
-to a radio signal that can be transmitted via bluetooth or a similar radio protocol. One interesting
-application of this intended to be implemented in this project is to either have a personal voice recorder
-or audio cassette have a ``key'' encoded in the audio that will need to be transmitted to another
-device in the room to unlock a lock box or clue. For example, a voice recorder may be found which has
-a password spoken by a specific person's voice as a room access key. This recording will be played
-to the correct access point to complete the puzzle and unlock the next item.
-
-\subsection{All other puzzles...}
-Currently, we have this limited number of planned puzzles, but more puzzles are expected to be added
-as stretch goals. We plan on having this escape room experience last only between 20 to 30 minutes,
-but this is a flexable duration that may change if time permits us to add a system that selects
-only certain puzzles to be used in a given playthrough. This would allow for greater variability,
-and for users to play the escape room more than once and solve different puzzles each time.
-Once we have more base systems in place to make puzzles designing to be more streamlined, we can add
-both to the number and complexity of puzzles.
-
-\subsection*{Clock}
-The clock that we have planned to use will be controlled through a single motor that turns the
-dial used to set the clock (if you were planning on using it normally). We have already created
-a mechanism that will control the clock and also allow others to control the clock as well. Under
-no user input, the clock will function as normal, ticking forward at a constant rate of one hour per
-minute. There are also two buttons, a fast-forward and a reverse button, that give players control
-over the time that the clock is displaying. Once a button is pressed, a motor spins the clock
-either forward or backwards, adjusting the events that are taking place in the room. An image of
-the clock has been included below.
-
-\begin{figure}[ht]
-    \centering
-    \includegraphics[width=0.85\columnwidth]{Images/big-clock.jpg}
-    \caption{The big clock that we are using for the ``Player Clock''.}
-\end{figure}
-
-Our early prototype for this control is incredibly rough and does not use the microcontroller or the
-motor that we are hoping to use in the final project, and is mostly just a proof of concept. In the
-final project we are going to use a stepper motor that will allow us to have a much finer level of
-control over what time the clock is displaying, and will also help the central computer keep track of
-what time is being displayed. Furthermore, we are going to be 3D printing mounting brackets and other
-components that will help the motor stay in place, rather than the mess of broken popsicle sticks and
-duct tape that it currently is.
-
-On top of the game clock is the game timer which will be displayed next to the door. This timer
-shows the remaining amount of time left to complete the game and is visible at all times. When the
-monster is revealed to the player during certain nighttime segments, the timer will go down at a
-faster rate which will dissuade players from getting the monster's attention. Using an LED display,
-the time will be outputted based on the value retrieved from the central computer's internal timer.
-
-
 
 % *************************************************************************************************************************************
 % ************************************* THIS SECTION MUST BE REVISED ******************************************************************
@@ -303,15 +228,6 @@ the time will be outputted based on the value retrieved from the central compute
         door open automatically. If it is facing a wall, it will create a knock sound, or if it does not contact with anything, it can
         make a clicking noise to signal the box is unlocked.}
 \end{figure}
- 
-% Probably want to keep this for the IMPLEMENTATION seciton above
-\section{Communication Protocols}
-As of now, we are trying to decide between two communication protocols that will be used
-to control majority of the connections in our room. These two protocols are Wi-Fi and Zigbee,
-and each of these have their unique benefits associated with them. A third communication
-protocol, bluetooth, is also something that we are thinging of incorporating, however, this
-will be more of a secondary communication protocol and will not be the driving force behind
-how our components will communicate with each other.
 
 \subsection*{Wi-Fi}
 Wi-Fi will act as an incredibly reliable and secure option for our senior project. One of the benefits of Wi-Fi
