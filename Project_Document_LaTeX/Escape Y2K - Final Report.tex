@@ -177,6 +177,84 @@ the room within the alloted time, and also would cause the room to end quicker i
 
 \subsection{TVs, State, and Detection} % Nami
 
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.90\columnwidth]{Images/TV_States.png}
+    \caption{Screenshots of different videos shown on the TVs. First image is the `Game' state.
+    Second image is the `Game' state when it reaches nighttime. Third image is the `Midnight' state. 
+    Fourth image is the `Time Travel' state. Fifth image is the `Seek' state. Sixth image is the `Monster' state.}
+    \label{fig:tv}
+\end{figure}
+
+\indent In accordance with the time period the game is set in, a CRT TV and monitor were procured and used to capture the state of the game
+as players make their way through the escape room. A mini PC is connected to each TV and using python-vlc, a library that links VLC Media Player
+and Python, the mini PC receives signals from the server to play certain videos. Figure~\ref{fig:tv} provides screenshots of these different states
+which play on the TVs with audio playing through bluetooth speakers located on the edges of the room for surround sound. A game timer is also shown
+on each TV to show exactly how much real-life time players have left to complete the room.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.90\columnwidth]{Images/state_flow.png}
+    \caption{A flowchart representing the different states of the game.}
+    \label{fig:pir}
+\end{figure}
+
+\subsubsection{Start}
+
+\indent This is the resting state of the game where nothing is happening and is simply waiting for players to start. All TVs will be dark during this state.
+When the players wish to play the game, they push the power button on the remote and point it at the TV to start the clock, game timer, and move to the `Game' state.
+
+\subsubsection{Game}
+
+\indent This is the general state of the game. An animated Windows XP Wallpaper with serene ambience will play with the time of the clock being reflected by the video.
+Every ten ticks of the clock, the mini PC will receive a signal to update the time of the video for any syncing issues. When the clock reaches 60 ticks,
+the color of the video will distort and the ambience will turn into a darker, more horrifying sound. This is to represent that the players are getting
+closer to midnight, and will also act as a signal that the monster is able to seek for the players.
+
+\subsubsection{Midnight (Panic State)}
+
+\indent The `Midnight' state is considered a panic state that will deplete the game timer at a quicker pace than usual. This state is reached when
+the clock has reached 12:00 and will only stop when the clock is reversed or the game ends. The Windows XP wallpaper has gone fully distorted with
+a bell tolling the new millenium has reached and distorted screaming of the end of the world. It's unadvised players let the game get to this state
+since they will incur time penalties, however this state is required to solve the final puzzle as a way to introduce tension as the room gets to a close.
+
+\subsubsection{Time Travel}
+
+\indent When the players use the remote to either forward or reverse the clock, the screen will resemble fast forwarding or reversing an old VHS. When
+the game is at this state, the monster cannot show up.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.90\columnwidth]{Images/PIR.png}
+    \caption{CAD screenshots of the print used for the PIR motion detectors located on top of the TVs.
+    The motion detector is inserted in the bottom facing into it, with its range limited by the cone shape of the print.}
+    \label{fig:pir}
+\end{figure}
+
+\subsubsection{Seek}
+
+\indent When the clock is considered to be at ``nighttime'' (which is represented by the usual game video being reddish) then the monster will search
+the room for the players on random chance. A PIR motion sensor was used to detect motion and located on top of each TV with a print as shown in Figure ~\ref{fig:pir} to restrict its searching area to
+act as the TVs field of vision. To warn players of this state, the cassette player will play a sound of looming footsteps before the eye appears on
+the screen searching around the room. This will last for 15 seconds as the motion sensor now starts polling to see if motion is detected. When motion is
+detected, the state will change to the `Monster' state until motion is no longer detected, in which it returns to this tate to finish the 15 seconds it
+searches for. When the 15 seconds are up, it will return to the `Game' state. The clock is paused during this state.
+
+
+\subsubsection{Monster (Panic State)}
+
+\indent The `Monster' state is considered a panic state that will deplete the game timer at a quicker pace than usual. This state is reached when motion
+is detected during the `Seek' state and will revert to the `Seek' state when motion is no longer detected. There is also a timeout of 5 seconds in case
+hardware issues arise to not crushingly punish the players. During this state, the monsters presence will be felt in the room as a scream and 
+horrible noises are played to induce stress in the players. This is a horror experience, after all. 
+
+\subsubsection{Ending}
+
+\indent There are two endings to the escape room on a win and a loss. When the game timer reaches 0, a video will play ``ejecting'' a VHS before static
+fills the screen. When the players solve the final puzzle, everything will shut down and remain dark for a few seconds before a video will play showing old
+footage of old new years celebration for the year 2000. These videos cut to black at the end of them, signifying the end of the escape room. The players can
+then be either proud of their win or lament their loss depending on which ending they got. 
+
 \subsection{Time Control and the Clock} % Kyle
 
 \subsection{Wireless Communication and Circuit Design} %Jake
@@ -255,7 +333,7 @@ however, and will need to be more properly considered when we have a more develo
 %   ********************************************************************************************************
 %   ********************* CONCLUSION TO BE COMPLETED TOGETHER **********************************************
 %   ********************************************************************************************************
-\section{Conclusions}
+\section{Conclusions} % Nami
 In conclusion, we are confident that this project will help us grow and become more capable
 engineers in the future. We are going to learn more about how to deal with lots of interconnected
 micro-systems, how to create a compelling and immersive story, how to properly document and track
