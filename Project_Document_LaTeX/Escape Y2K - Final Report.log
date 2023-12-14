@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 23.1) (preloaded format=pdflatex 2023.3.23)  14 DEC 2023 10:34
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 23.1) (preloaded format=pdflatex 2023.3.23)  14 DEC 2023 11:14
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -334,7 +334,11 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 LaTeX Font Info:    Trying to load font information for U+msb on input line 41.
  (C:\Users\schno\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-) [1{C:/Users/schno/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}
+)
+
+LaTeX Warning: Citation `wikipediaEscapeRoom' on page 1 undefined on input line 108.
+
+[1{C:/Users/schno/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}
 
 
 ]
@@ -349,18 +353,36 @@ File: Images/tvsketch.png Graphic file (type png)
 Package pdftex.def Info: Images/tvsketch.png  used on input line 170.
 (pdftex.def)             Requested size: 226.79846pt x 127.57669pt.
  [2 <./Images/tvcomparison.png> <./Images/tvsketch.png>]
+c:/Users/schno/Documents/escapeY2K/EscapeY2K-1/Project_Document_LaTeX/Escape Y2K - Final Report.tex:212: Undefined control sequence.
+l.212 \sebsection
+                 {Safe-Cracking Puzzle}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+c:/Users/schno/Documents/escapeY2K/EscapeY2K-1/Project_Document_LaTeX/Escape Y2K - Final Report.tex:216: Undefined control sequence.
+l.216 \Subsection
+                 {Radio Number Station}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
 <Images/EscapeRoomIsoFront.jpg, id=16, 895.09406pt x 569.12625pt>
 File: Images/EscapeRoomIsoFront.jpg Graphic file (type jpg)
 <use Images/EscapeRoomIsoFront.jpg>
-Package pdftex.def Info: Images/EscapeRoomIsoFront.jpg  used on input line 214.
+Package pdftex.def Info: Images/EscapeRoomIsoFront.jpg  used on input line 234.
 (pdftex.def)             Requested size: 226.79846pt x 144.20041pt.
 <Images/EscapeRoomIsoRear.jpg, id=17, 830.35219pt x 554.07pt>
 File: Images/EscapeRoomIsoRear.jpg Graphic file (type jpg)
 <use Images/EscapeRoomIsoRear.jpg>
-Package pdftex.def Info: Images/EscapeRoomIsoRear.jpg  used on input line 220.
+Package pdftex.def Info: Images/EscapeRoomIsoRear.jpg  used on input line 240.
 (pdftex.def)             Requested size: 189.0pt x 126.11453pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 226--231
+Underfull \hbox (badness 10000) in paragraph at lines 246--251
 
  []
 
@@ -368,49 +390,53 @@ Underfull \hbox (badness 10000) in paragraph at lines 226--231
 <Images/pebble charger.jpg, id=21, 573.64313pt x 560.0925pt>
 File: Images/pebble charger.jpg Graphic file (type jpg)
 <use Images/pebble charger.jpg>
-Package pdftex.def Info: Images/pebble charger.jpg  used on input line 270.
+Package pdftex.def Info: Images/pebble charger.jpg  used on input line 290.
 (pdftex.def)             Requested size: 189.0pt x 184.53197pt.
  [4 <./Images/pebble charger.jpg>]
 <Images/big-clock.jpg, id=25, 2276.505pt x 2198.2125pt>
 File: Images/big-clock.jpg Graphic file (type jpg)
 <use Images/big-clock.jpg>
-Package pdftex.def Info: Images/big-clock.jpg  used on input line 355.
+Package pdftex.def Info: Images/big-clock.jpg  used on input line 375.
 (pdftex.def)             Requested size: 214.20154pt x 206.81984pt.
 <Images/ClosedLock.png, id=26, 778.40813pt x 567.62062pt>
 File: Images/ClosedLock.png Graphic file (type png)
 <use Images/ClosedLock.png>
-Package pdftex.def Info: Images/ClosedLock.png  used on input line 383.
+Package pdftex.def Info: Images/ClosedLock.png  used on input line 403.
 (pdftex.def)             Requested size: 214.20154pt x 156.19574pt.
 <Images/OpenLock.png, id=27, 810.02625pt x 585.68813pt>
 File: Images/OpenLock.png Graphic file (type png)
 <use Images/OpenLock.png>
-Package pdftex.def Info: Images/OpenLock.png  used on input line 389.
+Package pdftex.def Info: Images/OpenLock.png  used on input line 409.
 (pdftex.def)             Requested size: 214.20154pt x 154.87595pt.
 <Images/OpenContainer.png, id=28, 907.13907pt x 615.0478pt>
 File: Images/OpenContainer.png Graphic file (type png)
 <use Images/OpenContainer.png>
-Package pdftex.def Info: Images/OpenContainer.png  used on input line 395.
+Package pdftex.def Info: Images/OpenContainer.png  used on input line 415.
 (pdftex.def)             Requested size: 214.20154pt x 145.23073pt.
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
  [5 <./Images/big-clock.jpg> <./Images/ClosedLock.png> <./Images/OpenLock.png>]
-Underfull \hbox (badness 7504) in paragraph at lines 473--474
+
+LaTeX Warning: Citation `wifiVsZigbee' on page 6 undefined on input line 434.
+
+
+LaTeX Warning: Citation `wifiVsZigbee' on page 6 undefined on input line 447.
+
+
+Underfull \hbox (badness 7504) in paragraph at lines 493--494
 []\OT1/ptm/m/n/8 A. Ascalon, \Es-cape rooms: Ev-ery-thing you need to know
  []
 
 
-Underfull \hbox (badness 6493) in paragraph at lines 473--474
+Underfull \hbox (badness 6493) in paragraph at lines 493--494
 \OT1/ptm/m/n/8 01-Dec-2022. [On-line]. Avail-able: $https : / / theescapegame . com / blog /
  []
 
 
-Underfull \hbox (badness 7291) in paragraph at lines 475--476
+Underfull \hbox (badness 7291) in paragraph at lines 495--496
 \OT1/ptm/m/n/8 Tu-to-ri-als Point, 17-Mar-2022. [On-line]. Avail-able: $https : / / www .
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 475--476
+Underfull \hbox (badness 10000) in paragraph at lines 495--496
 \OT1/ptm/m/n/8 tutorialspoint . com / what-[]are-[]the-[]dierences-[]between-[]zigbee-[]and-[]wi-[]^^L$.
  []
 
@@ -428,17 +454,24 @@ Before submitting the final camera ready copy, remember to:
 
 [7
 
-] (Escape Y2K - Final Report.aux) ) 
+] (Escape Y2K - Final Report.aux)
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
 Here is how much of TeX's memory you used:
- 4742 strings out of 476334
- 76963 string characters out of 5787971
+ 4743 strings out of 476334
+ 76969 string characters out of 5787971
  1868382 words of memory out of 5000000
  25103 multiletter control sequences out of 15000+600000
- 551380 words of font info for 115 fonts, out of 8000000 for 9000
+ 552487 words of font info for 116 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  57i,11n,62p,525b,341s stack positions out of 10000i,1000n,20000p,200000b,200000s
 {C:/Users/schno/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc}<C:/Users/schno/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/schno/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmb8a.pfb><C:/Users/schno/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmbi8a.pfb><C:/Users/schno/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmr8a.pfb><C:/Users/schno/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmri8a.pfb>
-Output written on "Escape Y2K - Final Report.pdf" (7 pages, 7271727 bytes).
+Output written on "Escape Y2K - Final Report.pdf" (7 pages, 7272862 bytes).
 PDF statistics:
  66 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
