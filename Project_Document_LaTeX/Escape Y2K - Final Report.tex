@@ -127,7 +127,34 @@ would open, showing them a plugboard combination.
 
 \subsection{Potentiometer Tuning}
 
+The potentiometer puzzle does not provide a direct solution with clear feedback on how it ought to be solved. Instead, 
+the four dials need to be placed in the correct orientation by trial and error. This puzzle uses the analog signal inputs 
+to find the voltage between each pair of potentiometers for a total of three analog signals. Because this puzzle uses analog 
+signals, the ESP module boards are unable to be used as they have no analog capabilities.
+
+\indent The five LEDs on the box light up when the respective voltage across the pair of potentiometers is in the 
+correct range (like variable voltage dividers). Because they need to either be determined as ``correct'' or ``incorrect'' 
+without any variability between them, the LEDs are set up with digital signals to turn on or off when the correct voltage is 
+reached. The first (furthest left) LED turns on when the device has power, and the last (furthest right) only turns on when 
+the middle three are illuminated and the correct time frame is shown on the clock. The remaining LEDs are interdependent on one 
+another, and do not hint at the correct position of any individual dial, only when all four are in a valid orientation together.
+
+
 \subsection{Radio Number Station}
+The ``number station'' puzzle utilizes the most abstract clue of the three main room puzzles. Unlike the other puzzle clues, 
+there is no hint at to what box to use. The tape itself only contains five numbers to align with a box that has five number 
+switches. The A side of the tape is played in reverse, so it is nearly impossible to understand what numbers are being stated, 
+but a hint printed on a separate sheet of paper urges the player to listen to the message backward by flipping the tape over. 
+While this is not how cassette tapes physically work, the B side of the tape is recorded separately with the audio playing 
+forward. The static and information on the tape is inspired by “number stations” that were played on radio transmissions during 
+the cold war. 
+
+\indent Once the players listen to the recording in the correct orientation, they are able to simply use the number 
+switches on the provided box to enter the stated combination. The switches output signals based on the binary values 
+of each number, which are decoded by an Arduino Uno to determine when the puzzle is complete. Like the other three initial 
+puzzles, it is not fully determined complete until the correct combination is displayed and the correct time frame is reached 
+in the game clock.
+
 
 \subsection{Audio Control and Tapes}
 
