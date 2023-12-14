@@ -41,14 +41,17 @@
 \maketitle
 
 \begin{abstract}
-    “ESCAPE Y2K” is an interactive escape room experience that relies on computer
-    engineering as its main control source. The escape room is built to be an autonomous,
-    immersive, sci-fi, horror experience using digital/analog circuit design, image/audio
-    processing, communication protocols, and embedded computing. Players
-    will interact and solve puzzles under a time limit while avoiding fictional threats within
-    the game in order to complete the experience and win. This is done with a time travel mechanic
-    that allows players to forward or reverse an artificial clock that changes the time within
-    the room and activates certain events that could both benefit and disadvantage them.
+    Escape rooms engage player's critical-thinking skills by placing them inside a locked room
+    that requires them to complete puzzles in order to escape. These rooms can be difficult to
+    create and control due to the amount of variables present and the fact most of them require
+    someone behind the scenes to control the room. “ESCAPE Y2K” is a science fiction analog horror 
+    escape room that differs from usual implementations by being completely autonomous. This room 
+    uses digital/analog circuit design, image/audio processing, communication protocols, and embedded
+    computing for its puzzles and game flow. Players are able to ``travel through time'' to activate
+    unique events that assist progression through the room which is controlled by a central server
+    that runs a script that sends and receives signals to ESP modules throughout the room. This escape
+    room was presented on the Computer Engineering Capstone Demo Day where students and faculty got
+    to play with a chance to escape the end of the world!
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -117,7 +120,7 @@ desks in the corner is where we will have the chessboard, and the yellow head re
 that will be included in some puzzles. The center podium will hold the cassette player. Finally, the orange circle
 is the time clock, and the nearby green box represents the clock controls.
 
-\subsection{Safe-Cracking Puzzle} %Jake
+\subsection{Safe-Cracking Puzzle} % Jake
 One of the puzzles that we implemented was a safe cracking puzzle. A hint for this puzzle was recorded on a cassette tape
 that would help the players know which numbers they needed to turn the safe to. Once the puzzle was reset by turning the dial
 to zero and holding the reset button until the lights flashed, if they turned left until they got to 33, right until they got to 72,
@@ -125,7 +128,7 @@ and left again until they reached 11 then the puzzle would be solved! However, p
 player clock (the giant physical clock) displayed a time between 2:15 and 4:30. If all of the above conditions were met, a puzzle box
 would open, showing them a plugboard combination.
 
-\subsection{Potentiometer Tuning}
+\subsection{Potentiometer Tuning} % Kyle
 
 The potentiometer puzzle does not provide a direct solution with clear feedback on how it ought to be solved. Instead, 
 the four dials need to be placed in the correct orientation by trial and error. This puzzle uses the analog signal inputs 
@@ -156,9 +159,9 @@ puzzles, it is not fully determined complete until the correct combination is di
 in the game clock.
 
 
-\subsection{Audio Control and Tapes}
+\subsection{Audio Control and Tapes} % Kyle
 
-\subsection{Props and Hints}
+\subsection{Props and Hints} % Nami
 
 \subsection{Adding Time} %Jake
 Originally, the idea was to give players a set amount of time to complete the room. Fifteen minutes seemed to be a reasonable amount
@@ -172,9 +175,9 @@ entered it would give players an extra minute to escape the room. However, in or
 into math problems that, when solved, would reveal one of the combinations. This would help to keep some players busy while others did their best to solve
 the room within the alloted time, and also would cause the room to end quicker if players were unable to correctly calculate all ten math equations.
 
-\subsection{TVs, State, and Detection}
+\subsection{TVs, State, and Detection} % Nami
 
-\subsection{Time Control and the Clock}
+\subsection{Time Control and the Clock} % Kyle
 
 \subsection{Wireless Communication and Circuit Design} %Jake
 One of the central ideas behind what makes this escape room different from other escape rooms is that all of the puzzles are able to communicate
@@ -206,8 +209,7 @@ scenes" to activate special events, lock or unlock boxes, and reset the current 
 % *************************************************************************************************************************************
 % ************************************* THIS SECTION MUST BE REVISED ******************************************************************
 % *************************************************************************************************************************************
-\section{Evaluation}
-
+\section{Evaluation} % Kyle
 
 \begin{figure}[H]
     \centering
