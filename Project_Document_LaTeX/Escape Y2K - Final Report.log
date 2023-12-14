@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 23.1) (preloaded format=pdflatex 2023.3.23)  14 DEC 2023 11:14
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 23.1) (preloaded format=pdflatex 2023.3.23)  14 DEC 2023 11:41
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -334,11 +334,7 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 LaTeX Font Info:    Trying to load font information for U+msb on input line 41.
  (C:\Users\schno\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-)
-
-LaTeX Warning: Citation `wikipediaEscapeRoom' on page 1 undefined on input line 108.
-
-[1{C:/Users/schno/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}
+) [1{C:/Users/schno/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}
 
 
 ]
@@ -353,24 +349,6 @@ File: Images/tvsketch.png Graphic file (type png)
 Package pdftex.def Info: Images/tvsketch.png  used on input line 170.
 (pdftex.def)             Requested size: 226.79846pt x 127.57669pt.
  [2 <./Images/tvcomparison.png> <./Images/tvsketch.png>]
-c:/Users/schno/Documents/escapeY2K/EscapeY2K-1/Project_Document_LaTeX/Escape Y2K - Final Report.tex:212: Undefined control sequence.
-l.212 \sebsection
-                 {Safe-Cracking Puzzle}
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-c:/Users/schno/Documents/escapeY2K/EscapeY2K-1/Project_Document_LaTeX/Escape Y2K - Final Report.tex:216: Undefined control sequence.
-l.216 \Subsection
-                 {Radio Number Station}
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
 <Images/EscapeRoomIsoFront.jpg, id=16, 895.09406pt x 569.12625pt>
 File: Images/EscapeRoomIsoFront.jpg Graphic file (type jpg)
 <use Images/EscapeRoomIsoFront.jpg>
@@ -414,13 +392,6 @@ File: Images/OpenContainer.png Graphic file (type png)
 Package pdftex.def Info: Images/OpenContainer.png  used on input line 415.
 (pdftex.def)             Requested size: 214.20154pt x 145.23073pt.
  [5 <./Images/big-clock.jpg> <./Images/ClosedLock.png> <./Images/OpenLock.png>]
-
-LaTeX Warning: Citation `wifiVsZigbee' on page 6 undefined on input line 434.
-
-
-LaTeX Warning: Citation `wifiVsZigbee' on page 6 undefined on input line 447.
-
-
 Underfull \hbox (badness 7504) in paragraph at lines 493--494
 []\OT1/ptm/m/n/8 A. Ascalon, \Es-cape rooms: Ev-ery-thing you need to know
  []
@@ -454,24 +425,17 @@ Before submitting the final camera ready copy, remember to:
 
 [7
 
-] (Escape Y2K - Final Report.aux)
-
-LaTeX Warning: There were undefined references.
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
- ) 
+] (Escape Y2K - Final Report.aux) ) 
 Here is how much of TeX's memory you used:
- 4743 strings out of 476334
- 76969 string characters out of 5787971
+ 4742 strings out of 476334
+ 76963 string characters out of 5787971
  1868382 words of memory out of 5000000
  25103 multiletter control sequences out of 15000+600000
- 552487 words of font info for 116 fonts, out of 8000000 for 9000
+ 551380 words of font info for 115 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  57i,11n,62p,525b,341s stack positions out of 10000i,1000n,20000p,200000b,200000s
 {C:/Users/schno/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc}<C:/Users/schno/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/schno/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmb8a.pfb><C:/Users/schno/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmbi8a.pfb><C:/Users/schno/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmr8a.pfb><C:/Users/schno/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmri8a.pfb>
-Output written on "Escape Y2K - Final Report.pdf" (7 pages, 7272862 bytes).
+Output written on "Escape Y2K - Final Report.pdf" (7 pages, 7272803 bytes).
 PDF statistics:
  66 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
