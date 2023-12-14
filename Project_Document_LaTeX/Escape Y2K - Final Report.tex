@@ -209,7 +209,13 @@ desks in the corner is where we will have the chessboard, and the yellow head re
 that will be included in some puzzles. The center podium will hold the cassette player. Finally, the orange circle
 is the time clock, and the nearby green box represents the clock controls.
 
-\subsection{Safe-Cracking Puzzle}
+\subsection{Safe-Cracking Puzzle} %Jake
+One of the puzzles that we implemented was a safe cracking puzzle. A hint for this puzzle was recorded on a cassette tape
+that would help the players know which numbers they needed to turn the safe to. Once the puzzle was reset by turning the dial
+to zero and holding the reset button until the lights flashed, if they turned left until they got to 33, right until they got to 72,
+and left again until they reached 11 then the puzzle would be solved! However, players were only able to solve this puzzle when the
+player clock (the giant physical clock) displayed a time between 2:15 and 4:30. If all of the above conditions were met, a puzzle box
+would open, showing them a plugboard combination.
 
 \subsection{Potentiometer Tuning}
 
@@ -219,13 +225,13 @@ is the time clock, and the nearby green box represents the clock controls.
 
 \subsection{Props and Hints}
 
-\subsection{Adding Time}
+\subsection{Adding Time} %Jake
 
 \subsection{TVs, State, and Detection}
 
 \subsection{Time Control and the Clock}
 
-\subsection{Wireless Communication and Circuit Design}
+\subsection{Wireless Communication and Circuit Design} %Jake
 
 \subsection{Box Control}
 
@@ -264,48 +270,7 @@ to a point when they are no longer able to continue with the escape room. Variou
 and anyone else who would like to help us tune the puzzles until they arrive at a happy medium.
 
 
-\subsection{Chess Board Puzzle}
-We have three ideas for the chess board puzzle. Two of the three ideas are based off the gold contact pins that are used
-This puzzle will be one of the first things that players see, but also the last puzzle that they will solve.
-Throughout the room and after solving various puzzles, players will receive chess pieces that, when
-arranged in the correct format, will open the door that is keeping players in the room and stop the
-catastrophic end of the world due to Y2K.
-
-We have two ideas for the chess board puzzle. Both ideas are based off the gold contact pins that are used
-to charge a pebble watch (and in other places in electronics as well). Basically, the idea
-is to have these golden pins in each (or at least a lot) of the spaces of the chess board, with
-a magnet underneath to help align the chess pieces when placed by the user. Only the pins that are used in
-the solution would be wired up, decreasing the amount of soldering that would be required to make the chess
-board and also leaving all of the other spaces as ``dummy'' spaces. The image below shows such a
-mechanism, one that would be used for charging a smartwatch.
-
-The third and final idea is to use magnetic switches underneath each of the places where we are wanting the players
-to put the pieces. Each piece would have a magnet inside, and when they are all placed on the correct squares the
-final door to the room would open. This solution is most assuredly easier since we are no longer able to identify
-which piece is in a given square. However, if we are unable to figure out a good way to implement the previous
-two solutions this is a definate option.
-
-\begin{figure}[ht]
-    \centering
-    \includegraphics[width=0.75\columnwidth]{Images/pebble charger.jpg}
-    \caption{Depiction of the contact pins that we plan on using for chess piece identification.}
-\end{figure}
-
-For our first idea, we are thinking of embedding resistors with different values into
-each of the chess pieces. Then, if the chess piece is placed on a space that is wired for the solution,
-the resistor value from that piece would be read and analyzed. If it is the correct value for that space,
-part of the puzzle would unlock. And, if every piece is placed in the correct location, when a button is
-pressed then the door to the room will open and the players will be able to escape! This will likely be done
-by communicating to the central computer when the button is pressed whether the players
-have successfully completed the puzzle or not.
-
-The second idea is a bit less flushed out, however, the premise is the same. However, instead of using
-a resistor to denote which piece is in which location, we would hook up some sort of tiny microcontroller that
-has been programmed to, when powered on, just transmit its name over and over. This would allow a computer
-to read the value that is being transmitted and determine if the piece has been placed in the correct location.
-
-
-\subsection{Bust}
+\subsection{Bust} %Nami we gotta change this one cuz it talks about the chess piece
 A small bust of a statue's head will be attached on a disc and situated
 on a podium. This bust can be rotated physically, which will rotate the
 disc under it as well. On the podium is a small hole that may contain a key
@@ -336,20 +301,6 @@ or audio cassette have a ``key'' encoded in the audio that will need to be trans
 device in the room to unlock a lock box or clue. For example, a voice recorder may be found which has
 a password spoken by a specific person's voice as a room access key. This recording will be played
 to the correct access point to complete the puzzle and unlock the next item.
-
-\subsection{Pressure Sensitive Chair}
-Another idea that we have for a puzzle is something that requires every member of the escape room to participate.
-Essentially, the idea is to have a number of chairs scattered throughout the room. Within each of these chairs
-we will embed a pressure sensor that can detect when one of the players in the room has sat down in that chair.
-Once every player in the room sits in the chairs that are scattered about, a lock of some sort will open and the
-players will be able to progress!
-
-In order to properly implement this puzzle we are going to need a few things. First of all, we are hoping that the
-players will be able to move the chairs around the room freely, giving the illusion that they are just normal chairs.
-This is going to require a small microcontroller to be hidden within the base of the chair that has Wi-Fi capabilities
-(most likely the ESP 32 board, due to its small size and on-board Wi-Fi) and at least one GPIO pin to detect the change
-in pressure when a player sits down on the chair. Furthermore, the board needs to have a relatively low power consumption
-so that the chair battery doesn't die during the length of time the players will be in the escape room.
 
 \subsection{All other puzzles...}
 Currently, we have this limited number of planned puzzles, but more puzzles are expected to be added
@@ -470,7 +421,6 @@ A list of these materials have been included below
     \item Analog clock
     \item Cameras
     \item Small CRT televisions
-    \item Chess board and pieces
     \item Audio cassette player
     \item Writable audio cassette tapes
     \item MP3 digital audio controller
@@ -482,7 +432,6 @@ A list of these materials have been included below
     \item Wireless communication modules
     \item Storage containers
     \item Busts with detachable modules
-    \item Turntable podium
 \end{itemize}
 
 \section{Appendix B: Troubles of note during development}
