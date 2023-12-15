@@ -126,7 +126,13 @@ that would help the players know which numbers they needed to turn the safe to. 
 to zero and holding the reset button until the lights flashed, if they turned left until they got to 33, right until they got to 72,
 and left again until they reached 11 then the puzzle would be solved! However, players were only able to solve this puzzle when the
 player clock (the giant physical clock) displayed a time between 2:15 and 4:30. If all of the above conditions were met, a puzzle box
-would open, showing them a plugboard combination.
+would open, showing them a plugboard combination. An image of the puzzle has been included below.
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.90\columnwidth]{Images/dial.jpg}
+    \caption{This was the safe dial puzzle that we included in the escape room.}
+    \label{fig:dial}
+\end{figure}
 
 \subsection{Potentiometer Tuning} % Kyle
 
@@ -220,7 +226,16 @@ just be standing around for a large majority of their time in the escape room. T
 their best to solve the puzzles that had been created for them.
 \\
 \indent To help remedy this, one puzzle was set aside for a special purpose. This puzzle had a keypad on the face, and when a correct combination was
-entered it would give players an extra minute to escape the room. However, in order to make this a bit more complicated, the combinations were broken down
+entered it would give players an extra minute to escape the room. An image of the keypad box has been included below.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.90\columnwidth]{Images/keypad.jpg}
+    \caption{Image of the keypad box puzzle that allowed players to increase the amout of time they were alloted to solve the room.}
+    \label{fig:keypad}
+\end{figure}
+
+However, in order to make this a bit more complicated, the combinations were broken down
 into math problems that, when solved, would reveal one of the combinations. This would help to keep some players busy while others did their best to solve
 the room within the alloted time, and also would cause the room to end quicker if players were unable to correctly calculate all ten math equations.
 
@@ -304,14 +319,43 @@ fills the screen. When the players solve the final puzzle, everything will shut 
 footage of old new years celebration for the year 2000. These videos cut to black at the end of them, signifying the end of the escape room. The players can
 then be either proud of their win or lament their loss depending on which ending they got. 
 
-\subsection{Time Control and the Clock} % Kyle
+\subsection{Time Control and the Clock} % Jake
+In Escape Y2K, there were two different clocks that the players needed to pay attention to, one of them represented the time the players had left to complete the room
+and one represented the time in the game world. This paragraph is going to be about the latter, the clock that represented the time in the game world. Players were
+given control of this clock by pressing "fast forward", "rewind", or "play" on a remote that they were given, allowing them to return to differnt time periods within
+the room. The clock that was used was the same clock that was purchased back when we first started planning to build this escape room, however, it was retrofitted with quite a few new components.
+\\
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.90\columnwidth]{Images/back_of_clock.jpg}
+    \caption{The back of the clock with all of the components installed that allowed it to fulfill its desired function}
+    \label{fig:backClock}
+\end{figure}
+\indent The above figure shows the back of the clock once all of the components had been successfully installed. These components include the following...
+\begin{itemize}
+    \item An ESP module to run the clock and connect to other components
+    \item A stepper motor and its driver
+    \item A rotary encoder to track how far the stepper had turned
+    \item Two slot interrupters, so we knew when the clock reached both 1300 hours and 0000 hours
+\end{itemize}
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.90\columnwidth]{Images/slot_interruptor_interrupted.jpg}
+    \caption{On the clock there were two slot interruptors. This was one of them already interrupted.}
+    \label{fig:slotInterruptor}
+\end{figure}
+With all of these components installed, we were able to control the turning of the clock remotely, reset the clock, trigger events
+when the clock reached midnight, etc. Furthermore, the three puzzles in the room were all dependent upon the time that the clock was displaying.
+Three periods of time were set aside during which players could solve one of the puzzles. If the game clock went past the given time period, the
+puzzle pertaining to the previous period would deactivate and the next one would activate. And finally, as the clock got closer to midnight,
+the chance that the monster would appear increased from 0\% to 1\% to 2\%, each percent value pertaining to one of the three-time blocks. 
 
 \subsection{Wireless Communication and Circuit Design} %Jake
-One of the central ideas behind what makes this escape room different from other escape rooms is that all of the puzzles are able to communicate
-wirelessly with a central server, indicating when they had been solved. Using this information, the server could then communcate wirelessly with
-the locked puzzle boxes, telling them to open without needing any external intervention. This paradigm was used extensively throught the escape
+One of the central ideas behind what makes this escape room different from other escape rooms is that all of the puzzles can communicate
+wirelessly with a central server, indicating when they had been solved. Using this information, the server could then communicate wirelessly with
+the locked puzzle boxes, telling them to open without needing any external intervention. This paradigm was used extensively throughout the escape
 room, allowing special events to trigger themselves and allowing certain components to connect and function synchronously, giving the room a 
-sense of interconnectedness. This wireless communication was achieved through the use of a dummy WiFi router and arduinos with ESP modules
+sense of interconnectedness. This wireless communication was achieved through the use of a dummy WiFi router and Arduinos with ESP modules
 attached to them, restricting their connection to the internet as a whole but allowing them to talk on an interconnected LAN network.
 \\
 \indent This network was further enhanced by the implementation of a server, which would propagate signals to any module that may need to be informed
@@ -323,11 +367,11 @@ scenes" to activate special events, lock or unlock boxes, and reset the current 
 % ************************************* THIS SECTION MUST BE REVISED ******************************************************************
 % *************************************************************************************************************************************
 \section{Evaluation} % Kyle
-``ESCAPE Y2K'' was completed, and fully functional as a computer controlled escape room experience. For demo day itself, 
+``ESCAPE Y2K'' was completed, and fully functional as a computer-controlled escape room experience. For demo day itself, 
 the control panel for the room was used to provide assistance and allow other guests to play sound effects remotely to 
 interact with the room if they could not participate actively. While the technical aspects of Escape Y2K were all 
 implemented and functional for the demonstration, there were a few aspects that could be improved for later revisions 
-of this, or other, computer controlled escape rooms.
+of this, or other, computer-controlled escape rooms.
 
 \subsection{Functionality}
 There were several physical aspects of ``ESCAPE Y2K'' that could have failed during the demonstration, from dislodged wires, 
@@ -338,12 +382,12 @@ which are the biggest concern for re-assembly and reliability issues.
 
 \indent After the approximate hour and 45 minutes of re-assembly, the room was able to be fully tested for function 
 and connectivity reliability before guests were let into the room. While being used, none of the above concerns caused 
-any practical issue for guests, but unfortunately, no teams managed to finish the escape room due to time constraints 
+any practical issues for guests, but unfortunately, no teams managed to finish the escape room due to time constraints 
 (which will be addressed in the following subsections). While everything physically operated as it should, there were a 
 few aspects that a second revision would address to make things run even smoother.
 
 \subsection{Mechanical Shortcomings}
-Many components of student made projects can be extremely fragile due to limitations of time, funding, or uncontrollable 
+Many components of student-made projects can be extremely fragile due to limitations of time, funding, or uncontrollable 
 factors like mistakes on the side of the end-user. Thankfully, the users did not cause any problems over the duration of 
 the demonstration, and nothing had serious reliability issues. However, there are a few aspects that had potential to cause 
 issues if factors were slightly different.
