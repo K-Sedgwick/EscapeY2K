@@ -482,7 +482,17 @@ pull-down resistors in the circuit didn't fully pull down off pins, leading to l
 the common-power side, we switched to use common ground. After some re-wireing and re-programming the ESP modules, 
 a common-ground configuration worked very reliably for the final room.
 
-\indent 
+\indent Issues involving timing for hot key presses were also an issue when it came to the TVs. When a signal comes 
+into the server that requires the mini PC to activate two hot keys (in scenarios where we interact with the videos 
+and timer at the same time such as starting or resetting the game) there would have to be enough time in between the 
+functions to avoid one of them not working correctly.
+
+\indent The final issue that gave a significant amount of concern leading up to demo day is the lack of a deticated large-scale 
+testing space. Due to the unique nature of an escape room demanding a certain layout of the room, and requiring a lot of physical 
+interactions to be tested makes testing without a controlled space very difficult. In addition to the relative layout of puzzles 
+being a vital aspect to test, the additional use of restricted motion sensors makes exact testing nearly impossible prior 
+to setting up in the actual demo space. Any chance to have a controlled space to test should be taken advantage of for 
+projects of this scale and nature.
 
 \begin{thebibliography}{00}
 
