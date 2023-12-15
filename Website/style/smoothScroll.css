@@ -1,0 +1,23 @@
+div#date-scroll-container{
+     height: 1000px;
+     overflow: hidden;
+}
+
+@keyframes smoothIn{
+     0% {
+          opacity: 0%;
+          margin-left: 0px;
+     }
+     10%{
+          opacity: 100%;
+          margin-left: 20px;
+     }
+     90%{
+          opacity: 100%;
+          margin-left: 20px;
+     }
+     100%{
+          opacity: 0%;
+          margin-left: 0px;
+     }
+}

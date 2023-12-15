@@ -1,0 +1,203 @@
+* {
+  z-index: 3;
+  --bg-color: rgb(55, 55, 55);
+}
+
+html {
+  background-color: var(--bg-color);
+}
+
+p {
+  font-family: "Ubuntu", sans-serif;
+}
+
+body {
+  /* font-family: "Mynerve", cursive; */
+  /* font-family: "Righteous", cursive; */
+  font-family: "Phudu", cursive;
+  background-color: var(--bg-color);
+  color: white;
+  height: 100vh;
+  min-height: 100%;
+}
+
+footer{
+  background-color:  rgb(48, 48, 48) !important; 
+}
+
+.navbar * {
+  font-size: 30px;
+}
+
+.nav-link {
+  color: white;
+}
+
+.nav-link:hover {
+  color: rgb(188, 188, 188);
+}
+
+.active-link {
+  color: rgb(161, 171, 192);
+}
+
+.active-link:hover {
+  color: rgb(123, 129, 141);
+}
+
+.navbar-nav * {
+  margin-right: 25px;
+}
+
+.title {
+  margin-left: 15vw;
+}
+
+.title-text {
+  font-size: 70px;
+}
+
+p.about-project-text {
+  text-indent: 70px;
+}
+
+a.github-link {
+  color: white;
+  text-decoration: none;
+}
+
+a.github-link:hover() {
+  color: rgb(189, 189, 189);
+}
+
+#logs > div.log {
+  margin-top: 20px;
+  transition: scale 500ms;
+}
+
+#logs > div.log:hover {
+  scale: 1.01;
+}
+
+#logs * {
+  color: rgb(255, 255, 255);
+}
+
+p.log-text {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.readable-font {
+  font-family: "Ubuntu", sans-serif;
+}
+
+.indent-text {
+  text-indent: 50px;
+}
+
+img.img-sm {
+  object-fit: contain;
+  height: 200px;
+  width: 300px;
+}
+
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#revealer {
+  position: absolute;
+  height: 150px;
+  width: 150px;
+  background-color: white;
+  border-radius: 50%;
+  translate: -50% -50%;
+  z-index: -100;
+}
+
+#reveal-text {
+  position: absolute;
+  margin-left: 18vw;
+  z-index: 2;
+  width: 82vw;
+}
+
+#top-background {
+  z-index: -3;
+  margin-top: -150px;
+  height: 160px;
+  width: 100vw;
+  background-color: var(--bg-color);
+}
+
+#left-background {
+  z-index: -3;
+  height: 160px;
+  width: 18vw;
+  background-color: var(--bg-color);
+}
+
+#right-background {
+  z-index: -3;
+  height: 160px;
+  margin-top: -170px;
+  margin-left: 900px;
+  background-color: var(--bg-color);
+}
+
+#bottom-background {
+  z-index: -3;
+  margin-top: -50px;
+  height: 80vh;
+  width: 100vw;
+  background-color: var(--bg-color);
+}
+
+.row {
+  width: 100vw !important;
+}
+
+/* ABOUT PAGE */
+div.about {
+  text-indent: 20px;
+  width: 100%;
+  margin: 15px;
+}
+
+img.profile-pic {
+  display: block;
+  margin-left: auto;
+  object-fit: cover;
+  object-position: 50% 0%;
+}
+
+img.profile-pic-new {
+  height: auto;
+  width: 150px;
+}
+
+img.profile-pic-old {
+  width: 250px;
+  height: 250px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+img.pic {
+  width: 300px;
+  height: 300px;
+  object-fit: cover;
+  object-position: 50% 0%;
+}
+
+div.about-title > h4 {
+  text-align: center;
+}
+
+div.about p {
+  font-family: "Poppins", sans-serif;
+  text-align: justify;
+}

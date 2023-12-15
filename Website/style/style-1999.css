@@ -1,0 +1,40 @@
+*{
+     font-family:'Times New Roman', Times, serif;
+}
+
+li.nav-link{
+     padding: 5px;
+     border-top-right-radius: 10%;
+     border-top-left-radius: 10%;
+}
+
+li.nav-link-active{
+     background-color: black;
+     padding: 5px;
+     border-top-right-radius: 10%;
+     border-top-left-radius: 10%;
+}
+
+li.nav-link-active > a{
+     text-decoration: none;
+     color: white;
+}
+
+a{
+     text-decoration: none;
+}
+
+div.nav-bottom-bar{
+     padding-top: 0;
+     margin-top: 0;
+     height: 5px;
+     width: 50vw;
+     justify-content: center;
+     background-color: black;
+}
+
+div#left-col, div#right-col{
+     height: 100vh;
+     background-color: black;
+     color: white;
+}
