@@ -135,6 +135,12 @@ the four dials need to be placed in the correct orientation by trial and error. 
 to find the voltage between each pair of potentiometers for a total of three analog signals. Because this puzzle uses analog 
 signals, the ESP module boards are unable to be used as they have no analog capabilities.
 
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.90\columnwidth]{Images/pot_puzzle.jpg}
+    \caption{The potentiometer puzzle. The left LED is always on, while the right only turns on upon completion.}
+\end{figure}
+
 \indent The five LEDs on the box light up when the respective voltage across the pair of potentiometers is in the 
 correct range (like variable voltage dividers). Because they need to either be determined as ``correct'' or ``incorrect'' 
 without any variability between them, the LEDs are set up with digital signals to turn on or off when the correct voltage is 
@@ -157,6 +163,12 @@ switches on the provided box to enter the stated combination. The switches outpu
 of each number, which are decoded by an Arduino Uno to determine when the puzzle is complete. Like the other three initial 
 puzzles, it is not fully determined complete until the correct combination is displayed and the correct time frame is reached 
 in the game clock.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.90\columnwidth]{Images/num_puzzle.jpg}
+    \caption{The internals of the number station puzzle. The black box on the left is the number switch module.}
+\end{figure}
 
 
 \subsection{Audio Control and Tapes} % Kyle
