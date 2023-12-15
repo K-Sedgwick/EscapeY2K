@@ -160,6 +160,27 @@ in the game clock.
 
 
 \subsection{Audio Control and Tapes} % Kyle
+The interactive nature of an escape room leads to several factors being included just for the sake of immersion. 
+The audio tapes found in the room provide vital hints, but two devices in the room contained additional circuitry 
+just to play sound effects without the players controlling them. To accomplish this, we used a ESP module (which 
+hijacked the power from the host device boards) and a SD card-read MP3 player (controlled by UART between the ESP and 
+itself). The main program would communicate to the ESP modules to play sound effects either randomly, or when particular 
+events occur. For example, the ``scream'' sound effect could be played randomly to startle players in the room while the 
+``monster footsteps'' would play when the entity was about to trigger its seeking event. For the sake of a more entertaining 
+demo, the control panel application could be used to manually play any of the pre-recorded sound effects on the tape player 
+or telephone dock.
+
+\indent Recorded audio hints were more vital to the escape room's completion, but did not need to be included in the room's 
+programming (with the exception of the final hint). The audio cassettes each contained a hint on the A-side of the 
+tape for players to put into the tape player to listen to (which was independent of the remote-triggered sound effects). 
+We did not need to modify the mechanical parts of the cassette player for this project, only the electrical parts.
+
+\indent The final hint did require wireless signals to play, as opposed to the recorded tapes. After completing the 
+second puzzle, players are given a key that grants them access to a telephone handset. The charging contacts were shorted 
+so when they are placed on the dock, the ESP module in the dock detects the phone was put down and signals the internal MP3 
+player to play the final hint (which is stored on it's SD card). Unlike the other hints, this recording only plays once, 
+demanding the players pay close attention before it turns off for good, adding an additional element of intensity to the room.
+
 
 \subsection{Props and Hints} % Nami
 
@@ -270,7 +291,6 @@ of an event and keep track of the current state of the room. An "admin control p
 scenes" to activate special events, lock or unlock boxes, and reset the current state of the room.
 
 
-\subsection{Box Control}
 
 \begin{figure}[ht]
     \centering
@@ -288,46 +308,62 @@ scenes" to activate special events, lock or unlock boxes, and reset the current 
 % ************************************* THIS SECTION MUST BE REVISED ******************************************************************
 % *************************************************************************************************************************************
 \section{Evaluation} % Kyle
+Escape Y2K was completed, and fully functional as a computer controlled escape room experience. For demo day itself, 
+the control panel for the room was used to provide assistance and allow other guests to play sound effects remotely to 
+interact with the room if they could not participate actively. While the technical aspects of Escape Y2K were all 
+implemented and functional for the demonstration, there were a few aspects that could be improved for later revisions 
+of this, or other, computer controlled escape rooms.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.85\columnwidth]{Images/ClosedLock.png}
-    \caption{When the motor arms are under the metal plate, the container remains locked}
-\end{figure}
+\subsection{Functionality}
+There were several physical aspects of Escape Y2K that could have failed during the demonstration, from dislodged wires, 
+misaligned clock hands for the slot-interrupt sensors, jammed autoboxes, or general hardware failure. Thankfully, due 
+to careful consideration of transportation and attention during re-assembly, these were all successfully avoided. If 
+additional funding were available, it would be possible to make printed circuit boards for all breadboard components, 
+which are the biggest concern for re-assembly and reliability issues.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.85\columnwidth]{Images/OpenLock.png}
-    \caption{When the arms are rotated out from the metal plate, the container is unlocked and can manually be opened.}
-\end{figure}
+\indent After the approximate hour and 45 minutes of re-assembly, the room was able to be fully tested for function 
+and connectivity reliability before guests were let into the room. While being used, none of the above concerns caused 
+any practical issue for guests, but unfortunately, no teams managed to finish the escape room due to time constraints 
+(which will be addressed in the following subsections). While everything physically operated as it should, there were a 
+few aspects that a second revision would address to make things run even smoother.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.85\columnwidth]{Images/OpenContainer.png}
-    \caption{The internal solenoid can be used for several effects. For example, when facing the container opening, it can pop the
-        door open automatically. If it is facing a wall, it will create a knock sound, or if it does not contact with anything, it can
-        make a clicking noise to signal the box is unlocked.}
-\end{figure}
+\subsection{Mechanical Shortcomings}
+Many components of student made projects can be extremely fragile due to limitations of time, funding, or uncontrollable 
+factors like mistakes on the side of the end-user. Thankfully, the users did not cause any problems over the duration of 
+the demonstration, and nothing had serious reliability issues. However, there are a few aspects that had potential to cause 
+issues if factors were slightly different.
 
-\subsection*{Wi-Fi}
-Wi-Fi will act as an incredibly reliable and secure option for our senior project. One of the benefits of Wi-Fi
-is that is it so widely supported. There are lots of libraries that would make communication and connection over
-Wi-Fi as simple as possible. Plus, the connection range is incredibly good over Wi-Fi, and the data rate is quite high
-(around 54 Mbps)~\cite{wifiVsZigbee}. There are two drawbacks to Wi-Fi, however, the first being that it uses a bit more energy than Zigbee
-to operate, which may become a problem depending on how many of our components need to operate on a portable energy
-source. The second is that there are so many other devices that operate using Wi-Fi, and we may want the privacy that
-a connection through Zigbee would provide.
+\indent One such concern is the fragility of puzzle boxes and the clock. Because the clock relies on a relatively cheap 
+stepper motor, custom 3D printed mounts, and finicky slot-interrupters, there are multiple aspects that hold potential 
+of breaking. Should the clock module be revised, we would 3D print a full enclosure for the motor that could house the 
+separate encoder much closer. By covering the motor entirely, it would prevent accidental dislodging or mechanical 
+movement not detected by the encoder. The slot interrupters could have a metal wing affixed below the clock hand, to be 
+more stable and secure than the tape wing used for the first revision. 
 
-\subsection*{Zigbee}
-On the other hand, Zigbee would be an interesting option for a variety of reasons. The most beneficial reason to using
-Zigbee would be its topology. Zigbee uses a mesh network topology, which allows each of the network devices to connect with
-one another, rather than being dependent upon a central hub to manage the details of the escape room. This would decrease
-the number of ``network-hops'' a command would need to traverse, allowing components to tell locks when their puzzle has been
-solved. We may end up needing a central hub, so this benefit could nullified, but I digress. Furthermore, Zigbee is much less
-widely used than Wi-Fi providing us with a unique experience when trying to get all of our components to communicate
-with one another. It also consumes less energy and has a lower data transmission rate than Wi-Fi (maxing out at 250 Kbps),
-which could help our wireless components be more energy efficient~\cite{wifiVsZigbee}. These details are yet to be explored,
-however, and will need to be more properly considered when we have a more developed plan as to what our escape room is going to require.
+\indent Concerns on the fragility of puzzles could simply be solved by making custom PCBs would remove reliability concerns 
+of loose wiring. With additional funding, the containers could also be made from more rugged materials, rather than 3D 
+printed (although 3D printing was find for demonstration purposes).
+
+\subsection{Creative Adjustments}
+Guests of the room provided feedback from their experiences to improve a revised escape room. Much of this feedback was 
+not necessarily on the technical side, but rather for the experiential aspects of the room, such as immersion and logical 
+flow. For individuals inexperienced with escape rooms, having a system that does not require an operator can make it extremely 
+difficult to try to understand where to start looking in the room, so some changes can benefit less experienced players.
+
+\indent The biggest and most consistent piece of feedback received was on timing. Eight minutes is simply not enough time to 
+get situated in the room and rationally look for clues. Our basic attempt at improving this was the ability to add time back 
+with the use of codes. However, with such a short initial time, this still was not particularly helpful. The unique ability 
+to get working time back is central to Escape Y2K, so the code system could be made more accessible to allow for more time 
+extensions. The easiest (and realistically intended) solution is to give players more base time when the room starts. With the 
+amount and complexity of puzzles, 20 minutes would be an ideal starting time for the room.
+
+\indent Another unique aspect of Escape Y2K that could use play-tuning is the appearance of the entity through the television 
+monitors. While its presence was restricted to about a one-percent chance of appearing every second while the clock was after 
+8:00 PM, these chances could stack on with additional time if the chance was completed while the entity was already seeking in 
+the room. Simply preventing this from happening could let players be less intruded by the entity, while still keeping it as an 
+important aspect of the room. As this is purely a creative change, it's ideal implementation would still need to be flexible to 
+further feedback as changes are continually made.
+
 
 
 %   ********************************************************************************************************
