@@ -396,12 +396,12 @@ more stable and secure than the tape wing used for the first revision.
     \label{fig:pir}
 \end{figure}
 
-\indent Concerns on the fragility of puzzles could simply be solved by making custom PCBs would remove reliability concerns 
-of loose wiring. With additional funding, the containers could also be made from more rugged materials, rather than 3D 
+\indent Concerns on the fragility of puzzles could simply be solved by making custom PCBs which removes chances for 
+loose wiring. With additional funding, the containers could also be made of more rugged materials, rather than 3D 
 printed (although 3D printing was fine for demonstration purposes).
 
 \subsection{Creative Adjustments}
-Guests of the room provided feedback from their experiences to improve a revised escape room. Much of this feedback was 
+\indent Guests of the room provided feedback from their experiences to improve a revised escape room. Much of this feedback was 
 not necessarily on the technical side, but rather for the experiential aspects of the room, such as immersion and logical 
 flow. For individuals inexperienced with escape rooms, having a system that does not require an operator can make it extremely 
 difficult to try to understand where to start looking in the room, so some changes can benefit less experienced players.
@@ -458,10 +458,10 @@ components needed for ``ESCAPE Y2K.''
     \item 9V power supply for clock
     \item 3 spools of PLA printing filament
     \item Relay modules (1 per autobox)
-    \item Mini windows PC
+    \item Mini Windows PC
 \end{itemize}
 
-\section{Appendix B: Troubles of note during development}
+\section{Appendix B: Troubles of Note During Development}
 
 \indent Most aspects of the ``ESCAPE Y2K'' project went relatively smoothly. Bugs were encountered, as is to be expected, 
 but nothing lead to any major issues for the demonstrated product. One of the few concerns that came up during the 
@@ -469,7 +469,7 @@ construction of the room was components without proper documentation. For exampl
 the number switch puzzle did not include a datasheet with the switch module, as it was just found in the lab's spare 
 parts. The closest datasheet found online shows it being used with a common-power configuration, but the 
 pull-down resistors in the circuit didn't fully pull down off pins, leading to logical errors. After some testing along 
-the common-power side, it was switched to use common ground. After some re-wireing and re-programming the ESP modules, 
+the common-power side, it was switched to use common ground. After re-wiring and re-programming the ESP modules, 
 a common-ground configuration worked very reliably for the final room.
 
 \indent Issues involving timing for hot key presses were also an issue when it came to the TVs. When a signal comes 
@@ -477,10 +477,10 @@ into the server that requires the mini PC to activate two hot keys (in scenarios
 and timer are interacted with at the same time such as starting or resetting the game) there would have to be enough time in between the 
 functions to avoid one of them not working correctly.
 
-\indent The final issue that gave a significant amount of concern leading up to demo day is the lack of a deticated large-scale 
+\indent The final issue that gave a significant amount of concern leading up to demo day is the lack of a dedicated large-scale 
 testing space. Due to the unique nature of an escape room demanding a certain layout of the room, and requiring a lot of physical 
-interactions to be tested makes testing without a controlled space very difficult. In addition to the relative layout of puzzles 
-being a vital aspect to test, the additional use of restricted motion sensors makes exact testing nearly impossible prior 
+interactions to be tested, testing without a controlled space became very difficult. In addition to the relative layout of puzzles 
+being a vital aspect to test, the additional use of restricted motion sensors made exact testing nearly impossible prior 
 to setting up in the actual demo space. Any chance to have a controlled space to test should be taken advantage of for 
 projects of this scale and nature.
 
