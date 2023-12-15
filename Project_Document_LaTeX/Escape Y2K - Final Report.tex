@@ -473,7 +473,16 @@ components we needed for Escape Y2K.
 
 \section{Appendix B: Troubles of note during development}
 
+Most aspects of the Escape Y2K project went relatively smoothly. Bugs were encountered, as is to be expected, 
+but nothing lead to any major issues for the demonstrated product. One of the few concerns that came up during the 
+construction of the room was components we found and decided to utilize without proper documentation. For example, 
+the number switch puzzle did not include a datasheet with the switch module, as we just found it in the lab's spare 
+parts. The closest datasheet we could find online shows it being used with a common-power configuration, but the 
+pull-down resistors in the circuit didn't fully pull down off pins, leading to logical errors. After some testing along 
+the common-power side, we switched to use common ground. After some re-wireing and re-programming the ESP modules, 
+a common-ground configuration worked very reliably for the final room.
 
+\indent 
 
 \begin{thebibliography}{00}
 
